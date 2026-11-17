@@ -276,14 +276,14 @@ karasu-slicer-benchmark/
 
 ## 10. Phases
 
-| Phase | Content | Done when |
-| --- | --- | --- |
-| P0 | Skeleton: `pyproject`, the `kbench` command with `env` and `doctor`, docs, decisions, CI with lint and tests | the owner approves the design and P0 passes its gates |
-| P1 | Models, exact sections, reference rasterizer, layer and model metrics | known-answer and defect-injection tests pass, no slicer needed |
-| P2 | karasu adapter, process runner, UVTools decoding, properties and issues | first accuracy and performance report of karasu-slicer on two targets |
-| P3 | PrusaSlicer adapter, manual import protocol for GUI slicers | first comparison report on the SL1S target |
-| P4 | Scaling, determinism, feature metrics, regression comparison between karasu-slicer versions, HTML report | full suite documented and reproducible |
-| P5 | Optional: native Windows runs, scheduled runs on a dedicated host | as decided |
+| Phase | Content | Done when | Status |
+| --- | --- | --- | --- |
+| P0 | Skeleton: `pyproject`, the `kbench` command with `env` and `doctor`, docs, decisions, CI with lint and tests | the owner approves the design and P0 passes its gates | done |
+| P1 | Models, exact sections, reference rasterizer, layer and model metrics | known-answer and defect-injection tests pass, no slicer needed | done |
+| P2 | karasu adapter, process runner, UVTools decoding, properties and issues | first accuracy and performance report of karasu-slicer on two targets | done |
+| P3 | PrusaSlicer adapter, manual import protocol for GUI slicers | first comparison report on the SL1S target | done |
+| P4 | Scaling, determinism, feature metrics, regression comparison between karasu-slicer versions, HTML report | full suite documented and reproducible | done |
+| P5 | Optional: native Windows runs, scheduled runs on a dedicated host | as decided | not started |
 
 ## 11. Decisions
 

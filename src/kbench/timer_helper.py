@@ -8,8 +8,9 @@ program's reported peak starts from the launcher's few megabytes (the launcher f
 with every run) instead of the suite's size.
 
 Request on standard input (JSON): ``argv``, ``stdout``, ``stderr`` (file paths), ``timeout_s``,
-``cwd`` (or null), ``env`` (or null). Result on standard output (JSON): ``exit_status``,
-``timed_out``, ``wall_ns``, ``user_s``, ``system_s``, ``peak_rss_kib``, ``exec_error``.
+``cwd`` (or null), ``env`` (or null), ``cpus`` (CPU numbers the program may run on, or null).
+Result on standard output (JSON): ``exit_status``, ``timed_out``, ``wall_ns``, ``user_s``,
+``system_s``, ``peak_rss_kib``, ``exec_error``.
 """
 
 import json
@@ -35,6 +36,8 @@ def main() -> int:
     if pid == 0:  # Child: become the program.
         try:
             os.setsid()
+            if request.get("cpus") is not None:
+                os.sched_setaffinity(0, request["cpus"])
             os.dup2(devnull, 0)
             os.dup2(stdout, 1)
             os.dup2(stderr, 2)

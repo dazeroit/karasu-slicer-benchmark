@@ -10,6 +10,11 @@
 #   cone       radius_mm, segments, height_mm, phase_deg = 0   (regular pyramid)
 #   icosphere  radius_mm, subdivisions                          (20 * 4^subdivisions triangles)
 #   extrusion  polygon_mm = [[x, y], ...] counter-clockwise, height_mm
+#   washer     size_mm (square side), hole_radius_mm, segments, height_mm   (hole through the centre)
+#   slotted    size_mm = [x, y], slot_width_mm, slot_depth_mm, height_mm    (slot cut from the +Y side)
+#
+# `feature = "pin" | "wall" | "hole" | "slot"` marks a body (prism, box, washer, slotted) whose
+# printed size the feature metrics measure.
 
 [[models]]
 id = "cube-20"
@@ -64,6 +69,11 @@ bodies = [
 ]
 
 [[models]]
+id = "column-r5-h60"
+description = "Scaling series: a 128-segment prism 60 mm high, 1,200 layers of 0.05 mm."
+bodies = [{ name = "column", shape = "prism", radius_mm = 5.0, segments = 128, height_mm = 60.0 }]
+
+[[models]]
 id = "sphere-r20-s3"
 description = "Scaling series: icosphere of radius 20 mm, 1,280 triangles."
 bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 3 }]
@@ -82,3 +92,41 @@ bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions
 id = "sphere-r20-s8"
 description = "Scaling series: icosphere of radius 20 mm, 1,310,720 triangles."
 bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 8 }]
+
+[[models]]
+id = "feature-plate"
+description = "Fine features from 0.05 to 1 mm: pins, walls, holes and slots, one row each."
+bodies = [
+  { name = "pin-0.05", feature = "pin", shape = "prism", radius_mm = 0.025, segments = 32, height_mm = 3.0, at_mm = [-19.25, 14.0] },
+  { name = "pin-0.10", feature = "pin", shape = "prism", radius_mm = 0.05, segments = 32, height_mm = 3.0, at_mm = [-13.75, 14.0] },
+  { name = "pin-0.15", feature = "pin", shape = "prism", radius_mm = 0.075, segments = 32, height_mm = 3.0, at_mm = [-8.25, 14.0] },
+  { name = "pin-0.20", feature = "pin", shape = "prism", radius_mm = 0.1, segments = 32, height_mm = 3.0, at_mm = [-2.75, 14.0] },
+  { name = "pin-0.30", feature = "pin", shape = "prism", radius_mm = 0.15, segments = 32, height_mm = 3.0, at_mm = [2.75, 14.0] },
+  { name = "pin-0.50", feature = "pin", shape = "prism", radius_mm = 0.25, segments = 32, height_mm = 3.0, at_mm = [8.25, 14.0] },
+  { name = "pin-0.75", feature = "pin", shape = "prism", radius_mm = 0.375, segments = 32, height_mm = 3.0, at_mm = [13.75, 14.0] },
+  { name = "pin-1.00", feature = "pin", shape = "prism", radius_mm = 0.5, segments = 32, height_mm = 3.0, at_mm = [19.25, 14.0] },
+  { name = "wall-0.05", feature = "wall", shape = "box", size_mm = [0.05, 6.0, 3.0], at_mm = [-19.25, 6.0] },
+  { name = "wall-0.10", feature = "wall", shape = "box", size_mm = [0.1, 6.0, 3.0], at_mm = [-13.75, 6.0] },
+  { name = "wall-0.15", feature = "wall", shape = "box", size_mm = [0.15, 6.0, 3.0], at_mm = [-8.25, 6.0] },
+  { name = "wall-0.20", feature = "wall", shape = "box", size_mm = [0.2, 6.0, 3.0], at_mm = [-2.75, 6.0] },
+  { name = "wall-0.30", feature = "wall", shape = "box", size_mm = [0.3, 6.0, 3.0], at_mm = [2.75, 6.0] },
+  { name = "wall-0.50", feature = "wall", shape = "box", size_mm = [0.5, 6.0, 3.0], at_mm = [8.25, 6.0] },
+  { name = "wall-0.75", feature = "wall", shape = "box", size_mm = [0.75, 6.0, 3.0], at_mm = [13.75, 6.0] },
+  { name = "wall-1.00", feature = "wall", shape = "box", size_mm = [1.0, 6.0, 3.0], at_mm = [19.25, 6.0] },
+  { name = "hole-0.05", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.025, segments = 32, height_mm = 2.0, at_mm = [-19.25, -3.0] },
+  { name = "hole-0.10", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.05, segments = 32, height_mm = 2.0, at_mm = [-13.75, -3.0] },
+  { name = "hole-0.15", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.075, segments = 32, height_mm = 2.0, at_mm = [-8.25, -3.0] },
+  { name = "hole-0.20", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.1, segments = 32, height_mm = 2.0, at_mm = [-2.75, -3.0] },
+  { name = "hole-0.30", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.15, segments = 32, height_mm = 2.0, at_mm = [2.75, -3.0] },
+  { name = "hole-0.50", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.25, segments = 32, height_mm = 2.0, at_mm = [8.25, -3.0] },
+  { name = "hole-0.75", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.375, segments = 32, height_mm = 2.0, at_mm = [13.75, -3.0] },
+  { name = "hole-1.00", feature = "hole", shape = "washer", size_mm = 4.0, hole_radius_mm = 0.5, segments = 32, height_mm = 2.0, at_mm = [19.25, -3.0] },
+  { name = "slot-0.05", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.05, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [-19.25, -12.0] },
+  { name = "slot-0.10", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.1, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [-13.75, -12.0] },
+  { name = "slot-0.15", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.15, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [-8.25, -12.0] },
+  { name = "slot-0.20", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.2, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [-2.75, -12.0] },
+  { name = "slot-0.30", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.3, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [2.75, -12.0] },
+  { name = "slot-0.50", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.5, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [8.25, -12.0] },
+  { name = "slot-0.75", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 0.75, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [13.75, -12.0] },
+  { name = "slot-1.00", feature = "slot", shape = "slotted", size_mm = [4.0, 6.0], slot_width_mm = 1.0, slot_depth_mm = 4.0, height_mm = 2.0, at_mm = [19.25, -12.0] },
+]

@@ -60,13 +60,14 @@ uv run kbench run --suite smoke        # a few minutes: time, decode and measure
 uv run kbench run --suite accuracy     # every target and single-shape model
 uv run kbench run --suite performance  # timing only, more repetitions, scaling series
 uv run kbench run --suite compare-sl1s # karasu-slicer and PrusaSlicer on the same SL1S panel
+uv run kbench run --suite scaling      # timing against resolution, layers, triangles, CPUs
 uv run kbench report work/runs/<run-id>
 uv run kbench report work/runs/<run-a> work/runs/<run-b>   # side by side
 uv run kbench import <file> --slicer <name> --slicer-version <v> --target <id> \
   --model <id> --stl work/models/<id>.stl   # a file exported by hand (docs/SLICERS.md)
 ```
 
-Each run writes `work/runs/<run-id>/` with its records and `report.md`. Everything a run
+Each run writes `work/runs/<run-id>/` with its records, `report.md` and `report.html`. Everything a run
 produces goes under `work/` (or `KBENCH_WORK`), which Git ignores.
 
 ## Checks before a change

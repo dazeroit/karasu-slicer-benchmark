@@ -1,0 +1,23 @@
+# Elegoo Mars 4 (9K; not the Mars 4 Ultra or Max).
+id = "elegoo-mars-4"
+description = "Elegoo Mars 4: 9K mono LCD, 8520 x 4320 px at 18 µm"
+
+[panel]
+resolution_x = 8520
+resolution_y = 4320
+pitch_x_mm = 0.018
+pitch_y_mm = 0.018
+layer_height_mm = 0.05
+
+[source]
+# Published values: 8520 x 4320 px, 18 µm XY, build volume 153.36 x 77.76 x 175 mm (= the panel).
+# Retrieved 2026-11-17 through a web search showing the manufacturer's product page and retailers.
+manufacturer = "https://us.elegoo.com/collections/mars-series/products/elegoo-mars-4-msla-resin-3d-printer-with-9k-mono-lcd"
+corroboration = ["https://matterhackers.com/store/l/elegoo-mars-4-9k-lcd-resin-3d-printer/sk/MUC7M21M", "https://printer-hub.ru/en/printers/elegoo-mars-4"]
+retrieved = "2026-11-17"
+
+[slicers.karasu]
+printer = "elegoo-mars-4"
+resin = "elegoo-standard-resin"
+format = "goo-v3"
+extension = ".goo"

@@ -14,6 +14,7 @@ from kbench import __version__
 from kbench.config import ConfigError, load_suite, load_targets, repository_path
 from kbench.env import capture_environment
 from kbench.geometry import GeometryError
+from kbench.html_report import write_html
 from kbench.install import InstallError, default_pins_path, install, load_pins
 from kbench.karasu_build import BuildError, build_karasu
 from kbench.models import CatalogError, build_catalog, default_catalog_path, load_catalog
@@ -274,10 +275,11 @@ def _run_suite(args: argparse.Namespace) -> int:
             keep_layers=args.keep_layers,
         )
         report = write_report(run_dir)
+        write_html(run_dir)
     except (ConfigError, RunError, CatalogError, OSError) as error:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
-    print(f"Report: {report}")
+    print(f"Report: {report} (and {report.with_suffix('.html').name})")
     return EXIT_OK
 
 
@@ -301,20 +303,22 @@ def _run_import(args: argparse.Namespace) -> int:
             keep_layers=args.keep_layers,
         )
         report = write_report(run_dir)
+        write_html(run_dir)
     except (ConfigError, RunError, CatalogError, OSError) as error:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
-    print(f"Report: {report}")
+    print(f"Report: {report} (and {report.with_suffix('.html').name})")
     return EXIT_OK
 
 
 def _run_report(args: argparse.Namespace) -> int:
     try:
         report = write_report(args.run_dirs[0], args.run_dirs[1:])
+        write_html(args.run_dirs[0], args.run_dirs[1:])
     except (OSError, KeyError, ValueError) as error:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
-    print(f"Report: {report}")
+    print(f"Report: {report} (and {report.with_suffix('.html').name})")
     return EXIT_OK
 
 

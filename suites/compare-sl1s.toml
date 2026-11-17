@@ -38,6 +38,11 @@ target = "prusa-sl1s"
 slicers = ["karasu", "prusaslicer"]
 
 [[cases]]
+model = "feature-plate"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
 model = "sphere-r20-s7"
 target = "prusa-sl1s"
 slicers = ["karasu", "prusaslicer"]

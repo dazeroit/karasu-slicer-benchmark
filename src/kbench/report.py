@@ -43,9 +43,13 @@ def slicer_label(case: dict[str, Any]) -> str:
     if case.get("manual"):
         return f"{case['slicer']} {case['manual']['slicer_version']} (manual)"
     tool = case.get("slicer_tool")
-    return (
+    label = (
         f"{case['slicer']} ({tool['version']})" if tool and tool.get("version") else case["slicer"]
     )
+    build = case.get("slicer_build")
+    if build:
+        label = label[:-1] + f", {build['commit'][:7]})" if label.endswith(")") else label
+    return label
 
 
 def _conditions(run: dict[str, Any], cases: Sequence[dict[str, Any]]) -> list[str]:
@@ -137,6 +141,7 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
             [
                 case["case"],
                 slicer_label(case),
+                str(len(case["cpus"])) if case.get("cpus") else "all",
                 _number(wall["median"]),
                 _number(wall["min"]),
                 _number(wall["max"]),
@@ -157,6 +162,7 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
         [
             "Case",
             "Slicer",
+            "CPUs",
             "Wall median (s)",
             "Min",
             "Max",
@@ -183,152 +189,158 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
         for case in cases
         if case.get("analysis", {}).get("status") == "analysed"
     ]
-    lines += ["## Accuracy", ""]
-    rows = []
-    for case, metrics in analysed:
-        summary = metrics["summary"]
-        offset = metrics["placement"]["offset_mm"]
-        orientation = metrics["orientation"]
-        rows.append(
-            [
-                case["case"],
-                slicer_label(case),
-                str(metrics["layer_count"]),
-                orientation["stored"] + (" (ambiguous)" if orientation["ambiguous"] else ""),
-                f"{_number(offset[0])}, {_number(offset[1])}",
-                f"{_number(summary['iou']['min'], 4)} / {_number(summary['iou']['mean'], 4)}",
-                " / ".join(
-                    _number(summary[field][stat], 4)
-                    for field, stat in (
-                        ("boundary_mean_mm", "mean"),
-                        ("boundary_p95_mm", "max"),
-                        ("boundary_max_mm", "max"),
-                    )
-                ),
-                _number(metrics["volume"]["error_vs_reference_pct"]),
-                _number(metrics["volume"]["error_vs_mesh_pct"]),
-                _number(metrics["height"]["error_mm"]),
-                _number(summary["edge_coverage_mae"]["mean"]),
-                _number(summary["stray_area_mm2"]["max"]),
-            ]
-        )
-    lines += _table(
-        [
-            "Case",
-            "Slicer",
-            "Layers",
-            "Stored orientation",
-            "Placement dx, dy (mm)",
-            "IoU min / mean",
-            "Boundary mean / p95 max / max (mm)",
-            "Volume vs reference (%)",
-            "Volume vs mesh (%)",
-            "Height error (mm)",
-            "Edge coverage MAE",
-            "Stray max (mm²)",
-        ],
-        rows,
-    )
-    lines += ["", "### Bodies", ""]
-    rows = []
-    for case, metrics in analysed:
-        for body in metrics["bodies"]:
-            phase = body["z_phase"]
+    if analysed:
+        lines += ["## Accuracy", ""]
+        rows = []
+        for case, metrics in analysed:
+            summary = metrics["summary"]
+            offset = metrics["placement"]["offset_mm"]
+            orientation = metrics["orientation"]
             rows.append(
                 [
                     case["case"],
                     slicer_label(case),
-                    body["name"],
-                    _number(body["volume_error_pct"]),
-                    _number(phase["phase"])
-                    if phase["phase"] is not None
-                    else f"– ({phase['reason']})",
-                    _number(phase["area_scale"], 4),
+                    str(metrics["layer_count"]),
+                    orientation["stored"] + (" (ambiguous)" if orientation["ambiguous"] else ""),
+                    f"{_number(offset[0])}, {_number(offset[1])}",
+                    f"{_number(summary['iou']['min'], 4)} / {_number(summary['iou']['mean'], 4)}",
+                    " / ".join(
+                        _number(summary[field][stat], 4)
+                        for field, stat in (
+                            ("boundary_mean_mm", "mean"),
+                            ("boundary_p95_mm", "max"),
+                            ("boundary_max_mm", "max"),
+                        )
+                    ),
+                    _number(metrics["volume"]["error_vs_reference_pct"]),
+                    _number(metrics["volume"]["error_vs_mesh_pct"]),
+                    _number(metrics["height"]["error_mm"]),
+                    _number(summary["edge_coverage_mae"]["mean"]),
+                    _number(summary["stray_area_mm2"]["max"]),
                 ]
             )
-    lines += _table(
-        ["Case", "Slicer", "Body", "Volume vs reference (%)", "Z phase (layers)", "Area scale"],
-        rows,
-    )
-
-    lines += side_by_side(cases, dict((id(case), metrics) for case, metrics in analysed))
-    lines += ["", "## File properties (UVTools)", ""]
-    rows = []
-    for case in cases:
-        analysis = case.get("analysis", {})
-        if analysis.get("status") != "analysed":
-            continue
-        props, checks = analysis["properties"], analysis["conformity"]
-        rows.append(
+        lines += _table(
             [
-                case["case"],
-                slicer_label(case),
-                f"{_number(props['ResolutionX'], 0)} × {_number(props['ResolutionY'], 0)}",
-                f"{_number(props['PixelWidth'], 4)} × {_number(props['PixelHeight'], 4)}",
-                _number(props["LayerHeight"], 3),
-                f"{_number(props['LayerCount'], 0)} (expected {checks['layer_count']['expected']})",
-                _number(props["BottomLayerCount"], 0),
-                f"{_number(props['BottomExposureTime'], 2)} / {_number(props['ExposureTime'], 2)}",
-                _number(props["AntiAliasing"], 0),
-                str(props.get("DisplayMirror") or "–"),
-                ", ".join(name for name, check in checks.items() if check["matches"] is False)
-                or "all match",
-            ]
+                "Case",
+                "Slicer",
+                "Layers",
+                "Stored orientation",
+                "Placement dx, dy (mm)",
+                "IoU min / mean",
+                "Boundary mean / p95 max / max (mm)",
+                "Volume vs reference (%)",
+                "Volume vs mesh (%)",
+                "Height error (mm)",
+                "Edge coverage MAE",
+                "Stray max (mm²)",
+            ],
+            rows,
         )
-    lines += _table(
-        [
-            "Case",
-            "Slicer",
-            "Resolution",
-            "Pixel (mm)",
-            "Layer (mm)",
-            "Layers",
-            "Bottom layers",
-            "Exposure bottom / normal (s)",
-            "AA",
-            "Mirror",
-            "Differs from target",
-        ],
-        rows,
-    )
+        lines += ["", "### Bodies", ""]
+        rows = []
+        for case, metrics in analysed:
+            for body in metrics["bodies"]:
+                phase = body["z_phase"]
+                rows.append(
+                    [
+                        case["case"],
+                        slicer_label(case),
+                        body["name"],
+                        _number(body["volume_error_pct"]),
+                        _number(phase["phase"])
+                        if phase["phase"] is not None
+                        else f"– ({phase['reason']})",
+                        _number(phase["area_scale"], 4),
+                    ]
+                )
+        lines += _table(
+            ["Case", "Slicer", "Body", "Volume vs reference (%)", "Z phase (layers)", "Area scale"],
+            rows,
+        )
 
-    lines += ["", "## UVTools issues", ""]
-    rows = []
-    for case in cases:
-        analysis = case.get("analysis", {})
-        if analysis.get("status") != "analysed":
-            continue
-        issues = analysis["issues"]
-        if issues is None:
-            error = analysis.get("uvtools_issues_error", "").splitlines()[0][:160]
+    lines += feature_tables(analysed)
+    lines += side_by_side(cases, {id(case): metrics for case, metrics in analysed})
+    lines += determinism(cases)
+    if analysed:
+        lines += ["", "## File properties (UVTools)", ""]
+        rows = []
+        for case in cases:
+            analysis = case.get("analysis", {})
+            if analysis.get("status") != "analysed":
+                continue
+            props, checks = analysis["properties"], analysis["conformity"]
             rows.append(
                 [
                     case["case"],
                     slicer_label(case),
-                    "–",
-                    f"UVTools could not read the file: {error}",
-                    "–",
+                    f"{_number(props['ResolutionX'], 0)} × {_number(props['ResolutionY'], 0)}",
+                    f"{_number(props['PixelWidth'], 4)} × {_number(props['PixelHeight'], 4)}",
+                    _number(props["LayerHeight"], 3),
+                    f"{_number(props['LayerCount'], 0)} "
+                    f"(expected {checks['layer_count']['expected']})",
+                    _number(props["BottomLayerCount"], 0),
+                    f"{_number(props['BottomExposureTime'], 2)} / "
+                    f"{_number(props['ExposureTime'], 2)}",
+                    _number(props["AntiAliasing"], 0),
+                    str(props.get("DisplayMirror") or "–"),
+                    ", ".join(name for name, check in checks.items() if check["matches"] is False)
+                    or "all match",
                 ]
             )
-            continue
-        by_type = (
-            ", ".join(f"{name}: {count}" for name, count in issues["by_type"].items()) or "none"
-        )
-        rows.append(
+        lines += _table(
             [
-                case["case"],
-                slicer_label(case),
-                str(issues["count"]),
-                by_type,
-                str(len(issues["unparsed"])),
-            ]
+                "Case",
+                "Slicer",
+                "Resolution",
+                "Pixel (mm)",
+                "Layer (mm)",
+                "Layers",
+                "Bottom layers",
+                "Exposure bottom / normal (s)",
+                "AA",
+                "Mirror",
+                "Differs from target",
+            ],
+            rows,
         )
-    lines += _table(["Case", "Slicer", "Issues", "By type", "Unparsed lines"], rows)
-    lines += [
-        "",
-        "UVTools' detectors are heuristics: their findings are observations, not ground truth.",
-        "",
-    ]
+
+        lines += ["", "## UVTools issues", ""]
+        rows = []
+        for case in cases:
+            analysis = case.get("analysis", {})
+            if analysis.get("status") != "analysed":
+                continue
+            issues = analysis["issues"]
+            if issues is None:
+                error = analysis.get("uvtools_issues_error", "").splitlines()[0][:160]
+                rows.append(
+                    [
+                        case["case"],
+                        slicer_label(case),
+                        "–",
+                        f"UVTools could not read the file: {error}",
+                        "–",
+                    ]
+                )
+                continue
+            by_type = (
+                ", ".join(f"{name}: {count}" for name, count in issues["by_type"].items()) or "none"
+            )
+            rows.append(
+                [
+                    case["case"],
+                    slicer_label(case),
+                    str(issues["count"]),
+                    by_type,
+                    str(len(issues["unparsed"])),
+                ]
+            )
+        lines += _table(["Case", "Slicer", "Issues", "By type", "Unparsed lines"], rows)
+        lines += [
+            "",
+            "UVTools' detectors are heuristics: their findings are observations, not ground truth.",
+            "",
+        ]
 
     failures = []
     for case in cases:
@@ -358,87 +370,92 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
     return "\n".join(lines)
 
 
-SIDE_BY_SIDE: tuple[tuple[str, Any], ...] = (
+def _perf(case: dict[str, Any], field: str) -> float | None:
+    perf = case.get("performance")
+    return perf[field]["median"] if perf else None
+
+
+def _cpu_total(case: dict[str, Any]) -> float | None:
+    user, system = _perf(case, "user_s"), _perf(case, "system_s")
+    return user + system if user is not None and system is not None else None
+
+
+def _rss_mib(case: dict[str, Any]) -> float | None:
+    value = _perf(case, "peak_rss_kib")
+    return value / 1024 if value is not None else None
+
+
+def _issues(case: dict[str, Any]) -> float | str | None:
+    analysis = case.get("analysis", {})
+    if analysis.get("issues"):
+        return float(analysis["issues"]["count"])
+    return "unreadable" if analysis.get("status") == "analysed" else None
+
+
+def _phases(metrics: dict[str, Any] | None) -> str | None:
+    if metrics is None:
+        return None
+    text = ", ".join(
+        f"{body['name']} {_number(body['z_phase']['phase'])}"
+        for body in metrics["bodies"]
+        if body["z_phase"]["phase"] is not None
+    )
+    return text or None
+
+
+def _smallest(metrics: dict[str, Any] | None, kind: str) -> float | None:
+    if metrics is None:
+        return None
+    return (metrics.get("features_smallest_resolved") or {}).get(kind)
+
+
+Metric = tuple[str, int, Any]
+
+# Label, digits, and the value (a number, a text, or None) from a case and its metrics.
+SIDE_BY_SIDE: tuple[Metric, ...] = (
+    ("Wall median (s)", 3, lambda c, m: _perf(c, "wall_s")),
+    ("User + system CPU (s)", 3, lambda c, m: _cpu_total(c)),
+    ("Peak RSS (MiB)", 1, lambda c, m: _rss_mib(c)),
+    ("Output (bytes)", 0, lambda c, m: _perf(c, "output_bytes")),
+    ("Stored orientation", 0, lambda c, m: m["orientation"]["stored"] if m else None),
+    ("Placement dx (mm)", 3, lambda c, m: m["placement"]["offset_mm"][0] if m else None),
+    ("Placement dy (mm)", 3, lambda c, m: m["placement"]["offset_mm"][1] if m else None),
+    ("IoU min", 4, lambda c, m: m["summary"]["iou"]["min"] if m else None),
+    ("IoU mean", 4, lambda c, m: m["summary"]["iou"]["mean"] if m else None),
+    ("Boundary mean (mm)", 4, lambda c, m: m["summary"]["boundary_mean_mm"]["mean"] if m else None),
     (
-        "Wall median (s)",
-        lambda c, m: _number(c["performance"]["wall_s"]["median"]) if c.get("performance") else "–",
+        "Boundary p95, worst layer (mm)",
+        4,
+        lambda c, m: m["summary"]["boundary_p95_mm"]["max"] if m else None,
     ),
-    (
-        "User + system CPU (s)",
-        lambda c, m: (
-            _number(c["performance"]["user_s"]["median"] + c["performance"]["system_s"]["median"])
-            if c.get("performance") and c["performance"]["user_s"]["median"] is not None
-            else "–"
-        ),
-    ),
-    (
-        "Peak RSS (MiB)",
-        lambda c, m: (
-            _number(c["performance"]["peak_rss_kib"]["median"] / 1024, 1)
-            if c.get("performance") and c["performance"]["peak_rss_kib"]["median"] is not None
-            else "–"
-        ),
-    ),
-    (
-        "Output (bytes)",
-        lambda c, m: (
-            _number(int(c["performance"]["output_bytes"]["median"]))
-            if c.get("performance") and c["performance"]["output_bytes"]["median"] is not None
-            else "–"
-        ),
-    ),
-    ("Stored orientation", lambda c, m: m["orientation"]["stored"] if m else "–"),
-    (
-        "Placement dx, dy (mm)",
-        lambda c, m: ", ".join(_number(v) for v in m["placement"]["offset_mm"]) if m else "–",
-    ),
-    ("IoU min", lambda c, m: _number(m["summary"]["iou"]["min"], 4) if m else "–"),
-    ("IoU mean", lambda c, m: _number(m["summary"]["iou"]["mean"], 4) if m else "–"),
-    (
-        "Boundary mean (mm)",
-        lambda c, m: _number(m["summary"]["boundary_mean_mm"]["mean"], 4) if m else "–",
-    ),
-    (
-        "Boundary max (mm)",
-        lambda c, m: _number(m["summary"]["boundary_max_mm"]["max"], 4) if m else "–",
-    ),
+    ("Boundary max (mm)", 4, lambda c, m: m["summary"]["boundary_max_mm"]["max"] if m else None),
     (
         "Volume vs reference (%)",
-        lambda c, m: _number(m["volume"]["error_vs_reference_pct"]) if m else "–",
+        3,
+        lambda c, m: m["volume"]["error_vs_reference_pct"] if m else None,
     ),
-    ("Height error (mm)", lambda c, m: _number(m["height"]["error_mm"]) if m else "–"),
-    (
-        "Edge coverage MAE",
-        lambda c, m: _number(m["summary"]["edge_coverage_mae"]["mean"]) if m else "–",
-    ),
-    (
-        "Z phase (bodies)",
-        lambda c, m: (
-            ", ".join(
-                f"{b['name']} {_number(b['z_phase']['phase'])}"
-                for b in m["bodies"]
-                if b["z_phase"]["phase"] is not None
-            )
-            or "–"
-            if m
-            else "–"
-        ),
-    ),
-    (
-        "UVTools issues",
-        lambda c, m: (
-            str(c["analysis"]["issues"]["count"])
-            if c.get("analysis", {}).get("issues")
-            else "unreadable"
-            if c.get("analysis", {}).get("status") == "analysed"
-            else "–"
-        ),
-    ),
+    ("Height error (mm)", 3, lambda c, m: m["height"]["error_mm"] if m else None),
+    ("Edge coverage MAE", 3, lambda c, m: m["summary"]["edge_coverage_mae"]["mean"] if m else None),
+    ("Z phase (bodies)", 0, lambda c, m: _phases(m)),
+    ("Smallest pin (mm)", 2, lambda c, m: _smallest(m, "pin")),
+    ("Smallest wall (mm)", 2, lambda c, m: _smallest(m, "wall")),
+    ("Smallest hole (mm)", 2, lambda c, m: _smallest(m, "hole")),
+    ("Smallest slot (mm)", 2, lambda c, m: _smallest(m, "slot")),
+    ("UVTools issues", 0, lambda c, m: _issues(c)),
 )
 
 
+def _cell(value: Any, digits: int) -> str:
+    if value is None:
+        return "–"
+    if isinstance(value, str):
+        return value
+    return _number(round(value) if digits == 0 else float(value), digits)
+
+
 def side_by_side(cases: Sequence[dict[str, Any]], metrics: dict[int, dict[str, Any]]) -> list[str]:
-    """For every case measured with more than one slicer, one column per slicer."""
+    """For every case measured more than once (other slicers, other versions or other runs), one
+    column each; with exactly two, a change column (second minus first)."""
     by_case: dict[str, list[dict[str, Any]]] = {}
     for case in cases:
         by_case.setdefault(case["case"], []).append(case)
@@ -449,13 +466,107 @@ def side_by_side(cases: Sequence[dict[str, Any]], metrics: dict[int, dict[str, A
         if not lines:
             lines += ["", "## Side by side", ""]
         lines += [f"### {name}", ""]
-        rows = [
-            [label, *(cell(case, metrics.get(id(case))) for case in group)]
-            for label, cell in SIDE_BY_SIDE
-        ]
-        lines += _table(["Metric", *(slicer_label(case) for case in group)], rows)
+        rows = []
+        for label, digits, value_of in SIDE_BY_SIDE:
+            values = [value_of(case, metrics.get(id(case))) for case in group]
+            row = [label, *(_cell(value, digits) for value in values)]
+            if len(group) == 2:
+                first, second = values
+                numeric = all(
+                    isinstance(v, int | float) and not isinstance(v, bool) for v in values
+                )
+                row.append(_cell(second - first, digits) if numeric else "")
+            rows.append(row)
+        header = ["Metric", *(slicer_label(case) for case in group)]
+        if len(group) == 2:
+            header.append("Change")
+        lines += _table(header, rows)
         lines.append("")
     return lines
+
+
+def feature_tables(analysed: Sequence[tuple[dict[str, Any], dict[str, Any]]]) -> list[str]:
+    """Measured size of every feature, by nominal size and kind (docs/METRICS.md, Features)."""
+    lines: list[str] = []
+    for case, metrics in analysed:
+        features = metrics.get("features") or []
+        if not features:
+            continue
+        if not lines:
+            lines += [
+                "",
+                "## Features",
+                "",
+                "Measured size in mm (error against the reference in brackets); a pin or wall "
+                "that did not print is *absent*, a hole or slot that closed is *closed*.",
+                "",
+            ]
+        kinds = ("pin", "wall", "hole", "slot")
+        sizes = sorted({feature["nominal_mm"] for feature in features})
+        by_key = {(f["kind"], f["nominal_mm"]): f for f in features}
+        rows = []
+        for size in sizes:
+            row = [_number(size, 2)]
+            for kind in kinds:
+                feature = by_key.get((kind, size))
+                if feature is None:
+                    row.append("")
+                elif not feature["resolved"]:
+                    row.append("absent" if kind in ("pin", "wall") else "closed")
+                else:
+                    row.append(f"{_number(feature['measured_mm'])} ({feature['error_mm']:+.3f})")
+            rows.append(row)
+        smallest = metrics.get("features_smallest_resolved", {})
+        lines += [f"### {case['case']}: {slicer_label(case)}", ""]
+        lines += _table(["Nominal (mm)", "Pin", "Wall", "Hole", "Slot"], rows)
+        lines += [
+            "",
+            "Smallest size from which every larger one resolved: "
+            + ", ".join(
+                f"{kind} {_number(smallest.get(kind), 2)} mm" for kind in kinds if kind in smallest
+            )
+            + ".",
+            "",
+        ]
+    return lines
+
+
+def determinism(cases: Sequence[dict[str, Any]]) -> list[str]:
+    """Outputs of the same model, target and slicer build across cases (CPU counts) and runs."""
+    groups: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    for case in cases:
+        if case.get("attempts"):
+            key = (case["model"]["id"], case["target"], slicer_label(case))
+            groups.setdefault(key, []).append(case)
+    rows = []
+    for (model, target, slicer), group in groups.items():
+        if len(group) < 2:
+            continue
+        attempts = [attempt for case in group for attempt in case["attempts"]]
+        outputs = {a["output_sha256"] for a in attempts if a.get("output_sha256")}
+        layers = {a["layers_sha256"] for a in attempts if a.get("layers_sha256")}
+        cpus = ", ".join(str(len(case["cpus"])) if case.get("cpus") else "all" for case in group)
+        rows.append(
+            [
+                model,
+                target,
+                slicer,
+                cpus,
+                str(len(attempts)),
+                str(len(outputs)) + (f" (layers: {len(layers)})" if layers else ""),
+            ]
+        )
+    if not rows:
+        return []
+    return [
+        "",
+        "## Determinism across cases",
+        "",
+        *_table(["Model", "Target", "Slicer", "CPUs per case", "Runs", "Distinct outputs"], rows),
+        "",
+        "One distinct output means every run, whatever its CPU count, wrote the same file.",
+        "",
+    ]
 
 
 def write_report(run_dir: Path, others: Sequence[Path] = ()) -> Path:

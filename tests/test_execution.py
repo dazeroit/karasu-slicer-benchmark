@@ -81,3 +81,16 @@ def test_describe() -> None:
     assert result["samples"] == [4.0, 1.0, 3.0, 2.0]  # Order kept, nothing removed.
     assert describe([2.0])["iqr"] is None
     assert describe([])["median"] is None
+
+
+@posix_only
+def test_cpu_affinity_restricts_the_program(tmp_path: Path) -> None:
+    import os
+
+    first = sorted(os.sched_getaffinity(0))[0]
+    program = "import os; print(sorted(os.sched_getaffinity(0)))"
+    run = run_timed(
+        [sys.executable, "-c", program], 30, tmp_path / "o", tmp_path / "e", cpus=[first]
+    )
+    assert run.exit_status == 0
+    assert (tmp_path / "o").read_text().strip() == f"[{first}]"

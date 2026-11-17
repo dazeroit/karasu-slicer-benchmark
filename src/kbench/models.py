@@ -20,7 +20,7 @@ import numpy as np
 
 from kbench.geometry import GeometryError
 from kbench.geometry.mesh import Mesh, merge, quantize_float32, topology
-from kbench.geometry.primitives import box, cone, extrude, icosphere, prism
+from kbench.geometry.primitives import box, cone, extrude, icosphere, prism, slotted, washer
 from kbench.geometry.stl import write_binary_stl
 from kbench.provenance import sha256_file
 
@@ -38,9 +38,13 @@ _SHAPE_KEYS: dict[str, set[str]] = {
     "cone": {"radius_mm", "segments", "height_mm", "phase_deg"},
     "icosphere": {"radius_mm", "subdivisions"},
     "extrusion": {"polygon_mm", "height_mm"},
+    "washer": {"size_mm", "hole_radius_mm", "segments", "height_mm"},
+    "slotted": {"size_mm", "slot_width_mm", "slot_depth_mm", "height_mm"},
 }
 _OPTIONAL_KEYS = {"phase_deg"}
-_BODY_KEYS = {"name", "shape", "at_mm"}
+_BODY_KEYS = {"name", "shape", "at_mm", "feature"}
+# A body may be marked as a fine feature, measured by the feature metrics (docs/METRICS.md).
+FEATURE_SHAPES = {"pin": "prism", "hole": "washer", "slot": "slotted", "wall": "box"}
 _MODEL_KEYS = {"id", "description", "bodies"}
 
 
@@ -54,6 +58,7 @@ class BodySpec:
     shape: str
     parameters: Mapping[str, Any]
     at_mm: tuple[float, float]
+    feature: str | None = None
 
 
 @dataclass(frozen=True)
@@ -69,6 +74,9 @@ class BuiltBody:
     shape: str
     first_triangle: int
     triangle_count: int
+    # Where the body's own origin went in the model (mm, X and Y).
+    translation_mm: tuple[float, float] = (0.0, 0.0)
+    feature: Mapping[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -134,7 +142,13 @@ def _parse_body(model_id: str, entry: Mapping[str, Any]) -> BodySpec:
     if len(at) != 2:
         raise CatalogError(f"model {model_id!r}: at_mm must be [x, y]")
     parameters = {key: entry[key] for key in _SHAPE_KEYS[shape] if key in entry}
-    return BodySpec(str(entry["name"]), shape, parameters, (float(at[0]), float(at[1])))
+    feature = entry.get("feature")
+    if feature is not None and FEATURE_SHAPES.get(feature) != shape:
+        raise CatalogError(
+            f"model {model_id!r}, body {entry['name']!r}: feature {feature!r} needs shape "
+            f"{FEATURE_SHAPES.get(feature)!r}"
+        )
+    return BodySpec(str(entry["name"]), shape, parameters, (float(at[0]), float(at[1])), feature)
 
 
 def build_body(spec: BodySpec) -> Mesh:
@@ -152,6 +166,23 @@ def build_body(spec: BodySpec) -> Mesh:
         return cone(float(p["radius_mm"]), int(p["segments"]), float(p["height_mm"]), phase)
     if spec.shape == "icosphere":
         return icosphere(float(p["radius_mm"]), int(p["subdivisions"]))
+    if spec.shape == "washer":
+        return washer(
+            float(p["size_mm"]),
+            float(p["hole_radius_mm"]),
+            int(p["segments"]),
+            float(p["height_mm"]),
+        )
+    if spec.shape == "slotted":
+        size = tuple(float(value) for value in p["size_mm"])
+        if len(size) != 2:
+            raise CatalogError(f"body {spec.name!r}: size_mm must be [x, y]")
+        return slotted(
+            (size[0], size[1]),
+            float(p["slot_width_mm"]),
+            float(p["slot_depth_mm"]),
+            float(p["height_mm"]),
+        )
     polygon = np.asarray(p["polygon_mm"], dtype=np.float64)
     return extrude(polygon, float(p["height_mm"]))
 
@@ -159,10 +190,12 @@ def build_body(spec: BodySpec) -> Mesh:
 def build_model(spec: ModelSpec) -> BuiltModel:
     """Place, merge, centre and quantise the bodies of ``spec``, and check the result."""
     placed: list[Mesh] = []
+    shifts: list[tuple[float, float]] = []
     for body in spec.bodies:
         mesh = build_body(body)
         low, high = mesh.bounds()
         centre = (low + high) / 2.0
+        shifts.append((body.at_mm[0] - centre[0], body.at_mm[1] - centre[1]))
         placed.append(
             Mesh(
                 mesh.vertices
@@ -180,12 +213,64 @@ def build_model(spec: ModelSpec) -> BuiltModel:
 
     bodies: list[BuiltBody] = []
     first = 0
-    for body, body_mesh in zip(spec.bodies, placed, strict=True):
-        bodies.append(BuiltBody(body.name, body.shape, first, len(body_mesh.triangles)))
+    for body, body_mesh, shift in zip(spec.bodies, placed, shifts, strict=True):
+        translation = (shift[0] - centre[0], shift[1] - centre[1])
+        bodies.append(
+            BuiltBody(
+                body.name,
+                body.shape,
+                first,
+                len(body_mesh.triangles),
+                translation,
+                feature_geometry(body, translation),
+            )
+        )
         first += len(body_mesh.triangles)
     built = BuiltModel(spec, mesh, tuple(bodies))
     _check_built(built)
     return built
+
+
+def feature_geometry(body: BodySpec, translation: tuple[float, float]) -> dict[str, Any] | None:
+    """The nominal size and the measuring geometry of a feature body, in model coordinates.
+
+    - ``pin``: a prism; nominal diameter twice the circumradius, reference the diameter of the
+      circle of the same area as the exact polygon.
+    - ``hole``: a washer's hole; same nominal and reference definitions.
+    - ``slot``: nominal and reference width; the band where it is measured: the slot without its
+      first and last millimetre of depth.
+    - ``wall``: a box; nominal and reference thickness its X size, measured over its Y length.
+    """
+    if body.feature is None:
+        return None
+    p = body.parameters
+    dx, dy = translation
+    if body.feature in ("pin", "hole"):
+        radius = float(p["radius_mm"] if body.feature == "pin" else p["hole_radius_mm"])
+        segments = int(p["segments"])
+        area = segments / 2.0 * radius**2 * math.sin(2.0 * math.pi / segments)
+        return {
+            "kind": body.feature,
+            "nominal_mm": 2.0 * radius,
+            "reference_mm": 2.0 * math.sqrt(area / math.pi),
+            "centre_mm": [dx, dy],
+        }
+    if body.feature == "slot":
+        sy = float(p["size_mm"][1])
+        width, depth = float(p["slot_width_mm"]), float(p["slot_depth_mm"])
+        if depth < 3.0:
+            raise CatalogError(f"body {body.name!r}: a slot needs a depth of at least 3 mm")
+        return {
+            "kind": "slot",
+            "nominal_mm": width,
+            "reference_mm": width,
+            "band_mm": {
+                "x": [dx - width / 2.0, dx + width / 2.0],
+                "y": [dy + sy / 2.0 - depth + 1.0, dy + sy / 2.0 - 1.0],
+            },
+        }
+    size = [float(value) for value in p["size_mm"]]
+    return {"kind": "wall", "nominal_mm": size[0], "reference_mm": size[0], "length_mm": size[1]}
 
 
 def _check_separation(spec: ModelSpec, placed: Sequence[Mesh]) -> None:
@@ -242,6 +327,7 @@ def model_record(model: BuiltModel, stl_name: str, stl_sha256: str) -> dict[str,
                 "triangle_count": body.triangle_count,
                 "volume_mm3": part.signed_volume(),
                 "bounds_mm": {"min": used.min(axis=0).tolist(), "max": used.max(axis=0).tolist()},
+                "feature": dict(body.feature) if body.feature else None,
             }
         )
     return {

@@ -31,7 +31,7 @@ from PIL import Image
 from kbench.geometry.mesh import Mesh
 from kbench.geometry.raster import Panel, Window
 from kbench.geometry.section import plane_segments, segments_area
-from kbench.metrics import MATERIAL_THRESHOLD
+from kbench.metrics import MATERIAL_THRESHOLD, features
 from kbench.metrics import orientation as orient
 from kbench.metrics.layers import LAYER_FIELDS, layer_metrics
 from kbench.models import BuiltModel
@@ -261,6 +261,9 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
     body_names = [body.name for body in model.bodies]
     per_layer: dict[str, list[Any]] = {field: [] for field in (*LAYER_FIELDS, "stray_area_mm2")}
     body_measured: dict[str, list[float]] = {name: [] for name in body_names}
+    feature_windows = features.measuring_windows(model, panel, offset_mm)
+    feature_kinds = {body.name: body.feature["kind"] for body in model.bodies if body.feature}
+    window_values: dict[str, list[float]] = {name: [] for name in feature_windows}
     for index, layer in enumerate(layers):
         canonical = orient.apply(stack.image(index), to_canonical)
         measured = to_coverage(take_padded(canonical, window))
@@ -273,6 +276,14 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
         sums = np.bincount(labels, weights=measured.ravel(), minlength=len(body_names))
         for name, total in zip(body_names, sums, strict=True):
             body_measured[name].append(float(total) * pixel)
+        for name, feature_window in feature_windows.items():
+            crop = to_coverage(take_padded(canonical, feature_window))
+            if feature_kinds[name] == "hole":
+                value = features.equivalent_diameter(features.hole_area_mm2(crop, panel))
+            else:
+                band_length_mm = feature_window.rows * panel.pitch_y_mm
+                value = features.empty_area_mm2(crop, panel) / band_length_mm
+            window_values[name].append(value)
 
     reference_area = per_layer["reference_area_mm2"]
     return {
@@ -297,6 +308,10 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
         "height": _height(mesh, layers, measured_full_area, pixel),
         "layers": per_layer,
         "summary": {field: summarize(field, values) for field, values in per_layer.items()},
+        "features": (
+            feature_results := features.summarize(model, layers, body_measured, window_values)
+        ),
+        "features_smallest_resolved": features.smallest_resolved(feature_results),
         "bodies": [_body_metrics(model, name, layers, body_measured[name]) for name in body_names],
     }
 

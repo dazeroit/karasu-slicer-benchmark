@@ -29,6 +29,13 @@ writes the STL files and `manifest.json` into `work/models/` (or `--out`).
 | `cone` | `radius_mm`, `segments`, `height_mm`, `phase_deg` | regular pyramid: the polygon at `z = 0`, apex at `height_mm` |
 | `icosphere` | `radius_mm`, `subdivisions` | icosahedron split `subdivisions` times with vertices on the sphere: `20 · 4^subdivisions` triangles |
 | `extrusion` | `polygon_mm`, `height_mm` | a simple counter-clockwise polygon, extruded (caps ear-clipped) |
+| `washer` | `size_mm`, `hole_radius_mm`, `segments`, `height_mm` | a square plate with a regular-polygon hole through its centre; each cap is one convex wedge per hole edge |
+| `slotted` | `size_mm = [x, y]`, `slot_width_mm`, `slot_depth_mm`, `height_mm` | a block with a slot cut from its +Y side, centred in X |
+
+A body may carry `feature = "pin"` (a prism), `"wall"` (a box: thickness along X, length along
+Y), `"hole"` (a washer) or `"slot"` (a slotted block). The builder records the feature's nominal
+size and its measuring geometry in model coordinates, and the feature metrics measure it
+(METRICS.md).
 
 Each body takes `at_mm = [x, y]`, the position of its bounding-box centre before the model is
 centred.
@@ -45,7 +52,9 @@ centred.
 | `sphere-r10` | icosphere r 10, 20,480 triangles | curvature in every direction |
 | `orientation-l` | chiral L, 2 mm thick | image orientation |
 | `accuracy-plate` | cube 10, prism r 4, pyramid r 5 h 10, icosphere r 5, chiral L | one job for the accuracy metrics |
-| `sphere-r20-s3` … `s8` | icosphere r 20, 1,280 to 1,310,720 triangles | performance scaling |
+| `feature-plate` | pins, walls, holes and slots of 0.05, 0.1, 0.15, 0.2, 0.3, 0.5, 0.75 and 1 mm, one row each, 5.5 mm apart | fine-feature resolution |
+| `column-r5-h60` | 128-segment prism, r 5, h 60 | layer-count scaling (1,200 layers of 0.05 mm) |
+| `sphere-r20-s3` … `s8` | icosphere r 20, 1,280 to 1,310,720 triangles | triangle-count scaling |
 
 The **chiral L** has arms of 20 and 12 mm, 4 mm wide. Its arms differ in length, so each of the
 eight flips and quarter turns of the panel gives a different image: the stored orientation of a
@@ -57,4 +66,5 @@ layer image can always be identified.
 `catalog_sha256`, `units` and, per model: `id`, `description`, `stl`, `sha256`,
 `triangle_count`, `vertex_count`, `volume_mm3` (exact, from the divergence theorem on the
 `float32` mesh), `bounds_mm`, and per body its `name`, `shape`, `first_triangle`,
-`triangle_count`, `volume_mm3` and `bounds_mm`. Body triangles are contiguous, in catalog order.
+`triangle_count`, `volume_mm3`, `bounds_mm` and `feature` (or null). Body triangles are
+contiguous, in catalog order.

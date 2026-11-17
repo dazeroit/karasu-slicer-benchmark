@@ -176,6 +176,34 @@ of each file, recording its refusals. For SL1 files the suite also hashes the la
 because PrusaSlicer writes the creation time into `config.ini` and its files are never
 byte-identical.
 
+## BD-019: HTML report charts
+
+2026-11-17. The HTML report draws its charts as inline SVG with a small script for tooltips, no
+chart library. Series take the first three slots of the reference categorical palette, which a
+palette validator passed on every pair in light and dark mode (CVD ΔE ≥ 9.2, normal-vision
+ΔE ≥ 20.9); the light-mode third colour is below 3:1 against the surface, so every chart keeps a
+legend and every value is in a table. More than three slicers in one report are shown in the
+tables only. Wall time across cases spans three decades, so it is a dot plot on a logarithmic
+axis rather than bars, which must start at zero.
+
+## BD-020: CPU affinity as the thread-count control
+
+2026-11-17. karasu-cli has no thread-count option, and `RAYON_NUM_THREADS` does not change the
+thread count its log reports (observed with 0.2.0-dev at `45bc195`). Restricting its CPU
+affinity does: with one CPU its log reports one thread, with four CPUs four, and its output is
+byte-identical. The suite therefore controls thread counts at the operating-system level
+(`cpus` in suite cases, applied by the launcher), which works for any program that sizes its
+pool to its usable CPUs and needs nothing from the program.
+
+## BD-021: Fine features measured by area and enclosure
+
+2026-11-17. Pins and walls are measured by their printed area (equivalent diameter, area over
+length), slots by the uncovered area of a band away from the slot's ends, and holes by the empty
+pixels their material encloses. Area measures use every pixel's coverage, so anti-aliasing
+counts; the hole measure is binary because an enclosed region is binary. Fit-based measures
+(circle fits on contours) were not used: on features of a few pixels they have no stable
+solution.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

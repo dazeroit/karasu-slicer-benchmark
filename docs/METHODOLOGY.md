@@ -169,8 +169,14 @@ measurements.
   pooled.
 - Page cache is warm (the model was just written and read by the warm-up). Cold-cache timing is
   not measured.
+- **CPU count.** A suite case may set `cpus = N`: the launcher restricts the program to the first
+  N CPUs the suite may use (its CPU affinity, set before `exec`). Programs that size their thread
+  pools to the CPUs they may use then run with N threads (karasu-cli reports this in its log),
+  without any option of the program itself (BD-020). Cases without `cpus` use every CPU.
 - **Determinism:** the SHA-256 of every run's print file, warm-ups included, is recorded; one
-  distinct hash means byte-identical files.
+  distinct hash means byte-identical files. For SL1 and SL1S archives the layer images are also
+  hashed alone (BD-018). Reports compare cases of the same model, target and slicer build across
+  CPU counts and runs (*Determinism across cases*).
 - A failed run (non-zero exit, signal, timeout, no file) is recorded with its status and kept out
   of the statistics, which say how many runs succeeded.
 
@@ -181,3 +187,17 @@ positions, issues, and every layer as an 8-bit PNG. The declared resolution, pix
 height and layer count are checked against the target and the model (`conformity` in the case
 record). The PNG stack is then measured against the reference (METRICS.md) and deleted unless
 `--keep-layers` is given; its metrics stay.
+
+## Reports
+
+`kbench run` writes `report.md` and `report.html` in the run directory; `kbench report <run>
+[<run> ...]` rewrites them, or with several runs writes `comparison.md` and `comparison.html` in
+the first one with every run's cases side by side. Two measurements of the same case (two
+slicers, or two builds of one slicer from two runs) get a change column, second minus first: the
+regression view between karasu-slicer versions.
+
+The HTML page holds the same tables under its charts: median wall time per case (logarithmic),
+wall time against triangle count for a model family on one target, wall time against CPU count,
+and per-layer area error. Charts use the first three categorical colours of a validated palette
+(BD-019); identity never rests on colour alone (legend, tables), labels are inserted as text,
+and every charted value is also in a table.

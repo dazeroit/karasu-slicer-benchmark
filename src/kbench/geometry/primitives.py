@@ -6,6 +6,7 @@ before ``float32`` quantisation (the model builder places and quantises bodies).
 
 from __future__ import annotations
 
+import itertools
 import math
 
 import numpy as np
@@ -151,3 +152,105 @@ def icosphere(radius_mm: float, subdivisions: int) -> Mesh:
     vertices = vertices * radius_mm
     vertices[:, 2] -= vertices[:, 2].min()
     return Mesh(vertices, faces.astype(np.int64))
+
+
+def washer(size_mm: float, hole_radius_mm: float, segments: int, height_mm: float) -> Mesh:
+    """A square plate of side ``size_mm`` with a regular-polygon hole through its centre.
+
+    The hole has circumradius ``hole_radius_mm``; its first vertex is half a segment past the X
+    axis. Each cap is split into one convex wedge per hole edge, between the hole edge and the
+    square boundary seen along the same two rays from the centre (plus a corner of the square
+    where one falls inside the wedge), so the triangulation is exact and needs no search.
+    """
+    half = size_mm / 2.0
+    if not 0.0 < hole_radius_mm < half:
+        raise GeometryError("the hole must lie inside the square")
+    if height_mm <= 0.0:
+        raise GeometryError("the height must be positive")
+    inner = regular_polygon(hole_radius_mm, segments, math.pi / segments)
+    width = 2.0 * math.pi / segments
+    start = math.pi / segments
+    corners = [math.pi / 4.0 + j * math.pi / 2.0 for j in range(4)]
+
+    outer: list[tuple[float, float]] = []
+    wedges: list[list[int]] = []  # Outer ring indices from O_k to O_{k+1}, corners between.
+    for k in range(segments):
+        angle = start + k * width
+        c, s = math.cos(angle), math.sin(angle)
+        scale = half / max(abs(c), abs(s))
+        first = len(outer)
+        outer.append((c * scale, s * scale))
+        ring = [first]
+        between = sorted(
+            ((corner - angle) % (2.0 * math.pi), corner)
+            for corner in corners
+            if 1e-12 < (corner - angle) % (2.0 * math.pi) < width - 1e-12
+        )
+        for _, corner in between:
+            outer.append(
+                (
+                    half * math.copysign(1.0, math.cos(corner)),
+                    half * math.copysign(1.0, math.sin(corner)),
+                )
+            )
+            ring.append(len(outer) - 1)
+        wedges.append(ring)
+    count_outer = len(outer)
+    for k in range(segments):
+        wedges[k].append(wedges[(k + 1) % segments][0])
+
+    ring_xy = np.concatenate((inner, np.asarray(outer)))
+    n = segments
+    m = count_outer
+    vertices = np.concatenate(
+        (
+            np.column_stack((ring_xy, np.zeros(n + m))),
+            np.column_stack((ring_xy, np.full(n + m, height_mm))),
+        )
+    )
+    top = n + m  # Index offset of the top layer.
+
+    def inner_index(k: int) -> int:
+        return k % n
+
+    def outer_index(j: int) -> int:
+        return n + j
+
+    triangles: list[tuple[int, int, int]] = []
+    for k in range(n):
+        polygon = [inner_index(k), *(outer_index(j) for j in wedges[k]), inner_index(k + 1)]
+        for a, b in itertools.pairwise(polygon[1:]):
+            triangles.append((polygon[0] + top, a + top, b + top))  # Top cap, facing up.
+            triangles.append((polygon[0], b, a))  # Bottom cap, facing down.
+    for j in range(m):  # Outer walls, facing out.
+        a, b = outer_index(j), outer_index((j + 1) % m)
+        triangles += [(a, b, b + top), (a, b + top, a + top)]
+    for k in range(n):  # Hole walls, facing the hole's axis.
+        a, b = inner_index(k), inner_index(k + 1)
+        triangles += [(b, a, a + top), (b, a + top, b + top)]
+    return Mesh(vertices, np.asarray(triangles, dtype=np.int64))
+
+
+def slotted(
+    size_mm: tuple[float, float], slot_width_mm: float, slot_depth_mm: float, height_mm: float
+) -> Mesh:
+    """A block ``size_mm = (x, y)`` with a slot of ``slot_width_mm`` cut from its +Y side,
+    centred in X, ``slot_depth_mm`` deep."""
+    sx, sy = size_mm
+    w, d = slot_width_mm, slot_depth_mm
+    if not (0.0 < w < sx and 0.0 < d < sy):
+        raise GeometryError("the slot must lie inside the block")
+    polygon = np.array(
+        [
+            [-sx / 2, -sy / 2],
+            [sx / 2, -sy / 2],
+            [sx / 2, sy / 2],
+            [w / 2, sy / 2],
+            [w / 2, sy / 2 - d],
+            [-w / 2, sy / 2 - d],
+            [-w / 2, sy / 2],
+            [-sx / 2, sy / 2],
+        ],
+        dtype=np.float64,
+    )
+    return extrude(polygon, height_mm)

@@ -68,10 +68,13 @@ def run_timed(
     *,
     cwd: Path | None = None,
     env: Mapping[str, str] | None = None,
+    cpus: Sequence[int] | None = None,
 ) -> TimedRun:
     """Run ``argv`` once through the launcher and measure it. ``argv[0]`` must be a path.
 
-    Requires Linux (``fork``, ``wait4``).
+    ``cpus`` restricts the program to those CPUs (its affinity, set before ``exec``), which is
+    how the suite controls the thread count of programs that size their pools to the CPUs they
+    may use. Requires Linux (``fork``, ``wait4``).
     """
     if not hasattr(os, "wait4") or not hasattr(os, "fork"):
         raise OSError("timed runs need fork and wait4, which this platform lacks")
@@ -83,6 +86,7 @@ def run_timed(
         "timeout_s": timeout_s,
         "cwd": str(cwd) if cwd is not None else None,
         "env": dict(env) if env is not None else None,
+        "cpus": list(cpus) if cpus is not None else None,
     }
     try:
         helper = subprocess.run(

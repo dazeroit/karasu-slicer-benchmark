@@ -46,6 +46,8 @@ class Case:
     target: str
     slicers: tuple[str, ...]
     analyze: bool
+    # Run the slicer on this many CPUs (the first ones the suite may use); None: all of them.
+    cpus: int | None = None
 
 
 @dataclass(frozen=True)
@@ -145,7 +147,10 @@ def load_suite(path: Path) -> Suite:
     cases = []
     for index, entry in enumerate(document["cases"]):
         _check_keys(
-            f"{where} case {index}", entry, {"model", "target", "slicers"}, {"id", "analyze"}
+            f"{where} case {index}",
+            entry,
+            {"model", "target", "slicers"},
+            {"id", "analyze", "cpus"},
         )
         if not isinstance(entry["slicers"], list) or not entry["slicers"]:
             raise ConfigError(f"{where} case {index}: slicers must be a non-empty list")
@@ -156,6 +161,9 @@ def load_suite(path: Path) -> Suite:
                 target=str(entry["target"]),
                 slicers=tuple(str(name) for name in entry["slicers"]),
                 analyze=bool(entry.get("analyze", True)),
+                cpus=_integer(f"{where} case {index} cpus", entry["cpus"], 1)
+                if "cpus" in entry
+                else None,
             )
         )
     ids = [case.id for case in cases]

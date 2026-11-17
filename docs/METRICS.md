@@ -113,3 +113,27 @@ get no phase: pixel noise, not geometry, would decide it.
 **Limits.** At coarse pixels binarisation noise moves the phase by a few hundredths of a layer
 (tests: within 0.08 at 5 pixels per mm). A growth that is not proportional to the area (a fixed
 offset of the outline) is only partly absorbed by `s`.
+
+## Feature metrics
+
+Bodies marked as features in the catalog (MODELS.md) are measured on the layers between their
+bottom and top, leaving out two layers at each end, and the median over those layers is
+reported (`features[]` in `metrics.json`):
+
+| Kind | Measured size | Reference |
+| --- | --- | --- |
+| `pin` | diameter of the circle with the body's measured area | the same for the exact prism section |
+| `wall` | measured area ÷ the wall's length | its thickness |
+| `hole` | diameter of the circle with the area of the empty pixels the material encloses (binary, 4-connected fill) | the same for the exact hole polygon |
+| `slot` | uncovered area (Σ `1 − coverage`) of the slot's band, the slot without its first and last millimetre, ÷ the band's length | its width |
+
+`error_mm` is measured minus reference. A pin or wall is *resolved* when it printed (size above
+zero), a hole or slot when it stayed open. `features_smallest_resolved` gives, per kind, the
+smallest nominal size from which every larger size resolved.
+
+**Limits.** A feature's printed size depends on where its edges fall on the pixel grid (its
+phase): up to a pixel either way for the smallest features. On the feature plate every feature
+has the same phase on panels whose pitch divides the 5.5 mm spacing and 17 mm row spacing (both
+4K panels and the SL1S), and edges often fall exactly on pixel centres: the measurement shows
+how a slicer breaks those ties (whether a pixel whose centre lies on an edge is material), not
+the range over all phases. Hole sizes count whole pixels.

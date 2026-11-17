@@ -215,6 +215,7 @@ def _time_case(
     directory: Path,
 ) -> dict[str, Any]:
     timing = suite.timing
+    cpus = _case_cpus(case)
     attempts: list[dict[str, Any]] = []
     print_file: Path | None = None
     total = timing.warmup + timing.repetitions
@@ -225,7 +226,11 @@ def _time_case(
         job = adapter.job(executable, model, target, stem, log=log)
         load = _host_load()
         run = run_timed(
-            job.argv, timing.timeout_s, stem.with_suffix(".stdout"), stem.with_suffix(".stderr")
+            job.argv,
+            timing.timeout_s,
+            stem.with_suffix(".stdout"),
+            stem.with_suffix(".stderr"),
+            cpus=cpus,
         )
         entry = {"attempt": attempt, "warmup": warmup, "host_before": load, **run.to_record()}
         entry["succeeded"] = run.exit_status == 0 and not run.timed_out and job.output.is_file()
@@ -250,6 +255,7 @@ def _time_case(
         "case": case.id,
         "slicer": adapter.name,
         "target": target.id,
+        "cpus": cpus,
         "directory": str(directory),
         "attempts": attempts,
         "performance": {
@@ -269,6 +275,16 @@ def _time_case(
         },
         "print_file": str(print_file) if print_file is not None else None,
     }
+
+
+def _case_cpus(case: Case) -> list[int] | None:
+    """The CPUs a case's slicer may use: the first ``case.cpus`` of the suite's own, or all."""
+    if case.cpus is None:
+        return None
+    available = sorted(os.sched_getaffinity(0))
+    if case.cpus > len(available):
+        raise RunError(f"case {case.id!r} asks for {case.cpus} CPUs; {len(available)} are usable")
+    return available[: case.cpus]
 
 
 def schedule_from_layers(layer_properties: Sequence[Mapping[str, Any]]) -> list[Layer]:

@@ -1,0 +1,97 @@
+# Timing only, one variable at a time: panel resolution (4K, 9K, 16K), layer count, triangle
+# count, and CPU count (the slicer restricted to 1 to 16 CPUs; the outputs must not change).
+id = "scaling"
+description = "karasu-slicer timing against panel resolution, layer count, triangle count and CPU count."
+
+[timing]
+warmup = 1
+repetitions = 5
+timeout_s = 1800
+
+[[cases]]
+id = "resolution-4k"
+model = "accuracy-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "resolution-9k"
+model = "accuracy-plate"
+target = "elegoo-mars-4"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "resolution-16k"
+model = "accuracy-plate"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "layers-1200"
+model = "column-r5-h60"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "triangles-1k"
+model = "sphere-r20-s3"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "triangles-20k"
+model = "sphere-r20-s5"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "triangles-330k"
+model = "sphere-r20-s7"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "triangles-1.3m"
+model = "sphere-r20-s8"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+id = "cpus-1"
+model = "sphere-r20-s7"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+cpus = 1
+
+[[cases]]
+id = "cpus-2"
+model = "sphere-r20-s7"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+cpus = 2
+
+[[cases]]
+id = "cpus-4"
+model = "sphere-r20-s7"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+cpus = 4
+
+[[cases]]
+id = "cpus-8"
+model = "sphere-r20-s7"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu"]
+analyze = false
+cpus = 8

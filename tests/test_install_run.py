@@ -10,6 +10,7 @@ import pytest
 from support import MakeScript, posix_only
 
 from kbench.config import Case, Suite, Timing, load_suite, load_targets, repository_path
+from kbench.html_report import render_html
 from kbench.install import InstallError, Pin, install
 from kbench.models import default_catalog_path
 from kbench.report import render
@@ -104,7 +105,10 @@ def test_timing_only_run_with_a_fake_slicer(make_script: MakeScript, tmp_path: P
     assert "--log" not in case["attempts"][1]["argv"]
     assert "analysis" not in case
     report = render(run_dir)
-    assert "| cube | karasu (karasu-slicer 9.9.9-fake) |" in report
+    assert "| cube | karasu (karasu-slicer 9.9.9-fake) | all |" in report
+    page = render_html(run_dir)
+    assert page.startswith("<!doctype html>")
+    assert "Median wall time" in page
     assert "## Failures\n\nNone." in report
 
 
