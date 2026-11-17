@@ -249,8 +249,12 @@ def _time_case(
                 print_file = directory / f"print{job.output.suffix}"
                 job.output.rename(print_file)
                 distinct[sha] = print_file
-            elif entry["succeeded"] and sha not in distinct and len(distinct) <= MAX_DISTINCT_FILES:
-                kept = directory / f"distinct-{len(distinct)}{job.output.suffix}"
+            elif (
+                entry["succeeded"]
+                and sha not in distinct
+                and sum(path != print_file for path in distinct.values()) < MAX_DISTINCT_FILES
+            ):
+                kept = directory / f"distinct-{attempt:02d}{job.output.suffix}"
                 job.output.rename(kept)
                 distinct[sha] = kept
             else:

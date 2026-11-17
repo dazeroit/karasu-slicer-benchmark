@@ -245,3 +245,36 @@ def test_import_and_compare_with_the_real_tools(tmp_path: Path) -> None:
     report = render([run_dir, imported])
     assert "karasu-by-hand 0.2.0-dev (manual)" in report
     assert "Manual export: no timing." in report
+
+
+@posix_only
+def test_differing_outputs_are_kept_up_to_the_limit(
+    make_script: MakeScript, tmp_path: Path
+) -> None:
+    # Every run writes different bytes (a counter), as a slicer stamping its creation time does.
+    karasu = make_script(
+        "karasu-cli",
+        'if [ "$1" = "--version" ]; then echo v; exit 0; fi\n'
+        'out=""; while [ $# -gt 0 ]; do [ "$1" = "--output" ] && out="$2"; shift; done\n'
+        'date +%s%N > "$out"',
+    )
+    suite = Suite(
+        "unit",
+        "x",
+        Timing(1, 4, 30),
+        (Case("cube", "cube-20", "elegoo-mars-5", ("karasu",), False),),
+        "0" * 64,
+    )
+    environ = {"KBENCH_KARASU_CLI": str(karasu), "PATH": "/usr/bin:/bin"}
+    run_dir = run_suite(
+        suite,
+        load_targets(repository_path("targets")),
+        default_catalog_path(),
+        tmp_path / "w",
+        environ,
+        progress=lambda _: None,
+    )
+    case = json.loads((run_dir / "cases" / "cube" / "karasu" / "case.json").read_text())
+    assert len(case["determinism"]["distinct_sha256"]) == 5
+    assert len(case["distinct_files"]) == 2
+    assert all(Path(path).is_file() for path in case["distinct_files"])
