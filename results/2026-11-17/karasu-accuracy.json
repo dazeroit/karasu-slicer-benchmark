@@ -1,0 +1,5111 @@
+{
+  "kind": "published_summary",
+  "runs": [
+    {
+      "cases": [
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cube",
+                "volume_error_pct": -0.15025000000002817,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.003756249999999639,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cylinder",
+                "volume_error_pct": -0.001390966013107443,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -2.7810941709511707e-05,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cone",
+                "volume_error_pct": -0.0046043300581901534,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling assumed",
+                  "outline_offset_mm": -8.922544397880152e-05,
+                  "phase": null,
+                  "reason": "the layer height cannot be told apart from an outline offset on this body"
+                }
+              },
+              {
+                "name": "sphere",
+                "volume_error_pct": 0.002893020711821379,
+                "z_phase": {
+                  "outline_offset_basis": "fitted phase",
+                  "outline_offset_mm": 5.956038093129685e-05,
+                  "phase": 0.4999198614912568,
+                  "reason": null
+                }
+              },
+              {
+                "name": "l",
+                "volume_error_pct": -0.3746874999999911,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.006557031249999839,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 199,
+              "measured_top_mm": 10.0,
+              "mesh_top_mm": 10.0
+            },
+            "layer_count": 200,
+            "layers": {
+              "area_error_mm2": {
+                "count": 200,
+                "max": -0.11971795113575467,
+                "mean": -0.23457229086784337,
+                "min": -0.6057269387092674,
+                "worst": -0.6057269387092674,
+                "worst_layer": 14
+              },
+              "boundary_max_mm": {
+                "count": 200,
+                "max": 0.035,
+                "mean": 0.03500000000000001,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 200,
+                "max": 0.0005972222222222224,
+                "mean": 0.00040795043102701754,
+                "min": 0.0002099400171379606,
+                "worst": 0.0005972222222222224,
+                "worst_layer": 166
+              },
+              "boundary_p95_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 200,
+                "max": 0.01366537887234415,
+                "mean": 0.00844783969038463,
+                "min": 0.0009029589517410842,
+                "worst": 0.01366537887234415,
+                "worst_layer": 166
+              },
+              "centroid_dy_mm": {
+                "count": 200,
+                "max": 0.017007230507693125,
+                "mean": 0.0025379107177285077,
+                "min": -0.00149215721983623,
+                "worst": 0.017007230507693125,
+                "worst_layer": 1
+              },
+              "depth_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 200,
+                "max": 0.2364265368590693,
+                "mean": 0.1912822035842777,
+                "min": 0.04157034207249833,
+                "worst": 0.2364265368590693,
+                "worst_layer": 4
+              },
+              "iou": {
+                "count": 200,
+                "max": 0.9998970079019799,
+                "mean": 0.9998202984954944,
+                "min": 0.9997313054182575,
+                "worst": 0.9997313054182575,
+                "worst_layer": 166
+              },
+              "measured_area_mm2": {
+                "count": 200,
+                "max": 361.93115000000006,
+                "mean": 250.82722700000005,
+                "min": 150.77055000000001,
+                "worst": 361.93115000000006,
+                "worst_layer": 39
+              },
+              "reference_area_mm2": {
+                "count": 200,
+                "max": 362.4853270492179,
+                "mean": 251.06179929086787,
+                "min": 150.90996345213713,
+                "worst": 362.4853270492179,
+                "worst_layer": 39
+              },
+              "stray_area_mm2": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": -0.0017500000000000003,
+                "min": -0.035,
+                "worst": -0.035,
+                "worst_layer": 9
+              },
+              "xor_area_mm2": {
+                "count": 200,
+                "max": 0.06492500000000001,
+                "mean": 0.04400812500000001,
+                "min": 0.022050000000000004,
+                "worst": 0.06492500000000001,
+                "worst_layer": 33
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 0.9999941416662272,
+              "margin": 0.582658198344221,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              0.0009060323558224758,
+              -0.00010902297428709724
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": -0.09329803206981657,
+              "error_vs_reference_mm3": -2.3457229086784537,
+              "error_vs_reference_pct": -0.09343209183173319,
+              "measured_mm3": 2508.2722700000004,
+              "mesh_mm3": 2510.614624037084,
+              "reference_stack_mm3": 2510.617992908679
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "accuracy-plate@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 200.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1006907.0,
+              "median": 1006907.0,
+              "min": 1006907.0,
+              "samples": [
+                1006907.0,
+                1006907.0,
+                1006907.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 16332.0,
+              "median": 16332.0,
+              "min": 16332.0,
+              "samples": [
+                16332.0,
+                16332.0,
+                16332.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.0031015,
+              "max": 0.030379999999999997,
+              "median": 0.025473,
+              "min": 0.024177,
+              "samples": [
+                0.030379999999999997,
+                0.024177,
+                0.025473
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.001582,
+              "max": 0.120888,
+              "median": 0.118876,
+              "min": 0.117724,
+              "samples": [
+                0.117724,
+                0.120888,
+                0.118876
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.001019726999999998,
+              "max": 0.042293145,
+              "median": 0.040677825,
+              "min": 0.040253691,
+              "samples": [
+                0.042293145,
+                0.040677825,
+                0.040253691
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cube",
+                "volume_error_pct": -0.15025000000002817,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.003756249999999639,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cylinder",
+                "volume_error_pct": -0.001390966013107443,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -2.7810941709511707e-05,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cone",
+                "volume_error_pct": -0.0046043300581901534,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling assumed",
+                  "outline_offset_mm": -8.922544397880152e-05,
+                  "phase": null,
+                  "reason": "the layer height cannot be told apart from an outline offset on this body"
+                }
+              },
+              {
+                "name": "sphere",
+                "volume_error_pct": 0.002893020711821379,
+                "z_phase": {
+                  "outline_offset_basis": "fitted phase",
+                  "outline_offset_mm": 5.956038093129685e-05,
+                  "phase": 0.4999198614912568,
+                  "reason": null
+                }
+              },
+              {
+                "name": "l",
+                "volume_error_pct": -0.3746874999999911,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.006557031249999839,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 199,
+              "measured_top_mm": 10.0,
+              "mesh_top_mm": 10.0
+            },
+            "layer_count": 200,
+            "layers": {
+              "area_error_mm2": {
+                "count": 200,
+                "max": -0.1197179511357831,
+                "mean": -0.2345722908678721,
+                "min": -0.6057269387092674,
+                "worst": -0.6057269387092674,
+                "worst_layer": 14
+              },
+              "boundary_max_mm": {
+                "count": 200,
+                "max": 0.035,
+                "mean": 0.03500000000000001,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 200,
+                "max": 0.0005972222222222224,
+                "mean": 0.00040795043102701754,
+                "min": 0.0002099400171379606,
+                "worst": 0.0005972222222222224,
+                "worst_layer": 166
+              },
+              "boundary_p95_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 200,
+                "max": 0.01366537887234813,
+                "mean": 0.008447839690387645,
+                "min": 0.0009029589517450632,
+                "worst": 0.01366537887234813,
+                "worst_layer": 166
+              },
+              "centroid_dy_mm": {
+                "count": 200,
+                "max": 0.017007230507695113,
+                "mean": 0.002537910717729253,
+                "min": -0.0014921572198372248,
+                "worst": 0.017007230507695113,
+                "worst_layer": 1
+              },
+              "depth_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 200,
+                "max": 0.23642653685907566,
+                "mean": 0.19100563053689193,
+                "min": 0.041570342072499475,
+                "worst": 0.23642653685907566,
+                "worst_layer": 4
+              },
+              "iou": {
+                "count": 200,
+                "max": 0.9998970079019799,
+                "mean": 0.9998202984954944,
+                "min": 0.9997313054182575,
+                "worst": 0.9997313054182575,
+                "worst_layer": 166
+              },
+              "measured_area_mm2": {
+                "count": 200,
+                "max": 361.93115000000006,
+                "mean": 250.82722700000005,
+                "min": 150.77055000000001,
+                "worst": 361.93115000000006,
+                "worst_layer": 39
+              },
+              "reference_area_mm2": {
+                "count": 200,
+                "max": 362.4853270492179,
+                "mean": 251.06179929086792,
+                "min": 150.90996345213716,
+                "worst": 362.4853270492179,
+                "worst_layer": 39
+              },
+              "stray_area_mm2": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": -0.0017500000000000003,
+                "min": -0.035,
+                "worst": -0.035,
+                "worst_layer": 9
+              },
+              "xor_area_mm2": {
+                "count": 200,
+                "max": 0.06492500000000001,
+                "mean": 0.04400812500000001,
+                "min": 0.022050000000000004,
+                "worst": 0.06492500000000001,
+                "worst_layer": 33
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 0.9999941416662272,
+              "margin": 0.582658198344221,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              0.0009060323558224902,
+              -0.00010902297428663058
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": -0.09329803206981657,
+              "error_vs_reference_mm3": -2.3457229086789084,
+              "error_vs_reference_pct": -0.09343209183175129,
+              "measured_mm3": 2508.2722700000004,
+              "mesh_mm3": 2510.614624037084,
+              "reference_stack_mm3": 2510.6179929086793
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "accuracy-plate@anycubic-photon-mono-4k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 40.0,
+              "BottomLayerCount": 1.0,
+              "DisplayMirror": "Horizontally",
+              "ExposureTime": 2.0,
+              "LayerCount": 200.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Photon Mono 4K",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 3840.0,
+              "ResolutionY": 2400.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1628956.0,
+              "median": 1628956.0,
+              "min": 1628956.0,
+              "samples": [
+                1628956.0,
+                1628956.0,
+                1628956.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 128.0,
+              "max": 17500.0,
+              "median": 17380.0,
+              "min": 17244.0,
+              "samples": [
+                17380.0,
+                17500.0,
+                17244.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.0014839999999999992,
+              "max": 0.030573999999999997,
+              "median": 0.029529999999999997,
+              "min": 0.027606,
+              "samples": [
+                0.029529999999999997,
+                0.027606,
+                0.030573999999999997
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.008967000000000003,
+              "max": 0.131132,
+              "median": 0.129941,
+              "min": 0.113198,
+              "samples": [
+                0.113198,
+                0.131132,
+                0.129941
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.001898926500000002,
+              "max": 0.039941324,
+              "median": 0.037860461,
+              "min": 0.036143471,
+              "samples": [
+                0.036143471,
+                0.037860461,
+                0.039941324
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "anycubic-photon-mono-4k"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cube",
+                "volume_error_pct": 0.20010000000002037,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.010005000000001018,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 399,
+              "measured_top_mm": 20.0,
+              "mesh_top_mm": 20.0
+            },
+            "layer_count": 400,
+            "layers": {
+              "area_error_mm2": {
+                "count": 400,
+                "max": 0.8004000000011047,
+                "mean": 0.8004000000001829,
+                "min": 0.8003999999999678,
+                "worst": 0.8004000000011047,
+                "worst_layer": 18
+              },
+              "boundary_max_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "boundary_p95_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 400,
+                "max": 1.7905676941154528e-14,
+                "mean": 1.1961986956521288e-14,
+                "min": -1.9895196601282807e-15,
+                "worst": 1.7905676941154528e-14,
+                "worst_layer": 2
+              },
+              "centroid_dy_mm": {
+                "count": 400,
+                "max": -1.9895196601282807e-14,
+                "mean": -2.389910491729097e-14,
+                "min": -4.5758952182950455e-14,
+                "worst": -4.5758952182950455e-14,
+                "worst_layer": 18
+              },
+              "depth_error_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 400,
+                "max": 0.2860716966295785,
+                "mean": 0.11796082157579983,
+                "min": 0.031274543131486435,
+                "worst": 0.2860716966295785,
+                "worst_layer": 40
+              },
+              "iou": {
+                "count": 400,
+                "max": 1.0,
+                "mean": 1.0,
+                "min": 1.0,
+                "worst": 1.0,
+                "worst_layer": 0
+              },
+              "measured_area_mm2": {
+                "count": 400,
+                "max": 400.8004000000001,
+                "mean": 400.8004000000001,
+                "min": 400.8004000000001,
+                "worst": 400.8004000000001,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 400,
+                "max": 400.0000000000001,
+                "mean": 399.99999999999983,
+                "min": 399.999999999999,
+                "worst": 400.0000000000001,
+                "worst_layer": 38
+              },
+              "stray_area_mm2": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": true,
+              "iou": 1.0,
+              "margin": 0.0,
+              "stored": "identity"
+            },
+            "placement_offset_mm": [
+              -2.0507076528976412e-14,
+              2.299957335405087e-14
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 0.20010000000002037,
+              "error_vs_reference_mm3": 16.00800000000436,
+              "error_vs_reference_pct": 0.20010000000005454,
+              "measured_mm3": 8016.008000000002,
+              "mesh_mm3": 8000.0,
+              "reference_stack_mm3": 7999.999999999997
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "cube-20@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 400.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "cube-20",
+            "sha256": "13a58383c6b39d88f41143dca3312d1f8cf934ca13de6f015973e238d6c5f416",
+            "triangle_count": 12,
+            "volume_mm3": 8000.0
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1142688.0,
+              "median": 1142688.0,
+              "min": 1142688.0,
+              "samples": [
+                1142688.0,
+                1142688.0,
+                1142688.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 128.0,
+              "max": 15400.0,
+              "median": 15144.0,
+              "min": 15144.0,
+              "samples": [
+                15400.0,
+                15144.0,
+                15144.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.0147615,
+              "max": 0.041839,
+              "median": 0.026212,
+              "min": 0.012315999999999999,
+              "samples": [
+                0.041839,
+                0.026212,
+                0.012315999999999999
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.015306,
+              "max": 0.126245,
+              "median": 0.11358499999999999,
+              "min": 0.095633,
+              "samples": [
+                0.095633,
+                0.11358499999999999,
+                0.126245
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0009809360000000017,
+              "max": 0.036995036,
+              "median": 0.036764617,
+              "min": 0.035033164,
+              "samples": [
+                0.035033164,
+                0.036995036,
+                0.036764617
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cylinder",
+                "volume_error_pct": -0.007059764471287349,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00017649078883469387,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 199,
+              "measured_top_mm": 10.0,
+              "mesh_top_mm": 10.0
+            },
+            "layer_count": 200,
+            "layers": {
+              "area_error_mm2": {
+                "count": 200,
+                "max": -0.005544586848699851,
+                "mean": -0.005544586848700419,
+                "min": -0.0055445868487140615,
+                "worst": -0.0055445868487140615,
+                "worst_layer": 3
+              },
+              "boundary_max_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "boundary_p95_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 200,
+                "max": -1.9895196601282807e-15,
+                "mean": -3.690558969537961e-15,
+                "min": -4.973799150320702e-15,
+                "worst": -4.973799150320702e-15,
+                "worst_layer": 0
+              },
+              "centroid_dy_mm": {
+                "count": 200,
+                "max": 2.984279490192421e-15,
+                "mean": 2.790301323329913e-15,
+                "min": 1.9895196601282807e-15,
+                "worst": 2.984279490192421e-15,
+                "worst_layer": 0
+              },
+              "depth_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 200,
+                "max": 0.19541354499717847,
+                "mean": 0.19541354499717734,
+                "min": 0.19541354499717584,
+                "worst": 0.19541354499717847,
+                "worst_layer": 180
+              },
+              "iou": {
+                "count": 200,
+                "max": 1.0,
+                "mean": 1.0,
+                "min": 1.0,
+                "worst": 1.0,
+                "worst_layer": 0
+              },
+              "measured_area_mm2": {
+                "count": 200,
+                "max": 78.5323,
+                "mean": 78.53229999999999,
+                "min": 78.5323,
+                "worst": 78.5323,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 200,
+                "max": 78.53784458684872,
+                "mean": 78.53784458684869,
+                "min": 78.5378445868487,
+                "worst": 78.53784458684872,
+                "worst_layer": 3
+              },
+              "stray_area_mm2": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": true,
+              "iou": 1.0,
+              "margin": 0.0,
+              "stored": "identity"
+            },
+            "placement_offset_mm": [
+              3.870682138771981e-15,
+              -2.0536517550119444e-15
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": -0.007059764471316297,
+              "error_vs_reference_mm3": -0.05544586848657218,
+              "error_vs_reference_pct": -0.007059764471287349,
+              "measured_mm3": 785.3230000000003,
+              "mesh_mm3": 785.3784458684871,
+              "reference_stack_mm3": 785.3784458684869
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "cylinder-r5-n512@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 200.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "cylinder-r5-n512",
+            "sha256": "106c06c1851583e5ef1935c2ea9a3b4dc3fabed3eb1b95edd46a6b51143ff4ce",
+            "triangle_count": 2044,
+            "volume_mm3": 785.3784458684871
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 440288.0,
+              "median": 440288.0,
+              "min": 440288.0,
+              "samples": [
+                440288.0,
+                440288.0,
+                440288.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 64.0,
+              "max": 16896.0,
+              "median": 16768.0,
+              "min": 16768.0,
+              "samples": [
+                16896.0,
+                16768.0,
+                16768.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.003564000000000001,
+              "max": 0.025269,
+              "median": 0.022095,
+              "min": 0.018141,
+              "samples": [
+                0.018141,
+                0.025269,
+                0.022095
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.0016135000000000177,
+              "max": 0.163269,
+              "median": 0.16203499999999998,
+              "min": 0.160042,
+              "samples": [
+                0.163269,
+                0.160042,
+                0.16203499999999998
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0013273510000000044,
+              "max": 0.079147959,
+              "median": 0.07667395,
+              "min": 0.076493257,
+              "samples": [
+                0.076493257,
+                0.079147959,
+                0.07667395
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cone",
+                "volume_error_pct": 0.0011402055269543751,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling assumed",
+                  "outline_offset_mm": 6.657743618326343e-05,
+                  "phase": null,
+                  "reason": "the layer height cannot be told apart from an outline offset on this body"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": -0.05000000000000071,
+              "first_layer": 0,
+              "last_layer": 318,
+              "measured_top_mm": 15.95,
+              "mesh_top_mm": 16.0
+            },
+            "layer_count": 320,
+            "layers": {
+              "area_error_mm2": {
+                "count": 320,
+                "max": 0.07335096314972134,
+                "mean": 0.0007638643580460527,
+                "min": -0.05667654975405867,
+                "worst": 0.07335096314972134,
+                "worst_layer": 44
+              },
+              "boundary_max_mm": {
+                "count": 320,
+                "max": 0.035,
+                "mean": 0.0019687500000000004,
+                "min": 0.0,
+                "worst": 0.035,
+                "worst_layer": 36
+              },
+              "boundary_mean_mm": {
+                "count": 320,
+                "max": 0.004666666666666667,
+                "mean": 5.2026030869313216e-05,
+                "min": 0.0,
+                "worst": 0.004666666666666667,
+                "worst_layer": 304
+              },
+              "boundary_p95_mm": {
+                "count": 320,
+                "max": 0.035,
+                "mean": 0.00021875000000000003,
+                "min": 0.0,
+                "worst": 0.035,
+                "worst_layer": 301
+              },
+              "centroid_dx_mm": {
+                "count": 319,
+                "max": 3.9790393202565614e-15,
+                "mean": -4.053880185214365e-17,
+                "min": -3.9790393202565614e-15,
+                "worst": -3.9790393202565614e-15,
+                "worst_layer": 76
+              },
+              "centroid_dy_mm": {
+                "count": 319,
+                "max": 1.9895196601282807e-15,
+                "mean": -5.924901809159456e-17,
+                "min": -2.984279490192421e-15,
+                "worst": -2.984279490192421e-15,
+                "worst_layer": 103
+              },
+              "depth_error_mm": {
+                "count": 319,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 320,
+                "max": 0.25177917195308247,
+                "mean": 0.19030813437122138,
+                "min": 0.057396606849972685,
+                "worst": 0.25177917195308247,
+                "worst_layer": 317
+              },
+              "iou": {
+                "count": 319,
+                "max": 1.0,
+                "mean": 0.9998707343139621,
+                "min": 0.9795918367346939,
+                "worst": 0.9795918367346939,
+                "worst_layer": 304
+              },
+              "measured_area_mm2": {
+                "count": 320,
+                "max": 200.33650000000003,
+                "mean": 66.99433125000002,
+                "min": 0.0,
+                "worst": 200.33650000000003,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 320,
+                "max": 200.35361728280128,
+                "mean": 66.99356738564197,
+                "min": 0.0004906767403164947,
+                "worst": 200.35361728280128,
+                "worst_layer": 0
+              },
+              "stray_area_mm2": {
+                "count": 320,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 319,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 320,
+                "max": 0.009800000000000001,
+                "mean": 0.0005359375000000001,
+                "min": 0.0,
+                "worst": 0.009800000000000001,
+                "worst_layer": 36
+              }
+            },
+            "orientation": {
+              "ambiguous": true,
+              "iou": 1.0,
+              "margin": 0.0,
+              "stored": "identity"
+            },
+            "placement_offset_mm": [
+              -1.8243830359412941e-16,
+              6.615391335632931e-18
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 0.0008960621182655023,
+              "error_vs_reference_mm3": 0.01222182972878727,
+              "error_vs_reference_pct": 0.0011402055269755876,
+              "measured_mm3": 1071.9093000000003,
+              "mesh_mm3": 1071.8996951128865,
+              "reference_stack_mm3": 1071.8970781702715
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "cone-r8-h16@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 320.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {
+              "EmptyLayer": 1
+            }
+          },
+          "model": {
+            "id": "cone-r8-h16",
+            "sha256": "4a3b7f8dcf78a17e12b74c315c822e0ad68e9d3956a0c1a5d8e832d0d356dfbc",
+            "triangle_count": 254,
+            "volume_mm3": 1071.8996951128865
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 513133.0,
+              "median": 513133.0,
+              "min": 513133.0,
+              "samples": [
+                513133.0,
+                513133.0,
+                513133.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 16512.0,
+              "median": 16512.0,
+              "min": 16512.0,
+              "samples": [
+                16512.0,
+                16512.0,
+                16512.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.012781500000000001,
+              "max": 0.048698,
+              "median": 0.043785,
+              "min": 0.023135,
+              "samples": [
+                0.048698,
+                0.043785,
+                0.023135
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.011252999999999985,
+              "max": 0.111048,
+              "median": 0.09382499999999999,
+              "min": 0.088542,
+              "samples": [
+                0.088542,
+                0.09382499999999999,
+                0.111048
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0018183155000000006,
+              "max": 0.06749788,
+              "median": 0.065245818,
+              "min": 0.063861249,
+              "samples": [
+                0.065245818,
+                0.06749788,
+                0.063861249
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "sphere",
+                "volume_error_pct": -0.00021957526645466032,
+                "z_phase": {
+                  "outline_offset_basis": "fitted phase",
+                  "outline_offset_mm": -5.810965097620584e-06,
+                  "phase": 0.5000002164012713,
+                  "reason": null
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 399,
+              "measured_top_mm": 20.0,
+              "mesh_top_mm": 20.0
+            },
+            "layer_count": 400,
+            "layers": {
+              "area_error_mm2": {
+                "count": 400,
+                "max": 0.06287305373976437,
+                "mean": -0.00045963002623749415,
+                "min": -0.09752468945646342,
+                "worst": -0.09752468945646342,
+                "worst_layer": 266
+              },
+              "boundary_max_mm": {
+                "count": 400,
+                "max": 0.035,
+                "mean": 0.0021000000000000003,
+                "min": 0.0,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 400,
+                "max": 0.0012962962962962965,
+                "mean": 1.3861150779956558e-05,
+                "min": 0.0,
+                "worst": 0.0012962962962962965,
+                "worst_layer": 0
+              },
+              "boundary_p95_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 400,
+                "max": 3.9790393202565614e-15,
+                "mean": -9.947598300641404e-18,
+                "min": -3.9790393202565614e-15,
+                "worst": -3.9790393202565614e-15,
+                "worst_layer": 11
+              },
+              "centroid_dy_mm": {
+                "count": 400,
+                "max": 3.9790393202565614e-15,
+                "mean": -4.973799150320706e-18,
+                "min": -3.9790393202565614e-15,
+                "worst": 3.9790393202565614e-15,
+                "worst_layer": 11
+              },
+              "depth_error_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 400,
+                "max": 0.2117986362621836,
+                "mean": 0.19103925360238372,
+                "min": 0.17651003929567535,
+                "worst": 0.2117986362621836,
+                "worst_layer": 2
+              },
+              "iou": {
+                "count": 400,
+                "max": 1.0,
+                "mean": 0.9999810739553793,
+                "min": 0.9966666666666667,
+                "worst": 0.9966666666666667,
+                "worst_layer": 0
+              },
+              "measured_area_mm2": {
+                "count": 400,
+                "max": 314.07040000000006,
+                "mean": 209.32640750000002,
+                "min": 1.4700000000000002,
+                "worst": 314.07040000000006,
+                "worst_layer": 199
+              },
+              "reference_area_mm2": {
+                "count": 400,
+                "max": 314.05090051521006,
+                "mean": 209.32686713002624,
+                "min": 1.4679154104452172,
+                "worst": 314.05090051521006,
+                "worst_layer": 199
+              },
+              "stray_area_mm2": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 400,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 400,
+                "max": 0.009800000000000001,
+                "mean": 0.00031850000000000004,
+                "min": 0.0,
+                "worst": 0.009800000000000001,
+                "worst_layer": 82
+              }
+            },
+            "orientation": {
+              "ambiguous": true,
+              "iou": 1.0,
+              "margin": 0.0,
+              "stored": "identity"
+            },
+            "placement_offset_mm": [
+              2.3857652444975382e-17,
+              1.1185568905713044e-17
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 7.667077533321192e-05,
+              "error_vs_reference_mm3": -0.009192600524329464,
+              "error_vs_reference_pct": -0.00021957526643293608,
+              "measured_mm3": 4186.52815,
+              "mesh_mm3": 4186.524940158869,
+              "reference_stack_mm3": 4186.537342600524
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "sphere-r10@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 400.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "sphere-r10",
+            "sha256": "c71d2a9d6e803eb6e3ad387128d9ce924081c3adb1f77431112223658a9ab673",
+            "triangle_count": 20480,
+            "volume_mm3": 4186.524940158869
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 945204.0,
+              "median": 945204.0,
+              "min": 945204.0,
+              "samples": [
+                945204.0,
+                945204.0,
+                945204.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 130.0,
+              "max": 18696.0,
+              "median": 18692.0,
+              "min": 18436.0,
+              "samples": [
+                18692.0,
+                18436.0,
+                18696.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.013654999999999999,
+              "max": 0.039701,
+              "median": 0.018646,
+              "min": 0.012391,
+              "samples": [
+                0.018646,
+                0.012391,
+                0.039701
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.011882000000000004,
+              "max": 0.185877,
+              "median": 0.179004,
+              "min": 0.16211299999999998,
+              "samples": [
+                0.179004,
+                0.185877,
+                0.16211299999999998
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.001080743499999981,
+              "max": 0.068908423,
+              "median": 0.066784413,
+              "min": 0.066746936,
+              "samples": [
+                0.066746936,
+                0.068908423,
+                0.066784413
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "l",
+                "volume_error_pct": -0.0006249999999573068,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -1.0937499999696954e-05,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 39,
+              "measured_top_mm": 2.0,
+              "mesh_top_mm": 2.0
+            },
+            "layer_count": 40,
+            "layers": {
+              "area_error_mm2": {
+                "count": 40,
+                "max": -0.0006999999998100748,
+                "mean": -0.0006999999998857475,
+                "min": -0.0007000000000232376,
+                "worst": -0.0007000000000232376,
+                "worst_layer": 2
+              },
+              "boundary_max_mm": {
+                "count": 40,
+                "max": 0.035,
+                "mean": 0.035,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 40,
+                "max": 0.002169500822819529,
+                "mean": 0.002169500822819529,
+                "min": 0.002169500822819529,
+                "worst": 0.002169500822819529,
+                "worst_layer": 0
+              },
+              "boundary_p95_mm": {
+                "count": 40,
+                "max": 0.035,
+                "mean": 0.035,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 40,
+                "max": 0.004103782946716095,
+                "mean": 0.004103782946712067,
+                "min": 0.004103782946702666,
+                "worst": 0.004103782946716095,
+                "worst_layer": 19
+              },
+              "centroid_dy_mm": {
+                "count": 40,
+                "max": -0.009493174019395952,
+                "mean": -0.009493174019399236,
+                "min": -0.00949317401940391,
+                "worst": -0.00949317401940391,
+                "worst_layer": 1
+              },
+              "depth_error_mm": {
+                "count": 40,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 40,
+                "max": 0.2497296583582015,
+                "mean": 0.11474971360339399,
+                "min": 0.04565058154790182,
+                "worst": 0.2497296583582015,
+                "worst_layer": 4
+              },
+              "iou": {
+                "count": 40,
+                "max": 0.9987655804502901,
+                "mean": 0.99876558045029,
+                "min": 0.9987655804502901,
+                "worst": 0.9987655804502901,
+                "worst_layer": 0
+              },
+              "measured_area_mm2": {
+                "count": 40,
+                "max": 111.99930000000002,
+                "mean": 111.99930000000002,
+                "min": 111.99930000000002,
+                "worst": 111.99930000000002,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 40,
+                "max": 112.00000000000004,
+                "mean": 111.99999999999991,
+                "min": 111.99999999999983,
+                "worst": 112.00000000000004,
+                "worst_layer": 2
+              },
+              "stray_area_mm2": {
+                "count": 40,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 40,
+                "max": -0.035,
+                "mean": -0.035,
+                "min": -0.035,
+                "worst": -0.035,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 40,
+                "max": 0.13842500000000002,
+                "mean": 0.13842500000000002,
+                "min": 0.13842500000000002,
+                "worst": 0.13842500000000002,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 1.0,
+              "margin": 0.6208082545141874,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              0.008012678238073402,
+              0.0016603679331784885
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": -0.0006250000000080595,
+              "error_vs_reference_mm3": -0.001399999999762258,
+              "error_vs_reference_pct": -0.0006249999998938659,
+              "measured_mm3": 223.99859999999998,
+              "mesh_mm3": 224.0,
+              "reference_stack_mm3": 223.99999999999974
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "orientation-l@anycubic-photon-mono-4k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 40.0,
+              "BottomLayerCount": 1.0,
+              "DisplayMirror": "Horizontally",
+              "ExposureTime": 2.0,
+              "LayerCount": 40.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Photon Mono 4K",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 3840.0,
+              "ResolutionY": 2400.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "orientation-l",
+            "sha256": "34f9e34d355ff2b14b61c322e5986638f219ee6a9fa156adad95fd45cb73ff33",
+            "triangle_count": 20,
+            "volume_mm3": 224.0
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 305720.0,
+              "median": 305720.0,
+              "min": 305720.0,
+              "samples": [
+                305720.0,
+                305720.0,
+                305720.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 128.0,
+              "max": 14464.0,
+              "median": 14208.0,
+              "min": 14208.0,
+              "samples": [
+                14464.0,
+                14208.0,
+                14208.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.007123999999999998,
+              "max": 0.027079,
+              "median": 0.021554999999999998,
+              "min": 0.012830999999999999,
+              "samples": [
+                0.021554999999999998,
+                0.012830999999999999,
+                0.027079
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.0062975,
+              "max": 0.017107999999999998,
+              "median": 0.010777,
+              "min": 0.004513,
+              "samples": [
+                0.010777,
+                0.017107999999999998,
+                0.004513
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0005024895000000015,
+              "max": 0.01928397,
+              "median": 0.018573261,
+              "min": 0.018278991,
+              "samples": [
+                0.01928397,
+                0.018278991,
+                0.018573261
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "anycubic-photon-mono-4k"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "pin-0.05",
+                "volume_error_pct": 25.58621914538053,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0031828341991120735,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.10",
+                "volume_error_pct": -5.812996653039639,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0014462524395651058,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.15",
+                "volume_error_pct": -2.3241441832380407,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0008673559637429604,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.20",
+                "volume_error_pct": 2.035819404907268,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0010130094391896088,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.30",
+                "volume_error_pct": 1.163936357199671,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0008687489003466677,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.50",
+                "volume_error_pct": -0.7894816337771986,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0009820997760479804,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.75",
+                "volume_error_pct": -0.37085077018098717,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0006919966296233793,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-1.00",
+                "volume_error_pct": -0.16163739163553334,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0004021476759655101,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.05",
+                "volume_error_pct": 39.65213092240794,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.009830958069220705,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.10",
+                "volume_error_pct": 4.737100459669267,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.002329730279032595,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.15",
+                "volume_error_pct": -6.899763233854266,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.005048594718163638,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.20",
+                "volume_error_pct": -12.718666762034218,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.01230837582952362,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.30",
+                "volume_error_pct": 4.73743340973323,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.006767766111835135,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.50",
+                "volume_error_pct": -2.2449999999999783,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0051807692307691755,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.75",
+                "volume_error_pct": 2.410000000000001,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.008033333333333363,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-1.00",
+                "volume_error_pct": -2.2449999999999783,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00962142857142849,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.05",
+                "volume_error_pct": 0.3703634638303534,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0036672375939335545,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.10",
+                "volume_error_pct": 0.3687959583504574,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.003615288997812384,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.15",
+                "volume_error_pct": 0.36873687819991596,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0035781074763940853,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.20",
+                "volume_error_pct": 1.2677199232515637,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.012175118905271278,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.30",
+                "volume_error_pct": 1.2389227946328731,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.011649721568973884,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.50",
+                "volume_error_pct": 0.372290897911077,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.003349232869102789,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.75",
+                "volume_error_pct": 0.3708198725389652,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0031441890599526717,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-1.00",
+                "volume_error_pct": 0.3847720796969801,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0030601612451077124,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.05",
+                "volume_error_pct": -0.8367774210982813,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.007112608991350278,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.10",
+                "volume_error_pct": -0.5881291656577435,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00495708836146745,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.15",
+                "volume_error_pct": -0.3352629092444369,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.002801840209960866,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.20",
+                "volume_error_pct": 0.8248889257204629,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.006834794180733945,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.30",
+                "volume_error_pct": 0.14375335103599013,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.001170562962123383,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.50",
+                "volume_error_pct": -0.3406818181817913,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0026767857142856294,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.75",
+                "volume_error_pct": -0.9149999999999907,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00686249999999993,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-1.00",
+                "volume_error_pct": -0.15024999999997846,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.001073214285714132,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [
+              {
+                "body": "pin-0.05",
+                "error_mm": 0.00601250585816273,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.05585191925620058,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.10",
+                "error_mm": -0.002940464944101759,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.09673836185197394,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.15",
+                "error_mm": -0.0017479515965471981,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.14777028859756633,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.20",
+                "error_mm": 0.002019305119154352,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.20137695871130576,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.30",
+                "error_mm": 0.0017353096011822333,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.3007717899894093,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.50",
+                "error_mm": -0.001971417051055413,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.49642271692932305,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.75",
+                "error_mm": -0.0013878212534123024,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.7462033797171553,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "pin-1.00",
+                "error_mm": -0.0008058738878670146,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.9959823940728899,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.05",
+                "error_mm": 0.01982500000000001,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.06982500000000001,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.10",
+                "error_mm": 0.0047375000000000195,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.10473750000000003,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.15",
+                "error_mm": -0.01034999999999997,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.13965000000000002,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.20",
+                "error_mm": -0.025437499999999974,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.17456250000000004,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.30",
+                "error_mm": 0.014212500000000072,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.31421250000000006,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.50",
+                "error_mm": -0.011224999999999874,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.4887750000000001,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.75",
+                "error_mm": 0.018075000000000063,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.7680750000000001,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "wall-1.00",
+                "error_mm": -0.022449999999999748,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.9775500000000003,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.05",
+                "error_mm": 0.00601250585816273,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.05585191925620058,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.10",
+                "error_mm": 0.0048105463291566175,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.10448937312523232,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.15",
+                "error_mm": 0.0034385400887775586,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.15295678028289109,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.20",
+                "error_mm": -0.005880929888203518,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.1934767237039479,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.30",
+                "error_mm": 0.006877080177555117,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.30591356056578217,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.50",
+                "error_mm": 0.001160618542397518,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.499554752522776,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.75",
+                "error_mm": 0.0017409278135963602,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.749332128784164,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "hole-1.00",
+                "error_mm": 0.0007589069576859897,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.9975471749184429,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.05",
+                "error_mm": 0.020000000000000004,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.07,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.10",
+                "error_mm": 0.0050000000000000044,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.10500000000000001,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.15",
+                "error_mm": -0.009999999999999981,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.14,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.20",
+                "error_mm": -0.024999999999999994,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.17500000000000002,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.30",
+                "error_mm": 0.015000000000000013,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.315,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.50",
+                "error_mm": -0.010000000000000009,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.49,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.75",
+                "error_mm": 0.020000000000000018,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.77,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "slot-1.00",
+                "error_mm": -0.020000000000000018,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.98,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              }
+            ],
+            "features_smallest_resolved": {
+              "hole": 0.05,
+              "pin": 0.05,
+              "slot": 0.05,
+              "wall": 0.05
+            },
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 59,
+              "measured_top_mm": 3.0,
+              "mesh_top_mm": 3.0
+            },
+            "layer_count": 60,
+            "layers": {
+              "area_error_mm2": {
+                "count": 60,
+                "max": 0.1836517629772061,
+                "mean": 0.09609802318558369,
+                "min": -0.07900945639681112,
+                "worst": 0.1836517629772061,
+                "worst_layer": 1
+              },
+              "boundary_max_mm": {
+                "count": 60,
+                "max": 0.035,
+                "mean": 0.03500000000000001,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 60,
+                "max": 0.00021977137336982777,
+                "mean": 0.0001458539931699828,
+                "min": 0.00010889530307006036,
+                "worst": 0.00021977137336982777,
+                "worst_layer": 40
+              },
+              "boundary_p95_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 60,
+                "max": -0.004806048210052723,
+                "mean": -0.04349563885806893,
+                "min": -0.12087482015409137,
+                "worst": -0.12087482015409137,
+                "worst_layer": 45
+              },
+              "centroid_dy_mm": {
+                "count": 60,
+                "max": 0.014609077451377177,
+                "mean": 0.007911326155472546,
+                "min": -0.005484176436326323,
+                "worst": 0.014609077451377177,
+                "worst_layer": 12
+              },
+              "depth_error_mm": {
+                "count": 60,
+                "max": -0.035,
+                "mean": -0.03500000000000001,
+                "min": -0.035,
+                "worst": -0.035,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 60,
+                "max": 0.27590194850352784,
+                "mean": 0.21268152447646882,
+                "min": 0.09197588817806229,
+                "worst": 0.27590194850352784,
+                "worst_layer": 57
+              },
+              "iou": {
+                "count": 60,
+                "max": 0.9998310620565379,
+                "mean": 0.9994536964935907,
+                "min": 0.9986989653676972,
+                "worst": 0.9986989653676972,
+                "worst_layer": 40
+              },
+              "measured_area_mm2": {
+                "count": 60,
+                "max": 326.28365,
+                "mean": 224.1104833333334,
+                "min": 19.764150000000004,
+                "worst": 326.28365,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 60,
+                "max": 326.0999982370235,
+                "mean": 224.0143853101478,
+                "min": 19.843159456396812,
+                "worst": 326.0999982370235,
+                "worst_layer": 10
+              },
+              "stray_area_mm2": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 60,
+                "max": 0.05512500000000001,
+                "mean": 0.045325,
+                "min": 0.025725000000000005,
+                "worst": 0.05512500000000001,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 0.9999399302439959,
+              "margin": 0.30163218692630556,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              0.0011863212157683031,
+              0.004336018223350407
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 0.04289814828299205,
+              "error_vs_reference_mm3": 0.2882940695567413,
+              "error_vs_reference_pct": 0.04289814828299205,
+              "measured_mm3": 672.3314500000006,
+              "mesh_mm3": 672.0431559304438,
+              "reference_stack_mm3": 672.0431559304438
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "feature-plate@elegoo-mars-5",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 30.0,
+              "BottomLayerCount": 2.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.75,
+              "LayerCount": 60.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Mars 5",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 4098.0,
+              "ResolutionY": 2560.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "feature-plate",
+            "sha256": "2f830394a9570b00e461725c1f34cde5aa3f8a2e50a286fb8e45f2da36d510d8",
+            "triangle_count": 3488,
+            "volume_mm3": 672.0431559304438
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 981808.0,
+              "median": 981808.0,
+              "min": 981808.0,
+              "samples": [
+                981808.0,
+                981808.0,
+                981808.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 130.0,
+              "max": 19572.0,
+              "median": 19564.0,
+              "min": 19312.0,
+              "samples": [
+                19564.0,
+                19572.0,
+                19312.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.0001494999999999986,
+              "max": 0.008383999999999999,
+              "median": 0.008196,
+              "min": 0.008085,
+              "samples": [
+                0.008383999999999999,
+                0.008196,
+                0.008085
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.005196500000000007,
+              "max": 0.097818,
+              "median": 0.094327,
+              "min": 0.087425,
+              "samples": [
+                0.097818,
+                0.087425,
+                0.094327
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0011192130000000008,
+              "max": 0.032170746,
+              "median": 0.031493984,
+              "min": 0.02993232,
+              "samples": [
+                0.032170746,
+                0.02993232,
+                0.031493984
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "pin-0.05",
+                "volume_error_pct": 25.58621914538053,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0031828341991120735,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.10",
+                "volume_error_pct": -5.812996653039639,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0014462524395651058,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.15",
+                "volume_error_pct": -2.3241441832380407,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0008673559637429604,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.20",
+                "volume_error_pct": 2.035819404907268,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0010130094391896088,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.30",
+                "volume_error_pct": 1.163936357199671,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0008687489003466677,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.50",
+                "volume_error_pct": -0.7894816337771986,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0009820997760479804,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.75",
+                "volume_error_pct": -0.37085077018098717,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0006919966296233793,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-1.00",
+                "volume_error_pct": -0.16163739163553334,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0004021476759655101,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.05",
+                "volume_error_pct": 39.65213092240794,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.009830958069220705,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.10",
+                "volume_error_pct": 4.737100459669267,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.002329730279032595,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.15",
+                "volume_error_pct": -6.899763233854266,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.005048594718163638,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.20",
+                "volume_error_pct": -12.718666762034218,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.01230837582952362,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.30",
+                "volume_error_pct": 4.73743340973323,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.006767766111835135,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.50",
+                "volume_error_pct": -2.2449999999999783,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0051807692307691755,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.75",
+                "volume_error_pct": 2.410000000000001,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.008033333333333363,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-1.00",
+                "volume_error_pct": -2.2449999999999783,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00962142857142849,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.05",
+                "volume_error_pct": 0.3703634638303534,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0036672375939335545,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.10",
+                "volume_error_pct": 0.3687959583504574,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.003615288997812384,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.15",
+                "volume_error_pct": 0.36873687819991596,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0035781074763940853,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.20",
+                "volume_error_pct": 1.2677199232515637,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.012175118905271278,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.30",
+                "volume_error_pct": 1.2389227946328731,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.011649721568973884,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.50",
+                "volume_error_pct": 0.372290897911077,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.003349232869102789,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.75",
+                "volume_error_pct": 0.3708198725389652,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0031441890599526717,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-1.00",
+                "volume_error_pct": 0.3847720796969801,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0030601612451077124,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.05",
+                "volume_error_pct": -0.8367774210982813,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.007112608991350278,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.10",
+                "volume_error_pct": -0.5881291656577435,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00495708836146745,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.15",
+                "volume_error_pct": -0.3352629092444369,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.002801840209960866,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.20",
+                "volume_error_pct": 0.8248889257204629,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.006834794180733945,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.30",
+                "volume_error_pct": 0.14375335103599013,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.001170562962123383,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.50",
+                "volume_error_pct": -0.3406818181817913,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0026767857142856294,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.75",
+                "volume_error_pct": -0.9149999999999907,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00686249999999993,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-1.00",
+                "volume_error_pct": -0.15024999999997846,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.001073214285714132,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [
+              {
+                "body": "pin-0.05",
+                "error_mm": 0.00601250585816273,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.05585191925620058,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.10",
+                "error_mm": -0.002940464944101759,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.09673836185197394,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.15",
+                "error_mm": -0.0017479515965471981,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.14777028859756633,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.20",
+                "error_mm": 0.002019305119154352,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.20137695871130576,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.30",
+                "error_mm": 0.0017353096011822333,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.3007717899894093,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.50",
+                "error_mm": -0.001971417051055413,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.49642271692932305,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.75",
+                "error_mm": -0.0013878212534123024,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.7462033797171553,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "pin-1.00",
+                "error_mm": -0.0008058738878670146,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.9959823940728899,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.05",
+                "error_mm": 0.01982500000000001,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.06982500000000001,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.10",
+                "error_mm": 0.0047375000000000195,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.10473750000000003,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.15",
+                "error_mm": -0.01034999999999997,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.13965000000000002,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.20",
+                "error_mm": -0.025437499999999974,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.17456250000000004,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.30",
+                "error_mm": 0.014212500000000072,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.31421250000000006,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.50",
+                "error_mm": -0.011224999999999874,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.4887750000000001,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.75",
+                "error_mm": 0.018075000000000063,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.7680750000000001,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "wall-1.00",
+                "error_mm": -0.022449999999999748,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.9775500000000003,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.05",
+                "error_mm": 0.00601250585816273,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.05585191925620058,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.10",
+                "error_mm": 0.0048105463291566175,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.10448937312523232,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.15",
+                "error_mm": 0.0034385400887775586,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.15295678028289109,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.20",
+                "error_mm": -0.005880929888203518,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.1934767237039479,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.30",
+                "error_mm": 0.006877080177555117,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.30591356056578217,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.50",
+                "error_mm": 0.001160618542397518,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.499554752522776,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.75",
+                "error_mm": 0.0017409278135963602,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.749332128784164,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "hole-1.00",
+                "error_mm": 0.0007589069576859897,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.9975471749184429,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.05",
+                "error_mm": 0.020000000000000004,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.07,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.10",
+                "error_mm": 0.0050000000000000044,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.10500000000000001,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.15",
+                "error_mm": -0.009999999999999981,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.14,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.20",
+                "error_mm": -0.024999999999999994,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.17500000000000002,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.30",
+                "error_mm": 0.015000000000000013,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.315,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.50",
+                "error_mm": -0.010000000000000009,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.49,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.75",
+                "error_mm": 0.020000000000000018,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.77,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "slot-1.00",
+                "error_mm": -0.020000000000000018,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.98,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              }
+            ],
+            "features_smallest_resolved": {
+              "hole": 0.05,
+              "pin": 0.05,
+              "slot": 0.05,
+              "wall": 0.05
+            },
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 59,
+              "measured_top_mm": 3.0,
+              "mesh_top_mm": 3.0
+            },
+            "layer_count": 60,
+            "layers": {
+              "area_error_mm2": {
+                "count": 60,
+                "max": 0.1836517629772061,
+                "mean": 0.09609802318558476,
+                "min": -0.07900945639681112,
+                "worst": 0.1836517629772061,
+                "worst_layer": 1
+              },
+              "boundary_max_mm": {
+                "count": 60,
+                "max": 0.035,
+                "mean": 0.03500000000000001,
+                "min": 0.035,
+                "worst": 0.035,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 60,
+                "max": 0.00021977137336982777,
+                "mean": 0.0001458539931699828,
+                "min": 0.00010889530307006036,
+                "worst": 0.00021977137336982777,
+                "worst_layer": 40
+              },
+              "boundary_p95_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 60,
+                "max": -0.004806048210056702,
+                "mean": -0.04349563885806972,
+                "min": -0.1208748201540874,
+                "worst": -0.1208748201540874,
+                "worst_layer": 41
+              },
+              "centroid_dy_mm": {
+                "count": 60,
+                "max": 0.014609077451377177,
+                "mean": 0.007911326155472711,
+                "min": -0.005484176436326323,
+                "worst": 0.014609077451377177,
+                "worst_layer": 12
+              },
+              "depth_error_mm": {
+                "count": 60,
+                "max": -0.035,
+                "mean": -0.03500000000000001,
+                "min": -0.035,
+                "worst": -0.035,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 60,
+                "max": 0.27590194850352784,
+                "mean": 0.21268152447646452,
+                "min": 0.09197588817805899,
+                "worst": 0.27590194850352784,
+                "worst_layer": 57
+              },
+              "iou": {
+                "count": 60,
+                "max": 0.9998310620565379,
+                "mean": 0.9994536964935907,
+                "min": 0.9986989653676972,
+                "worst": 0.9986989653676972,
+                "worst_layer": 40
+              },
+              "measured_area_mm2": {
+                "count": 60,
+                "max": 326.28365,
+                "mean": 224.1104833333334,
+                "min": 19.764150000000004,
+                "worst": 326.28365,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 60,
+                "max": 326.0999982370235,
+                "mean": 224.01438531014776,
+                "min": 19.84315945639681,
+                "worst": 326.0999982370235,
+                "worst_layer": 10
+              },
+              "stray_area_mm2": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 60,
+                "max": 0.05512500000000001,
+                "mean": 0.045325,
+                "min": 0.025725000000000005,
+                "worst": 0.05512500000000001,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 0.9999399302439959,
+              "margin": 0.30163218692630556,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              0.0011863212157678066,
+              0.004336018223350286
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 0.04289814828299205,
+              "error_vs_reference_mm3": 0.2882940695567413,
+              "error_vs_reference_pct": 0.04289814828299205,
+              "measured_mm3": 672.3314500000006,
+              "mesh_mm3": 672.0431559304438,
+              "reference_stack_mm3": 672.0431559304438
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "feature-plate@anycubic-photon-mono-4k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 40.0,
+              "BottomLayerCount": 1.0,
+              "DisplayMirror": "Horizontally",
+              "ExposureTime": 2.0,
+              "LayerCount": 60.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Photon Mono 4K",
+              "PixelHeight": 0.035,
+              "PixelWidth": 0.035,
+              "ResolutionX": 3840.0,
+              "ResolutionY": 2400.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "feature-plate",
+            "sha256": "2f830394a9570b00e461725c1f34cde5aa3f8a2e50a286fb8e45f2da36d510d8",
+            "triangle_count": 3488,
+            "volume_mm3": 672.0431559304438
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1178920.0,
+              "median": 1178920.0,
+              "min": 1178920.0,
+              "samples": [
+                1178920.0,
+                1178920.0,
+                1178920.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 192.0,
+              "max": 20368.0,
+              "median": 20244.0,
+              "min": 19984.0,
+              "samples": [
+                20368.0,
+                20244.0,
+                19984.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.0038320000000000003,
+              "max": 0.019249,
+              "median": 0.014983999999999999,
+              "min": 0.011585,
+              "samples": [
+                0.011585,
+                0.014983999999999999,
+                0.019249
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.001752500000000018,
+              "max": 0.095902,
+              "median": 0.09268499999999999,
+              "min": 0.09239699999999999,
+              "samples": [
+                0.09268499999999999,
+                0.095902,
+                0.09239699999999999
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0005683814999999995,
+              "max": 0.030113136,
+              "median": 0.02988174,
+              "min": 0.028976373,
+              "samples": [
+                0.028976373,
+                0.030113136,
+                0.02988174
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "anycubic-photon-mono-4k"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "cube",
+                "volume_error_pct": -0.0999760000000151,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0024993999999999516,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cylinder",
+                "volume_error_pct": -0.0011123329806093341,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -2.2239959419654486e-05,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "cone",
+                "volume_error_pct": -0.00012976765415998788,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling assumed",
+                  "outline_offset_mm": -3.5579869139577973e-06,
+                  "phase": null,
+                  "reason": "the layer height cannot be told apart from an outline offset on this body"
+                }
+              },
+              {
+                "name": "sphere",
+                "volume_error_pct": -0.00012524413080535808,
+                "z_phase": {
+                  "outline_offset_basis": "fitted phase",
+                  "outline_offset_mm": -5.711816303478046e-06,
+                  "phase": 0.49998419061809957,
+                  "reason": null
+                }
+              },
+              {
+                "name": "l",
+                "volume_error_pct": -0.014400000000008057,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0002519999999999128,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [],
+            "features_smallest_resolved": {},
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 199,
+              "measured_top_mm": 10.0,
+              "mesh_top_mm": 10.0
+            },
+            "layer_count": 200,
+            "layers": {
+              "area_error_mm2": {
+                "count": 200,
+                "max": -0.09336773631164874,
+                "mean": -0.10385989086782871,
+                "min": -0.128208929133109,
+                "worst": -0.128208929133109,
+                "worst_layer": 34
+              },
+              "boundary_max_mm": {
+                "count": 200,
+                "max": 0.019,
+                "mean": 0.018999999999999996,
+                "min": 0.019,
+                "worst": 0.019,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 200,
+                "max": 0.0006172299336149669,
+                "mean": 0.0004511334996410139,
+                "min": 0.0002716722171763044,
+                "worst": 0.0006172299336149669,
+                "worst_layer": 90
+              },
+              "boundary_p95_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 200,
+                "max": 0.008498410978726952,
+                "mean": 0.006436436070392573,
+                "min": 0.0027512535948017104,
+                "worst": 0.008498410978726952,
+                "worst_layer": 124
+              },
+              "centroid_dy_mm": {
+                "count": 200,
+                "max": 0.0006969283683215508,
+                "mean": -0.0006006660766079173,
+                "min": -0.0019213359280844315,
+                "worst": -0.0019213359280844315,
+                "worst_layer": 199
+              },
+              "depth_error_mm": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 200,
+                "max": 0.19633052862769385,
+                "mean": 0.16496015285963941,
+                "min": 0.022669422546793837,
+                "worst": 0.19633052862769385,
+                "worst_layer": 20
+              },
+              "iou": {
+                "count": 200,
+                "max": 0.9998553807190753,
+                "mean": 0.9997704951232202,
+                "min": 0.9996995383046343,
+                "worst": 0.9996995383046343,
+                "worst_layer": 90
+              },
+              "measured_area_mm2": {
+                "count": 200,
+                "max": 362.36541600000004,
+                "mean": 250.95793940000004,
+                "min": 150.81242400000002,
+                "worst": 362.36541600000004,
+                "worst_layer": 39
+              },
+              "reference_area_mm2": {
+                "count": 200,
+                "max": 362.48532704921706,
+                "mean": 251.06179929086787,
+                "min": 150.90996345213705,
+                "worst": 362.48532704921706,
+                "worst_layer": 39
+              },
+              "stray_area_mm2": {
+                "count": 200,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 200,
+                "max": 0.014,
+                "mean": 0.00084,
+                "min": 0.0,
+                "worst": 0.014,
+                "worst_layer": 1
+              },
+              "xor_area_mm2": {
+                "count": 200,
+                "max": 0.075544,
+                "mean": 0.05663539,
+                "min": 0.021812,
+                "worst": 0.075544,
+                "worst_layer": 90
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 1.0,
+              "margin": 0.5831870594906969,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              -0.00036936036334067667,
+              -0.0013945993882669714
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": -0.04123412757864991,
+              "error_vs_reference_mm3": -1.038598908678523,
+              "error_vs_reference_pct": -0.04136825720249273,
+              "measured_mm3": 2509.5793940000003,
+              "mesh_mm3": 2510.614624037084,
+              "reference_stack_mm3": 2510.617992908679
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "accuracy-plate@elegoo-saturn-4-ultra-16k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 29.5,
+              "BottomLayerCount": 5.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.55,
+              "LayerCount": 200.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Saturn 4 Ultra 16K",
+              "PixelHeight": 0.019,
+              "PixelWidth": 0.014,
+              "ResolutionX": 15120.0,
+              "ResolutionY": 6230.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1825112.0,
+              "median": 1825112.0,
+              "min": 1825112.0,
+              "samples": [
+                1825112.0,
+                1825112.0,
+                1825112.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 190.0,
+              "max": 18784.0,
+              "median": 18404.0,
+              "min": 18404.0,
+              "samples": [
+                18404.0,
+                18784.0,
+                18404.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.006732499999999995,
+              "max": 0.04355,
+              "median": 0.039005,
+              "min": 0.030084999999999997,
+              "samples": [
+                0.030084999999999997,
+                0.04355,
+                0.039005
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.013230499999999978,
+              "max": 0.206862,
+              "median": 0.185526,
+              "min": 0.18040099999999998,
+              "samples": [
+                0.185526,
+                0.206862,
+                0.18040099999999998
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.002425954499999994,
+              "max": 0.050978721,
+              "median": 0.046743936,
+              "min": 0.046126812,
+              "samples": [
+                0.046126812,
+                0.050978721,
+                0.046743936
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": {
+            "bodies": [
+              {
+                "name": "pin-0.05",
+                "volume_error_pct": 9.080601771987633,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0011295944001799947,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.10",
+                "volume_error_pct": 2.2601750624141124,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0005623233407766215,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.15",
+                "volume_error_pct": 3.018127114495109,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0011263460206004103,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.20",
+                "volume_error_pct": 0.5557393871657882,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0002765320163327183,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.30",
+                "volume_error_pct": 0.7453269653767128,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0005563035964677793,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.50",
+                "volume_error_pct": -0.1938597151951758,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00024115770998624794,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-0.75",
+                "volume_error_pct": -0.012042309569488598,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -2.2470595465801e-05,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "pin-1.00",
+                "volume_error_pct": -0.05758303348130607,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00014326439479899467,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.05",
+                "volume_error_pct": 12.07637681645948,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0029940977029214396,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.10",
+                "volume_error_pct": -1.9350407547985355,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0009516629583850878,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.15",
+                "volume_error_pct": 2.735372380673932,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0020014870199490074,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.20",
+                "volume_error_pct": 5.070100202655905,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0049065440549094915,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.30",
+                "volume_error_pct": -1.9347290148868963,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0027639002662567724,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.50",
+                "volume_error_pct": 0.8672000000000284,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0020012307692307938,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-0.75",
+                "volume_error_pct": 0.8671999999999624,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0028906666666666954,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "wall-1.00",
+                "volume_error_pct": 0.8672000000000284,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0037165714285714566,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.05",
+                "volume_error_pct": 0.32415782983682917,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0032097220596521456,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.10",
+                "volume_error_pct": 0.32594380835505016,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0031952114375702985,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.15",
+                "volume_error_pct": 0.32393145941353196,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.003143329689248819,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.20",
+                "volume_error_pct": -0.025033365246809464,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.00024041919109161144,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.30",
+                "volume_error_pct": -0.027291544394832095,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.000256625267340655,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.50",
+                "volume_error_pct": 0.3299496248394968,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.002968318953971747,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-0.75",
+                "volume_error_pct": 0.3296144177475883,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.002794807190857164,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "hole-1.00",
+                "volume_error_pct": 0.3378590092666162,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": 0.0026870531959658234,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.05",
+                "volume_error_pct": -0.2500127904538942,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.002125108991350417,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.10",
+                "volume_error_pct": -0.11473930454186557,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0009670883614676384,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.15",
+                "volume_error_pct": -0.2159039426686912,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0018043402099609449,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.20",
+                "volume_error_pct": -0.6799601627231293,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.005633955819266083,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.30",
+                "volume_error_pct": -0.4074966674100826,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0033181870378766426,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.50",
+                "volume_error_pct": -0.21372727272728814,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0016792857142857085,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-0.75",
+                "volume_error_pct": -0.2500000000000095,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.0018749999999999442,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              },
+              {
+                "name": "slot-1.00",
+                "volume_error_pct": -0.28990000000000293,
+                "z_phase": {
+                  "outline_offset_basis": "mid-layer sampling",
+                  "outline_offset_mm": -0.002070714285714307,
+                  "phase": null,
+                  "reason": "the area does not vary enough with height"
+                }
+              }
+            ],
+            "features": [
+              {
+                "body": "pin-0.05",
+                "error_mm": 0.0022130001021681348,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.052052413500205987,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.10",
+                "error_mm": 0.001120238512024252,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.10079906530809996,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.15",
+                "error_mm": 0.0022393193710350534,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.15175755956514858,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.20",
+                "error_mm": 0.000553433719551466,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.19991108731170287,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.30",
+                "error_mm": 0.0011123780591792976,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.30014885844740635,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.50",
+                "error_mm": -0.00048348111736423727,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.4979106528630142,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "pin-0.75",
+                "error_mm": -4.5325331979872985e-05,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.7475458756385878,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "pin-1.00",
+                "error_mm": -0.00028698857698694624,
+                "kind": "pin",
+                "layers": 56,
+                "measured_mm": 0.99650127938377,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.05",
+                "error_mm": 0.006037333333333332,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.056037333333333335,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.10",
+                "error_mm": -0.0019346666666666679,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.09806533333333334,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.15",
+                "error_mm": 0.004102666666666699,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.1541026666666667,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.20",
+                "error_mm": 0.010139999999999982,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.21014,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.30",
+                "error_mm": -0.005803999999999976,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.294196,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.50",
+                "error_mm": 0.0043360000000000065,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.504336,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "wall-0.75",
+                "error_mm": 0.006504000000000065,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 0.7565040000000001,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "wall-1.00",
+                "error_mm": 0.008672000000000013,
+                "kind": "wall",
+                "layers": 56,
+                "measured_mm": 1.008672,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.05",
+                "error_mm": 0.0022130001021681348,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.052052413500205987,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.04983941339803785,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.10",
+                "error_mm": -0.0005739840885316538,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.09910484270754405,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.0996788267960757,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.15",
+                "error_mm": 0.0011193220746316124,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.15063756226874514,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.14951824019411353,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.20",
+                "error_mm": -0.0002954494667882779,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.19906220412536313,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.1993576535921514,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.30",
+                "error_mm": 0.0005476572231986054,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.29958413761142566,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.29903648038822706,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.50",
+                "error_mm": -0.00014349428849347312,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.498250639691885,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.49839413398037846,
+                "resolved": true
+              },
+              {
+                "body": "hole-0.75",
+                "error_mm": 0.0006339532049396412,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.7482251541755073,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.7475912009705676,
+                "resolved": true
+              },
+              {
+                "body": "hole-1.00",
+                "error_mm": 0.0003925214094998575,
+                "kind": "hole",
+                "layers": 36,
+                "measured_mm": 0.9971807893702568,
+                "nominal_mm": 1.0,
+                "reference_mm": 0.9967882679607569,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.05",
+                "error_mm": 0.006000000000000005,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.05600000000000001,
+                "nominal_mm": 0.05,
+                "reference_mm": 0.05,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.10",
+                "error_mm": -0.001999999999999988,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.09800000000000002,
+                "nominal_mm": 0.1,
+                "reference_mm": 0.1,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.15",
+                "error_mm": 0.004000000000000031,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.15400000000000003,
+                "nominal_mm": 0.15,
+                "reference_mm": 0.15,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.20",
+                "error_mm": 0.010000000000000037,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.21000000000000005,
+                "nominal_mm": 0.2,
+                "reference_mm": 0.2,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.30",
+                "error_mm": -0.005999999999999894,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.2940000000000001,
+                "nominal_mm": 0.3,
+                "reference_mm": 0.3,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.50",
+                "error_mm": 0.0040000000000000036,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.504,
+                "nominal_mm": 0.5,
+                "reference_mm": 0.5,
+                "resolved": true
+              },
+              {
+                "body": "slot-0.75",
+                "error_mm": 0.006000000000000116,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 0.7560000000000001,
+                "nominal_mm": 0.75,
+                "reference_mm": 0.75,
+                "resolved": true
+              },
+              {
+                "body": "slot-1.00",
+                "error_mm": 0.008000000000000007,
+                "kind": "slot",
+                "layers": 36,
+                "measured_mm": 1.008,
+                "nominal_mm": 1.0,
+                "reference_mm": 1.0,
+                "resolved": true
+              }
+            ],
+            "features_smallest_resolved": {
+              "hole": 0.05,
+              "pin": 0.05,
+              "slot": 0.05,
+              "wall": 0.05
+            },
+            "height": {
+              "error_mm": 0.0,
+              "first_layer": 0,
+              "last_layer": 59,
+              "measured_top_mm": 3.0,
+              "mesh_top_mm": 3.0
+            },
+            "layer_count": 60,
+            "layers": {
+              "area_error_mm2": {
+                "count": 60,
+                "max": 0.19302454360326138,
+                "mean": 0.03103068985240694,
+                "min": -0.04996623702334091,
+                "worst": 0.19302454360326138,
+                "worst_layer": 42
+              },
+              "boundary_max_mm": {
+                "count": 60,
+                "max": 0.019,
+                "mean": 0.017333333333333333,
+                "min": 0.014,
+                "worst": 0.019,
+                "worst_layer": 0
+              },
+              "boundary_mean_mm": {
+                "count": 60,
+                "max": 0.001465345088804921,
+                "mean": 0.0010065016229205872,
+                "min": 8.881469115191987e-05,
+                "worst": 0.001465345088804921,
+                "worst_layer": 0
+              },
+              "boundary_p95_mm": {
+                "count": 60,
+                "max": 0.019,
+                "mean": 0.012666666666666666,
+                "min": 0.0,
+                "worst": 0.019,
+                "worst_layer": 0
+              },
+              "centroid_dx_mm": {
+                "count": 60,
+                "max": 0.002771368681057993,
+                "mean": -0.0193137466654178,
+                "min": -0.06348397735832896,
+                "worst": -0.06348397735832896,
+                "worst_layer": 41
+              },
+              "centroid_dy_mm": {
+                "count": 60,
+                "max": 0.019004984391994186,
+                "mean": 0.01056183189193723,
+                "min": -0.006324473108157349,
+                "worst": 0.019004984391994186,
+                "worst_layer": 7
+              },
+              "depth_error_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "edge_coverage_mae": {
+                "count": 60,
+                "max": 0.2577407740301318,
+                "mean": 0.1676233762093207,
+                "min": 0.051696436147467065,
+                "worst": 0.2577407740301318,
+                "worst_layer": 7
+              },
+              "iou": {
+                "count": 60,
+                "max": 0.9994823741771076,
+                "mean": 0.9986584827611724,
+                "min": 0.998246537053205,
+                "worst": 0.998246537053205,
+                "worst_layer": 0
+              },
+              "measured_area_mm2": {
+                "count": 60,
+                "max": 326.05003200000004,
+                "mean": 224.04541600000007,
+                "min": 20.036184000000002,
+                "worst": 326.05003200000004,
+                "worst_layer": 0
+              },
+              "reference_area_mm2": {
+                "count": 60,
+                "max": 326.0999982370234,
+                "mean": 224.01438531014765,
+                "min": 19.84315945639674,
+                "worst": 326.0999982370234,
+                "worst_layer": 4
+              },
+              "stray_area_mm2": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "width_error_mm": {
+                "count": 60,
+                "max": 0.0,
+                "mean": 0.0,
+                "min": 0.0,
+                "worst": 0.0,
+                "worst_layer": 0
+              },
+              "xor_area_mm2": {
+                "count": 60,
+                "max": 0.572698,
+                "mean": 0.38525666666666664,
+                "min": 0.010374000000000001,
+                "worst": 0.572698,
+                "worst_layer": 0
+              }
+            },
+            "orientation": {
+              "ambiguous": false,
+              "iou": 0.9999861310194434,
+              "margin": 0.32000638811182425,
+              "stored": "mirror_y"
+            },
+            "placement_offset_mm": [
+              -0.0009390382717268182,
+              0.0015345305744386985
+            ],
+            "schema_version": 2,
+            "volume": {
+              "error_vs_mesh_pct": 0.013852096957600809,
+              "error_vs_reference_mm3": 0.09309206955686022,
+              "error_vs_reference_pct": 0.013852096957668486,
+              "measured_mm3": 672.1362480000003,
+              "mesh_mm3": 672.0431559304438,
+              "reference_stack_mm3": 672.0431559304434
+            }
+          },
+          "analysis_error": null,
+          "analysis_status": "analysed",
+          "case": "feature-plate@elegoo-saturn-4-ultra-16k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": 1,
+            "distinct_decoded_layers": 1,
+            "distinct_files": 1,
+            "outputs": 4
+          },
+          "file": {
+            "conformity": {
+              "layer_count": true,
+              "layer_height_mm": true,
+              "pixel_pitch_mm": true,
+              "resolution": true,
+              "uniform_layers": true
+            },
+            "declared": {
+              "AntiAliasing": 1.0,
+              "BottomExposureTime": 29.5,
+              "BottomLayerCount": 5.0,
+              "DisplayMirror": "Vertically",
+              "ExposureTime": 2.55,
+              "LayerCount": 60.0,
+              "LayerHeight": 0.05,
+              "MachineName": "Saturn 4 Ultra 16K",
+              "PixelHeight": 0.019,
+              "PixelWidth": 0.014,
+              "ResolutionX": 15120.0,
+              "ResolutionY": 6230.0
+            },
+            "decoder": "uvtools",
+            "properties_source": "uvtools",
+            "uvtools_issues": {}
+          },
+          "model": {
+            "id": "feature-plate",
+            "sha256": "2f830394a9570b00e461725c1f34cde5aa3f8a2e50a286fb8e45f2da36d510d8",
+            "triangle_count": 3488,
+            "volume_mm3": 672.0431559304438
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 3,
+              "iqr": 0.0,
+              "max": 1743248.0,
+              "median": 1743248.0,
+              "min": 1743248.0,
+              "samples": [
+                1743248.0,
+                1743248.0,
+                1743248.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 3,
+              "iqr": 180.0,
+              "max": 23156.0,
+              "median": 22896.0,
+              "min": 22796.0,
+              "samples": [
+                22896.0,
+                22796.0,
+                23156.0
+              ]
+            },
+            "system_s": {
+              "count": 3,
+              "iqr": 0.008002499999999996,
+              "max": 0.031744999999999995,
+              "median": 0.021047,
+              "min": 0.01574,
+              "samples": [
+                0.021047,
+                0.01574,
+                0.031744999999999995
+              ]
+            },
+            "timed_runs": 3,
+            "user_s": {
+              "count": 3,
+              "iqr": 0.00453600000000004,
+              "max": 0.147958,
+              "median": 0.14382499999999998,
+              "min": 0.13888599999999998,
+              "samples": [
+                0.14382499999999998,
+                0.147958,
+                0.13888599999999998
+              ]
+            },
+            "wall_s": {
+              "count": 3,
+              "iqr": 0.0012436175000000022,
+              "max": 0.038961273,
+              "median": 0.03883246,
+              "min": 0.036474038,
+              "samples": [
+                0.036474038,
+                0.038961273,
+                0.03883246
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        }
+      ],
+      "ended_at_utc": "2026-11-17T14:50:25Z",
+      "host": {
+        "cpu_model": "AMD Ryzen 7 7700 8-Core Processor",
+        "hypervisor_flag": true,
+        "kernel_release": "6.6.87.2-microsoft-standard-WSL2",
+        "logical_cpus": 16,
+        "machine": "x86_64",
+        "memory_total_kib": 15937716,
+        "os_distribution": "Ubuntu 24.04.5 LTS",
+        "physical_cores": 8,
+        "python": "3.12.3",
+        "wsl": true
+      },
+      "launcher_floor_kib": 8028.0,
+      "models": {
+        "catalog_sha256": "893fe1880810216028918e1fa3d44ee36cd55e6c76f9f5b9dd9b636a81bd25b5",
+        "generator_version": 1
+      },
+      "run_id": "20261117T143449Z-accuracy",
+      "started_at_utc": "2026-11-17T14:34:49Z",
+      "suite": {
+        "description": "Accuracy and feature plates on the 4K targets and the 16K target, and the single-shape models on the Elegoo Mars 5.",
+        "id": "accuracy",
+        "sha256": "c726e0c4360038152c0a46b3c8cec2d60a95229c4998db2ebfb8e2569d229f42",
+        "timing": {
+          "repetitions": 3,
+          "timeout_s": 1200.0,
+          "warmup": 1
+        }
+      },
+      "suite_code": {
+        "git_commit": "174aee71f36c16214eccb03df493638ea8ceb23c",
+        "git_dirty": false,
+        "lockfile_sha256": "6ca434bc6351001b9e5c3eea31b35c66ea2fcc30077c26db57a13daf7d2f1407",
+        "version": "0.1.0.dev0"
+      },
+      "targets": {
+        "anycubic-photon-mono-4k": {
+          "description": "Anycubic Photon Mono 4K: 6.23-inch mono LCD, 3840 x 2400 px at 35 \u00b5m",
+          "sha256": "5029ef2ef1d6759bf48c026bd4c523bc3ecee142cb3389a0b3c632a072a2d15c",
+          "source": {
+            "corroboration": [
+              "https://printer-hub.ru/en/printers/anycubic-photon-mono-4k",
+              "https://all3dp.com/1/anycubic-photon-mono-4k-review-3d-printer-specs/"
+            ],
+            "manufacturer": "https://store.anycubic.com/products/photon-mono-4k",
+            "retrieved": "2026-11-17"
+          }
+        },
+        "elegoo-mars-5": {
+          "description": "Elegoo Mars 5: 4K mono LCD, 4098 x 2560 px at 35 \u00b5m",
+          "sha256": "201ea3ed3401b502112babc406fbfd34d9f846c8bb9bd6da08570fdb60ac02ee",
+          "source": {
+            "corroboration": [
+              "https://printer-hub.ru/en/printers/elegoo-mars-5",
+              "https://liqcreate.com/?p=20146"
+            ],
+            "manufacturer": "https://us.elegoo.com/pages/elegoo-mars-5-series",
+            "retrieved": "2026-11-17"
+          }
+        },
+        "elegoo-saturn-4-ultra-16k": {
+          "description": "Elegoo Saturn 4 Ultra 16K: 10-inch 16K mono LCD, 15120 x 6230 px of 14 x 19 \u00b5m",
+          "sha256": "65c9cf99f3a73fb9a89de67bbde34d1bfeee95421ebf62c1372f75047007973d",
+          "source": {
+            "corroboration": [
+              "https://printer-hub.ru/en/printers/elegoo-saturn-4-ultra-16k",
+              "https://www.fabbaloo.com/news/elegoo-launches-saturn-4-ultra-16k-high-resolution-resin-printing-at-150mm-hour"
+            ],
+            "manufacturer": "https://us.elegoo.com/",
+            "retrieved": "2026-11-17"
+          }
+        }
+      },
+      "tools": [
+        {
+          "name": "karasu-cli",
+          "sha256": "ee36c780383547d43ad877b84af7ea9dc27d98314d990676a5252f03f4b2dd4e",
+          "version": "karasu-slicer 0.2.0-dev"
+        },
+        {
+          "name": "UVtoolsCmd",
+          "sha256": "4fc69a726a1f20f0a85db622bcfa2ca214ffaba9441a74df8dd6dff3bb4a9a06",
+          "version": "7.1.2"
+        },
+        {
+          "name": "PrusaSlicer",
+          "sha256": "ef5a3941963ee37066be5cae7524a243552f813d45f4b02a1fbf2147ab1e91cd",
+          "version": "PrusaSlicer-2.8.1+linux-x64-GTK3-202409181416 based on Slic3r (with GUI support)"
+        },
+        {
+          "name": "dragonfruit-cli",
+          "sha256": "e8781a54ed689724fc30b3bf839e978f5c0def6d032984dce5c5800df6b7f4fb",
+          "version": "dragonfruit-cli v0.2.2 (188df82)"
+        },
+        {
+          "name": "git",
+          "sha256": "eb54b535467e0975c1284d4c4d08eea779aeb248a5d34b02e2ee171382e22201",
+          "version": "git version 2.43.0"
+        },
+        {
+          "name": "cargo",
+          "sha256": "b1c8cb14e30889e7e2999e6b69e62d9e9b9ffc0f4df8180564d306d9680e6c55",
+          "version": "cargo 1.100.0 (3acc79c0c 2026-11-05)"
+        },
+        {
+          "name": "npm",
+          "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+          "version": "11.19.0"
+        }
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "title": "karasu-slicer accuracy on three panels"
+}

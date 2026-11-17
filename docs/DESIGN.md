@@ -249,7 +249,7 @@ karasu-slicer-benchmark/
 ├── thresholds/               optional, versioned gates, separate from measurements
 ├── schemas/                  JSON Schemas of run, case and metric records
 ├── tools/                    pins.toml: pinned external tools (UVTools, PrusaSlicer)
-├── results/                  curated, published summaries (if decided)
+├── results/                  curated, published summaries (BD-026)
 ├── docs/
 │   ├── DESIGN.md             this document
 │   ├── METHODOLOGY.md        protocols, environment control, statistics, limits
@@ -288,7 +288,8 @@ karasu-slicer-benchmark/
 
 ## 11. Decisions
 
-The licence (MIT, BD-001) and the language (Python, BD-002) are decided. The initial targets,
-the GUI slicers for manual campaigns, the publication of results, building karasu-cli from
-source, and hosting remain open; [DECISIONS.md](DECISIONS.md) lists them with the default this
-design assumes until the owner decides.
+Decisions are recorded in [DECISIONS.md](DECISIONS.md) as they are taken: among them the licence
+(MIT, BD-001), the language (Python, BD-002), the compared slicers (PrusaSlicer, BD-015;
+DragonFruit, BD-022; CHITUBOX and Lychee through the manual protocol) and the publication of
+curated results (BD-026). The questions still open are listed there with the default this design
+assumes until the owner decides.

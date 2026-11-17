@@ -67,6 +67,7 @@ uv run kbench run --suite compare-elegoo # karasu-slicer and DragonFruit, both w
 uv run kbench run --suite scaling      # timing against resolution, layers, triangles, CPUs
 uv run kbench report work/runs/<run-id>
 uv run kbench report work/runs/<run-a> work/runs/<run-b>   # side by side
+uv run kbench publish work/runs/<run-id> ... --out results/<date> --name <name> --title "<title>"
 uv run kbench import <file> --slicer <name> --slicer-version <v> --target <id> \
   --model <id> --stl work/models/<id>.stl   # a file exported by hand (docs/SLICERS.md)
 ```
@@ -90,7 +91,8 @@ KBENCH_INTEGRATION=1 uv run pytest -m integration   # with karasu-cli and UVTool
 - `models/catalog.toml`: the test models.
 - `targets/`: benchmark printers (panel, layer height, each slicer's settings).
 - `suites/`: suites of cases with their timing parameters.
-- `tools/pins.toml`: pinned external tools.
+- `tools/pins.toml`, `tools/sources.toml`: pinned external tools, and slicers built from source.
+- `results/`: published summaries of chosen runs ([results/README.md](results/README.md)).
 - `tests/`: the suite's tests.
 - `docs/`: design, methodology and decisions.
 - `.github/workflows/`: continuous integration.

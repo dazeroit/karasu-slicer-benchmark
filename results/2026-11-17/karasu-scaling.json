@@ -1,0 +1,1298 @@
+{
+  "kind": "published_summary",
+  "runs": [
+    {
+      "cases": [
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "resolution-4k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 1006907.0,
+              "median": 1006907.0,
+              "min": 1006907.0,
+              "samples": [
+                1006907.0,
+                1006907.0,
+                1006907.0,
+                1006907.0,
+                1006907.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 144.0,
+              "max": 16460.0,
+              "median": 16208.0,
+              "min": 16056.0,
+              "samples": [
+                16348.0,
+                16056.0,
+                16208.0,
+                16460.0,
+                16204.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.008271999999999998,
+              "max": 0.038481999999999995,
+              "median": 0.025993,
+              "min": 0.015665,
+              "samples": [
+                0.01967,
+                0.038481999999999995,
+                0.027941999999999998,
+                0.015665,
+                0.025993
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.009669999999999998,
+              "max": 0.134121,
+              "median": 0.12458,
+              "min": 0.110637,
+              "samples": [
+                0.12458,
+                0.110637,
+                0.134121,
+                0.129239,
+                0.119569
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.0021031960000000016,
+              "max": 0.050125948,
+              "median": 0.042151765,
+              "min": 0.039964244,
+              "samples": [
+                0.042921621,
+                0.042151765,
+                0.050125948,
+                0.040818425,
+                0.039964244
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "resolution-9k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 1915292.0,
+              "median": 1915292.0,
+              "min": 1915292.0,
+              "samples": [
+                1915292.0,
+                1915292.0,
+                1915292.0,
+                1915292.0,
+                1915292.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 8.0,
+              "max": 18012.0,
+              "median": 17760.0,
+              "min": 17584.0,
+              "samples": [
+                17756.0,
+                17764.0,
+                17760.0,
+                17584.0,
+                18012.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.002038999999999999,
+              "max": 0.028950999999999998,
+              "median": 0.025485999999999998,
+              "min": 0.019563999999999998,
+              "samples": [
+                0.0265,
+                0.024461,
+                0.028950999999999998,
+                0.019563999999999998,
+                0.025485999999999998
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.005417000000000005,
+              "max": 0.18781799999999998,
+              "median": 0.179611,
+              "min": 0.16991099999999998,
+              "samples": [
+                0.179611,
+                0.174728,
+                0.180145,
+                0.18781799999999998,
+                0.16991099999999998
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.0019035249999999962,
+              "max": 0.049507701,
+              "median": 0.047500904,
+              "min": 0.044169154,
+              "samples": [
+                0.049322488,
+                0.049507701,
+                0.047500904,
+                0.047418963,
+                0.044169154
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-4"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "resolution-16k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "accuracy-plate",
+            "sha256": "f4d42dfd9ffecc56f53bb6ab08f0d6356067346ff91a8fe857d5e7f54cff79c2",
+            "triangle_count": 5914,
+            "volume_mm3": 2510.614624037084
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 1825112.0,
+              "median": 1825112.0,
+              "min": 1825112.0,
+              "samples": [
+                1825112.0,
+                1825112.0,
+                1825112.0,
+                1825112.0,
+                1825112.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 512.0,
+              "max": 18784.0,
+              "median": 18660.0,
+              "min": 18092.0,
+              "samples": [
+                18780.0,
+                18268.0,
+                18660.0,
+                18784.0,
+                18092.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.010275,
+              "max": 0.030254,
+              "median": 0.026913,
+              "min": 0.015937,
+              "samples": [
+                0.015937,
+                0.026913,
+                0.018935999999999998,
+                0.030254,
+                0.029210999999999997
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.014660000000000006,
+              "max": 0.20199299999999998,
+              "median": 0.186224,
+              "min": 0.181668,
+              "samples": [
+                0.199213,
+                0.181668,
+                0.20199299999999998,
+                0.184553,
+                0.186224
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.0004972989999999997,
+              "max": 0.047337441,
+              "median": 0.04702446,
+              "min": 0.046487771,
+              "samples": [
+                0.046723286,
+                0.046487771,
+                0.047220585,
+                0.047337441,
+                0.04702446
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "layers-1200",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "column-r5-h60",
+            "sha256": "d7573e29ff0d5e1381a701da75bfb449978bd5b04cfedfa432c68e8d6de84442",
+            "triangle_count": 508,
+            "volume_mm3": 4710.496660181643
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 1664288.0,
+              "median": 1664288.0,
+              "min": 1664288.0,
+              "samples": [
+                1664288.0,
+                1664288.0,
+                1664288.0,
+                1664288.0,
+                1664288.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 128.0,
+              "max": 15628.0,
+              "median": 15500.0,
+              "min": 15244.0,
+              "samples": [
+                15500.0,
+                15500.0,
+                15628.0,
+                15244.0,
+                15628.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.006031999999999996,
+              "max": 0.07560499999999999,
+              "median": 0.069809,
+              "min": 0.046936,
+              "samples": [
+                0.046936,
+                0.06604,
+                0.069809,
+                0.07560499999999999,
+                0.072072
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.013763999999999998,
+              "max": 0.33246899999999996,
+              "median": 0.310265,
+              "min": 0.305857,
+              "samples": [
+                0.33246899999999996,
+                0.323251,
+                0.310265,
+                0.305857,
+                0.309487
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.0019938180000000014,
+              "max": 0.064797162,
+              "median": 0.063397515,
+              "min": 0.061805911,
+              "samples": [
+                0.062133023,
+                0.061805911,
+                0.064797162,
+                0.063397515,
+                0.064126841
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-mars-5"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "triangles-1k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s3",
+            "sha256": "659688840ef7365d565f2e08d43d6fa55e1c43d19181ce5ee42813a0cfdd1a1b",
+            "triangle_count": 1280,
+            "volume_mm3": 33221.9263709515
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6838716.0,
+              "median": 6838716.0,
+              "min": 6838716.0,
+              "samples": [
+                6838716.0,
+                6838716.0,
+                6838716.0,
+                6838716.0,
+                6838716.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 376.0,
+              "max": 21184.0,
+              "median": 20932.0,
+              "min": 20032.0,
+              "samples": [
+                21180.0,
+                20932.0,
+                20804.0,
+                20032.0,
+                21184.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.034879,
+              "max": 0.125035,
+              "median": 0.087546,
+              "min": 0.05355,
+              "samples": [
+                0.125035,
+                0.093802,
+                0.087546,
+                0.05355,
+                0.058922999999999996
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.041671000000000014,
+              "max": 0.545042,
+              "median": 0.507768,
+              "min": 0.4744,
+              "samples": [
+                0.4744,
+                0.501482,
+                0.507768,
+                0.543153,
+                0.545042
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.0030826780000000054,
+              "max": 0.09020632,
+              "median": 0.083516293,
+              "min": 0.081146066,
+              "samples": [
+                0.08584637,
+                0.09020632,
+                0.082763692,
+                0.081146066,
+                0.083516293
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "triangles-20k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s5",
+            "sha256": "992e2485a8ae740b67c20964a555f5ac0195ddfe52d5f03b4adb5353d2de430a",
+            "triangle_count": 20480,
+            "volume_mm3": 33492.19952127095
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6870248.0,
+              "median": 6870248.0,
+              "min": 6870248.0,
+              "samples": [
+                6870248.0,
+                6870248.0,
+                6870248.0,
+                6870248.0,
+                6870248.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 376.0,
+              "max": 23296.0,
+              "median": 22912.0,
+              "min": 22656.0,
+              "samples": [
+                22912.0,
+                22656.0,
+                23288.0,
+                23296.0,
+                22912.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.021944000000000005,
+              "max": 0.082287,
+              "median": 0.063739,
+              "min": 0.047102,
+              "samples": [
+                0.049773,
+                0.071717,
+                0.047102,
+                0.082287,
+                0.063739
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.013210999999999973,
+              "max": 0.666159,
+              "median": 0.641235,
+              "min": 0.620896,
+              "samples": [
+                0.650605,
+                0.641235,
+                0.666159,
+                0.620896,
+                0.637394
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.003802780999999991,
+              "max": 0.115632689,
+              "median": 0.111724549,
+              "min": 0.107520095,
+              "samples": [
+                0.107520095,
+                0.111724549,
+                0.113797898,
+                0.109995117,
+                0.115632689
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "triangles-330k",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s7",
+            "sha256": "4036ffd57d9632f8053c13495a3e10ebd35b8bf52ec3d2dfef6349672dfe1e2b",
+            "triangle_count": 327680,
+            "volume_mm3": 33509.18865389015
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872568.0,
+              "median": 6872568.0,
+              "min": 6872568.0,
+              "samples": [
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 3816.0,
+              "max": 115292.0,
+              "median": 113756.0,
+              "min": 86608.0,
+              "samples": [
+                110008.0,
+                86608.0,
+                113824.0,
+                113756.0,
+                115292.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.021515000000000006,
+              "max": 0.22966899999999998,
+              "median": 0.182493,
+              "min": 0.161483,
+              "samples": [
+                0.182493,
+                0.161483,
+                0.22966899999999998,
+                0.18198599999999998,
+                0.203501
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.04122999999999988,
+              "max": 1.384436,
+              "median": 1.322438,
+              "min": 1.29207,
+              "samples": [
+                1.384436,
+                1.339364,
+                1.2981340000000001,
+                1.322438,
+                1.29207
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.009610449000000021,
+              "max": 0.371022371,
+              "median": 0.359817774,
+              "min": 0.355353609,
+              "samples": [
+                0.371022371,
+                0.359300697,
+                0.368911146,
+                0.355353609,
+                0.359817774
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "triangles-1.3m",
+          "cpus": null,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s8",
+            "sha256": "41618faa621b67942a94078d12fe10e433a8a7958cf23070e10a177a5228e077",
+            "triangle_count": 1310720,
+            "volume_mm3": 33510.038386304
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872688.0,
+              "median": 6872688.0,
+              "min": 6872688.0,
+              "samples": [
+                6872688.0,
+                6872688.0,
+                6872688.0,
+                6872688.0,
+                6872688.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 516.0,
+              "max": 302864.0,
+              "median": 298944.0,
+              "min": 297972.0,
+              "samples": [
+                298944.0,
+                298540.0,
+                299056.0,
+                302864.0,
+                297972.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.02915699999999999,
+              "max": 0.6447269999999999,
+              "median": 0.63871,
+              "min": 0.5945779999999999,
+              "samples": [
+                0.641918,
+                0.63871,
+                0.6447269999999999,
+                0.612761,
+                0.5945779999999999
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.05544600000000033,
+              "max": 3.780871,
+              "median": 3.7523109999999997,
+              "min": 3.704131,
+              "samples": [
+                3.704131,
+                3.7167149999999998,
+                3.7523109999999997,
+                3.780871,
+                3.772161
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.018999674999999883,
+              "max": 1.20684904,
+              "median": 1.147579785,
+              "min": 1.138167388,
+              "samples": [
+                1.147579785,
+                1.160732183,
+                1.138167388,
+                1.141732508,
+                1.20684904
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "cpus-1",
+          "cpus": 1,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s7",
+            "sha256": "4036ffd57d9632f8053c13495a3e10ebd35b8bf52ec3d2dfef6349672dfe1e2b",
+            "triangle_count": 327680,
+            "volume_mm3": 33509.18865389015
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872568.0,
+              "median": 6872568.0,
+              "min": 6872568.0,
+              "samples": [
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 8.0,
+              "max": 70612.0,
+              "median": 70584.0,
+              "min": 70580.0,
+              "samples": [
+                70580.0,
+                70588.0,
+                70580.0,
+                70612.0,
+                70584.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.007174,
+              "max": 0.09417099999999999,
+              "median": 0.08703699999999999,
+              "min": 0.068825,
+              "samples": [
+                0.08703699999999999,
+                0.09417099999999999,
+                0.068825,
+                0.09379799999999999,
+                0.08662399999999999
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.028015000000000012,
+              "max": 1.006526,
+              "median": 0.952693,
+              "min": 0.9344739999999999,
+              "samples": [
+                0.9429029999999999,
+                0.9344739999999999,
+                0.952693,
+                1.006526,
+                0.970918
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.03886745699999983,
+              "max": 1.219258631,
+              "median": 1.140527351,
+              "min": 1.134065705,
+              "samples": [
+                1.139751957,
+                1.140527351,
+                1.134065705,
+                1.219258631,
+                1.178619414
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "cpus-2",
+          "cpus": 2,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s7",
+            "sha256": "4036ffd57d9632f8053c13495a3e10ebd35b8bf52ec3d2dfef6349672dfe1e2b",
+            "triangle_count": 327680,
+            "volume_mm3": 33509.18865389015
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872568.0,
+              "median": 6872568.0,
+              "min": 6872568.0,
+              "samples": [
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 440.0,
+              "max": 85172.0,
+              "median": 84888.0,
+              "min": 83660.0,
+              "samples": [
+                84888.0,
+                83660.0,
+                85172.0,
+                84620.0,
+                85060.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.005831000000000003,
+              "max": 0.145196,
+              "median": 0.10815899999999999,
+              "min": 0.101813,
+              "samples": [
+                0.104959,
+                0.11079,
+                0.145196,
+                0.10815899999999999,
+                0.101813
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.035694000000000004,
+              "max": 0.9909859999999999,
+              "median": 0.963297,
+              "min": 0.915072,
+              "samples": [
+                0.944633,
+                0.980327,
+                0.915072,
+                0.963297,
+                0.9909859999999999
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.008724893000000011,
+              "max": 0.722770856,
+              "median": 0.706786786,
+              "min": 0.689397944,
+              "samples": [
+                0.689397944,
+                0.722770856,
+                0.705601825,
+                0.706786786,
+                0.714326718
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "cpus-4",
+          "cpus": 4,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s7",
+            "sha256": "4036ffd57d9632f8053c13495a3e10ebd35b8bf52ec3d2dfef6349672dfe1e2b",
+            "triangle_count": 327680,
+            "volume_mm3": 33509.18865389015
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872568.0,
+              "median": 6872568.0,
+              "min": 6872568.0,
+              "samples": [
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 424.0,
+              "max": 84796.0,
+              "median": 84180.0,
+              "min": 82896.0,
+              "samples": [
+                83988.0,
+                84796.0,
+                84180.0,
+                82896.0,
+                84412.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.016383999999999996,
+              "max": 0.126748,
+              "median": 0.104781,
+              "min": 0.087971,
+              "samples": [
+                0.104781,
+                0.126748,
+                0.087971,
+                0.11046399999999999,
+                0.09408
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.01317999999999997,
+              "max": 0.907987,
+              "median": 0.8839859999999999,
+              "min": 0.87635,
+              "samples": [
+                0.87635,
+                0.8839859999999999,
+                0.907987,
+                0.883716,
+                0.8968959999999999
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.004372060999999983,
+              "max": 0.45992165,
+              "median": 0.456034543,
+              "min": 0.45351607,
+              "samples": [
+                0.456034543,
+                0.458486326,
+                0.45351607,
+                0.45992165,
+                0.454114265
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        },
+        {
+          "accuracy": null,
+          "analysis_error": null,
+          "analysis_status": null,
+          "case": "cpus-8",
+          "cpus": 8,
+          "determinism": {
+            "decoded_files": null,
+            "distinct_decoded_layers": null,
+            "distinct_files": 1,
+            "outputs": 6
+          },
+          "file": null,
+          "model": {
+            "id": "sphere-r20-s7",
+            "sha256": "4036ffd57d9632f8053c13495a3e10ebd35b8bf52ec3d2dfef6349672dfe1e2b",
+            "triangle_count": 327680,
+            "volume_mm3": 33509.18865389015
+          },
+          "performance": {
+            "failed_runs": 0,
+            "output_bytes": {
+              "count": 5,
+              "iqr": 0.0,
+              "max": 6872568.0,
+              "median": 6872568.0,
+              "min": 6872568.0,
+              "samples": [
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0,
+                6872568.0
+              ]
+            },
+            "peak_rss_kib": {
+              "count": 5,
+              "iqr": 1392.0,
+              "max": 85516.0,
+              "median": 85128.0,
+              "min": 82860.0,
+              "samples": [
+                85128.0,
+                85516.0,
+                82860.0,
+                85360.0,
+                83968.0
+              ]
+            },
+            "system_s": {
+              "count": 5,
+              "iqr": 0.02617999999999998,
+              "max": 0.153723,
+              "median": 0.134471,
+              "min": 0.120335,
+              "samples": [
+                0.125112,
+                0.15129199999999998,
+                0.120335,
+                0.153723,
+                0.134471
+              ]
+            },
+            "timed_runs": 5,
+            "user_s": {
+              "count": 5,
+              "iqr": 0.08713300000000002,
+              "max": 1.066391,
+              "median": 1.036093,
+              "min": 0.944299,
+              "samples": [
+                0.944299,
+                0.949604,
+                1.036737,
+                1.036093,
+                1.066391
+              ]
+            },
+            "wall_s": {
+              "count": 5,
+              "iqr": 0.013001937000000019,
+              "max": 0.395492765,
+              "median": 0.37227879,
+              "min": 0.357308344,
+              "samples": [
+                0.357308344,
+                0.37227879,
+                0.372060361,
+                0.395492765,
+                0.385062298
+              ]
+            }
+          },
+          "slicer": "karasu",
+          "slicer_commit": "45bc195abfd439fec409e1075cbd4d0665455d30",
+          "slicer_label": "karasu (karasu-slicer 0.2.0-dev, 45bc195)",
+          "target": "elegoo-saturn-4-ultra-16k"
+        }
+      ],
+      "ended_at_utc": "2026-11-17T14:30:35Z",
+      "host": {
+        "cpu_model": "AMD Ryzen 7 7700 8-Core Processor",
+        "hypervisor_flag": true,
+        "kernel_release": "6.6.87.2-microsoft-standard-WSL2",
+        "logical_cpus": 16,
+        "machine": "x86_64",
+        "memory_total_kib": 15937716,
+        "os_distribution": "Ubuntu 24.04.5 LTS",
+        "physical_cores": 8,
+        "python": "3.12.3",
+        "wsl": true
+      },
+      "launcher_floor_kib": 7972.0,
+      "models": {
+        "catalog_sha256": "893fe1880810216028918e1fa3d44ee36cd55e6c76f9f5b9dd9b636a81bd25b5",
+        "generator_version": 1
+      },
+      "run_id": "20261117T143003Z-scaling",
+      "started_at_utc": "2026-11-17T14:30:03Z",
+      "suite": {
+        "description": "karasu-slicer timing against panel resolution, layer count, triangle count and CPU count.",
+        "id": "scaling",
+        "sha256": "f6ee021b1a1631e8a1e585bee22fe8aab62b3a1e590ce619bc9f0136f173d58c",
+        "timing": {
+          "repetitions": 5,
+          "timeout_s": 1800.0,
+          "warmup": 1
+        }
+      },
+      "suite_code": {
+        "git_commit": "174aee71f36c16214eccb03df493638ea8ceb23c",
+        "git_dirty": false,
+        "lockfile_sha256": "6ca434bc6351001b9e5c3eea31b35c66ea2fcc30077c26db57a13daf7d2f1407",
+        "version": "0.1.0.dev0"
+      },
+      "targets": {
+        "elegoo-mars-4": {
+          "description": "Elegoo Mars 4: 9K mono LCD, 8520 x 4320 px at 18 \u00b5m",
+          "sha256": "7840b1e443db0889dd833148272dabd93deef84f2dbc00967405fe17e698a7b6",
+          "source": {
+            "corroboration": [
+              "https://matterhackers.com/store/l/elegoo-mars-4-9k-lcd-resin-3d-printer/sk/MUC7M21M",
+              "https://printer-hub.ru/en/printers/elegoo-mars-4"
+            ],
+            "manufacturer": "https://us.elegoo.com/collections/mars-series/products/elegoo-mars-4-msla-resin-3d-printer-with-9k-mono-lcd",
+            "retrieved": "2026-11-17"
+          }
+        },
+        "elegoo-mars-5": {
+          "description": "Elegoo Mars 5: 4K mono LCD, 4098 x 2560 px at 35 \u00b5m",
+          "sha256": "201ea3ed3401b502112babc406fbfd34d9f846c8bb9bd6da08570fdb60ac02ee",
+          "source": {
+            "corroboration": [
+              "https://printer-hub.ru/en/printers/elegoo-mars-5",
+              "https://liqcreate.com/?p=20146"
+            ],
+            "manufacturer": "https://us.elegoo.com/pages/elegoo-mars-5-series",
+            "retrieved": "2026-11-17"
+          }
+        },
+        "elegoo-saturn-4-ultra-16k": {
+          "description": "Elegoo Saturn 4 Ultra 16K: 10-inch 16K mono LCD, 15120 x 6230 px of 14 x 19 \u00b5m",
+          "sha256": "65c9cf99f3a73fb9a89de67bbde34d1bfeee95421ebf62c1372f75047007973d",
+          "source": {
+            "corroboration": [
+              "https://printer-hub.ru/en/printers/elegoo-saturn-4-ultra-16k",
+              "https://www.fabbaloo.com/news/elegoo-launches-saturn-4-ultra-16k-high-resolution-resin-printing-at-150mm-hour"
+            ],
+            "manufacturer": "https://us.elegoo.com/",
+            "retrieved": "2026-11-17"
+          }
+        }
+      },
+      "tools": [
+        {
+          "name": "karasu-cli",
+          "sha256": "ee36c780383547d43ad877b84af7ea9dc27d98314d990676a5252f03f4b2dd4e",
+          "version": "karasu-slicer 0.2.0-dev"
+        },
+        {
+          "name": "UVtoolsCmd",
+          "sha256": "4fc69a726a1f20f0a85db622bcfa2ca214ffaba9441a74df8dd6dff3bb4a9a06",
+          "version": "7.1.2"
+        },
+        {
+          "name": "PrusaSlicer",
+          "sha256": "ef5a3941963ee37066be5cae7524a243552f813d45f4b02a1fbf2147ab1e91cd",
+          "version": "PrusaSlicer-2.8.1+linux-x64-GTK3-202409181416 based on Slic3r (with GUI support)"
+        },
+        {
+          "name": "dragonfruit-cli",
+          "sha256": "e8781a54ed689724fc30b3bf839e978f5c0def6d032984dce5c5800df6b7f4fb",
+          "version": "dragonfruit-cli v0.2.2 (188df82)"
+        },
+        {
+          "name": "git",
+          "sha256": "eb54b535467e0975c1284d4c4d08eea779aeb248a5d34b02e2ee171382e22201",
+          "version": "git version 2.43.0"
+        },
+        {
+          "name": "cargo",
+          "sha256": "b1c8cb14e30889e7e2999e6b69e62d9e9b9ffc0f4df8180564d306d9680e6c55",
+          "version": "cargo 1.100.0 (3acc79c0c 2026-11-05)"
+        },
+        {
+          "name": "npm",
+          "sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+          "version": "11.19.0"
+        }
+      ]
+    }
+  ],
+  "schema_version": 1,
+  "title": "karasu-slicer scaling: resolution, layers, triangles and CPUs"
+}

@@ -145,6 +145,11 @@ dragonfruit-cli slice run <model.stl> --output <file>.goo --layer-height 0.05 \
 
 - Its `.goo` files declare the panel given (resolution, 0.035 mm pixels, 0.05 mm layers) and
   `DisplayMirror: None`; the images are the unmirrored top view (`identity`).
+- With `--anti-aliasing Off` its `.goo` files still declare `AntiAliasing: 8` (as UVTools reads
+  them), and their layers have grey edge pixels: 26 levels, in steps of 255/25, on the 10 mm
+  sphere on the Elegoo Mars 5, where 4.1 % of the lit pixels are partial. The binary metrics
+  threshold them at 0.5 as they do every slicer's (METRICS.md); `edge_coverage_mae` measures how
+  closely they follow the exact coverage.
 - The model, centred at the origin, is placed on the panel half a pixel off its centre in X and Y.
 - The GOO header carries the creation time (`FileCreateTime`), so two runs never give
   byte-identical files; their decoded layers are identical (BD-024).

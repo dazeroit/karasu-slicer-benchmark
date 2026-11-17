@@ -255,6 +255,16 @@ never "the newest build": with several builds in `work/karasu/` (versions compar
 regressions), the one measured is the one last built or re-selected, and every run records its
 commit.
 
+## BD-026: Curated results published under results/
+
+2026-11-17, owner. Results are published as curated summaries under `results/<date>/`, written by
+`kbench publish` from chosen runs: the report's tables and the records as JSON, with every
+local path, host and user name left out, no per-layer arrays, and no file written by another
+program (manual exports are named by SHA-256). Only runs made from committed suite code are
+published; runs made before a metric definition changed are run again rather than published
+beside newer ones. Each campaign's README states its scope, its main measured facts and its
+limits; it ranks nothing.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.
@@ -262,7 +272,6 @@ Each is answered by a later `BD` record. Until then, the suite assumes the defau
 | Question | Default assumed |
 | --- | --- |
 | Initial benchmark targets | Prusa SL1S (common ground with PrusaSlicer), a 4K catalog printer with verified orientation, the Anycubic Photon P1, a 16K printer |
-| GUI slicers for manual campaigns | none until the owner names them |
-| Publication of results | nothing published; results stay under `work/` |
+| GUI slicers for manual campaigns | CHITUBOX and Lychee, exported by the owner (2026-11-17); others when the owner names them |
 | Building karasu-cli from a git ref | allowed, by `git archive` export into `work/`, never writing to the karasu-slicer checkout |
-| Hosting, remote and CI service | local repository only; the GitHub Actions workflow is ready for when it is hosted |
+| Hosting, remote and CI service | public repository `dazeroit/karasu-slicer-benchmark` on GitHub with GitHub Actions CI (owner, 2026-11-17) |
