@@ -179,12 +179,22 @@ byte-identical.
 ## BD-019: HTML report charts
 
 2026-11-17. The HTML report draws its charts as inline SVG with a small script for tooltips, no
-chart library. Series take the first three slots of the reference categorical palette, which a
-palette validator passed on every pair in light and dark mode (CVD ΔE ≥ 9.2, normal-vision
-ΔE ≥ 20.9); the light-mode third colour is below 3:1 against the surface, so every chart keeps a
-legend and every value is in a table. More than three slicers in one report are shown in the
-tables only. Wall time across cases spans three decades, so it is a dot plot on a logarithmic
-axis rather than bars, which must start at zero.
+chart library. Series take the slots of the reference categorical palette in a fixed order, the
+order in which slicers first appear in the report, so a slicer keeps its colour on every chart.
+
+- **Line charts** show up to four series. The first four slots pass the palette validator on
+  adjacent pairs in light and dark mode (CVD ΔE ≥ 8.4, normal-vision ΔE ≥ 19.8). Their fourth
+  slot (yellow) and second (orange) are close for colour-blind readers, so every line of a chart
+  with two or more series also carries a direct label, in the right margin, joined to the line's
+  end by a leader; labels are spaced so they never overlap where lines converge.
+- **The wall-time dot plot** sets every series against every other on the same row, which only
+  the first three slots pass (all pairs: CVD ΔE ≥ 9.2, normal-vision ΔE ≥ 20.9); it shows three.
+- In light mode the third and fourth colours are below 3:1 against the surface: every chart keeps
+  its legend and direct labels, and every value is in a table.
+
+Slicers beyond those limits are in the tables only, and the page says so. Wall time across cases
+spans three decades, so it is a dot plot on a logarithmic axis rather than bars, which must start
+at zero.
 
 ## BD-020: CPU affinity as the thread-count control
 

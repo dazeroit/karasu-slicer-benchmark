@@ -18,9 +18,16 @@ from typing import Any
 from kbench.report import _load, render, slicer_label
 
 # Categorical slots 1-3 of the reference palette, validated all-pairs in both modes (BD-019).
-SERIES_LIGHT = ("#2a78d6", "#eb6834", "#1baf7a")
-SERIES_DARK = ("#3987e5", "#d95926", "#199e70")
-MAX_SERIES = len(SERIES_LIGHT)
+SERIES_LIGHT = ("#2a78d6", "#eb6834", "#1baf7a", "#eda100")
+SERIES_DARK = ("#3987e5", "#d95926", "#199e70", "#c98500")
+# Lines pass the palette's adjacent-pair checks with four slots and carry direct labels; the dot
+# plot sets every pair side by side, which only the first three slots pass (BD-019).
+MAX_LINE_SERIES = 4
+MAX_DOT_SERIES = 3
+# Direct labels of line ends: the gutter's width and the least vertical distance between labels.
+LABEL_GUTTER_PX = 128
+LABEL_GAP_PX = 14
+LABEL_MAX_CHARS = 18
 
 WIDTH = 720
 FONT = 'system-ui, -apple-system, "Segoe UI", sans-serif'
@@ -71,17 +78,30 @@ def _tip(lines: Sequence[str]) -> str:
 
 
 class Series:
-    """The report's series: one per slicer label, in order of first appearance, at most three."""
+    """The report's series: one per slicer label, in order of first appearance; colour slots
+    follow that order and never change with the chart (at most four)."""
 
     def __init__(self, labels: Sequence[str]) -> None:
         self.labels: list[str] = []
         for label in labels:
             if label not in self.labels:
                 self.labels.append(label)
-        self.shown = self.labels[:MAX_SERIES]
+        self.shown = self.labels[:MAX_LINE_SERIES]
 
     def slot(self, label: str) -> int | None:
         return self.shown.index(label) + 1 if label in self.shown else None
+
+    def dot_slot(self, label: str) -> int | None:
+        slot = self.slot(label)
+        return slot if slot is not None and slot <= MAX_DOT_SERIES else None
+
+    def short(self, label: str) -> str:
+        """A direct label: the slicer's name, with the last detail of its label (a commit or a
+        version) when two shown series share that name."""
+        base = label.split(" (")[0]
+        if sum(other.split(" (")[0] == base for other in self.shown) > 1:
+            base = f"{base} {label.rstrip(')').split()[-1].strip(',(')}"
+        return base if len(base) <= LABEL_MAX_CHARS else base[: LABEL_MAX_CHARS - 1] + "…"
 
 
 def _legend(series: Series, labels: Sequence[str], mark: str) -> str:
@@ -105,14 +125,16 @@ def timing_chart(cases: Sequence[dict[str, Any]], series: Series) -> str | None:
     for case in cases:
         perf = case.get("performance")
         label = slicer_label(case)
-        if not perf or perf["wall_s"]["median"] is None or series.slot(label) is None:
+        if not perf or perf["wall_s"]["median"] is None or series.dot_slot(label) is None:
             continue
         rows.setdefault(case["case"], []).append((label, perf["wall_s"]["median"], perf))
     if not rows:
         return None
     values = [value for entries in rows.values() for _, value, _ in entries]
     ticks = _decades(min(values), max(values))
-    left, right, top, row_height = 230, 24, 28, 30
+    # Room for the longest case name at the row labels' 12 px (about 7 px per character).
+    left = min(max(160, 7 * max(len(name) for name in rows) + 24), WIDTH // 2)
+    right, top, row_height = 24, 28, 30
     height = top + row_height * len(rows) + 30
     plot = WIDTH - left - right
 
@@ -142,7 +164,7 @@ def timing_chart(cases: Sequence[dict[str, Any]], series: Series) -> str | None:
                 f'<line class="connector" x1="{min(xs):.1f}" y1="{y:.1f}" x2="{max(xs):.1f}" y2="{y:.1f}"/>'
             )
         for label, value, perf in entries:
-            slot = series.slot(label)
+            slot = series.dot_slot(label)
             x = x_of(value)
             lines = [
                 f"{_fmt(value)} s median wall time",
@@ -188,7 +210,8 @@ def line_chart(
         return None
     xs = sorted({x for points in data.values() for x, _ in points})
     ys = [y for points in data.values() for _, y in points]
-    left, right, top, bottom = 64, 24, 16, 40
+    labelled = len(data) >= 2
+    left, right, top, bottom = 64, 24 + (LABEL_GUTTER_PX if labelled else 0), 16, 40
     height = 260
     plot_w, plot_h = WIDTH - left - right, height - top - bottom
     if log_x:
@@ -248,6 +271,9 @@ def line_chart(
                     f'<circle class="marker" cx="{sx(x):.1f}" cy="{sy(y):.1f}" r="4" style="fill:var(--series-{slot})"/>'
                 )
 
+    if labelled:
+        parts += _direct_labels(data, series, sx, sy, WIDTH - right, top, top + plot_h)
+
     readouts = []
     for x in xs:
         rows = []
@@ -263,6 +289,47 @@ def line_chart(
     )
     parts.append("</svg>")
     return _card(title, note, _legend(series, list(data), "line") + "".join(parts))
+
+
+def label_positions(ends: Sequence[float], low: float, high: float) -> list[float]:
+    """Vertical positions for labels wanted at ``ends`` (sorted), at least LABEL_GAP_PX apart,
+    kept between ``low`` and ``high`` where the space allows."""
+    positions: list[float] = []
+    for wanted in ends:
+        positions.append(max(wanted, positions[-1] + LABEL_GAP_PX) if positions else wanted)
+    for index in reversed(range(len(positions))):
+        ceiling = high if index == len(positions) - 1 else positions[index + 1] - LABEL_GAP_PX
+        positions[index] = min(positions[index], ceiling)
+    if positions and positions[0] < low:
+        shift = low - positions[0]
+        positions = [position + shift for position in positions]
+    return positions
+
+
+def _direct_labels(
+    data: dict[str, list[tuple[float, float]]],
+    series: Series,
+    sx: Any,
+    sy: Any,
+    plot_right: float,
+    top: float,
+    bottom: float,
+) -> list[str]:
+    """Each line's name in the right gutter, joined to the line's end by a leader."""
+    ends = sorted((sy(points[-1][1]), sx(points[-1][0]), label) for label, points in data.items())
+    positions = label_positions([y for y, _, _ in ends], top + 4, bottom - 4)
+    gutter = plot_right + 10
+    parts = []
+    for (y_end, x_end, label), y_label in zip(ends, positions, strict=True):
+        slot = series.slot(label)
+        parts.append(
+            f'<polyline class="leader" points="{x_end + 5:.1f},{y_end:.1f} {gutter - 4:.1f},{y_label:.1f}"/>'
+            f'<line class="label-key" x1="{gutter:.1f}" y1="{y_label:.1f}" x2="{gutter + 10:.1f}" '
+            f'y2="{y_label:.1f}" style="stroke:var(--series-{slot})"/>'
+            f'<text class="direct-label" x="{gutter + 14:.1f}" y="{y_label + 4:.1f}">'
+            f"{_esc(series.short(label))}</text>"
+        )
+    return parts
 
 
 def scaling_charts(cases: Sequence[dict[str, Any]], series: Series) -> list[str]:
@@ -417,10 +484,11 @@ def render_html(run_dirs: Sequence[Path] | Path) -> str:
     ]
     charts += layer_charts(analysed, series)
     note = ""
-    if len(series.labels) > MAX_SERIES:
+    if len(series.labels) > MAX_DOT_SERIES:
         note = (
-            f'<p class="note">Charts show the first {MAX_SERIES} slicers; '
-            f"{len(series.labels) - MAX_SERIES} more are in the tables.</p>"
+            f'<p class="note">The wall-time chart shows the first {MAX_DOT_SERIES} slicers and '
+            f"line charts the first {min(len(series.labels), MAX_LINE_SERIES)}; every slicer is "
+            "in the tables.</p>"
         )
     title = runs[0]["run_id"] if len(runs) == 1 else f"{len(runs)} runs"
     markdown = render(directories)
@@ -552,6 +620,9 @@ svg {{ width: 100%; height: auto; display: block; font-family: {font}; }}
 .line {{ fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }}
 .marker {{ stroke: var(--surface-1); stroke-width: 2; }}
 .crosshair {{ stroke: var(--muted); stroke-width: 1; }}
+.leader {{ fill: none; stroke: var(--axis); stroke-width: 1; }}
+.label-key {{ stroke-width: 2; stroke-linecap: round; }}
+.direct-label {{ fill: var(--text-secondary); font-size: 11px; }}
 .overlay {{ fill: transparent; }}
 .legend {{ display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0 0 6px; font-size: 12px; color: var(--text-secondary); }}
 .legend-item {{ display: inline-flex; align-items: center; gap: 6px; }}

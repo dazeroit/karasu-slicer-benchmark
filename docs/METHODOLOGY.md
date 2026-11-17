@@ -201,6 +201,7 @@ regression view between karasu-slicer versions.
 
 The HTML page holds the same tables under its charts: median wall time per case (logarithmic),
 wall time against triangle count for a model family on one target, wall time against CPU count,
-and per-layer area error. Charts use the first three categorical colours of a validated palette
-(BD-019); identity never rests on colour alone (legend, tables), labels are inserted as text,
-and every charted value is also in a table.
+and per-layer area error. Line charts show up to four slicers, each with a direct label, and the
+wall-time chart three, in the colours of a validated palette (BD-019); identity never rests on
+colour alone (legend, direct labels, tables), labels are inserted as text, and every charted
+value is also in a table.
