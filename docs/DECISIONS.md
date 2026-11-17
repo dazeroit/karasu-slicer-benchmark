@@ -236,6 +236,15 @@ suite keeps up to two of them besides the print file and, after analysing the pr
 them the same way and compares their pixels; the report gives the number of distinct decoded
 layer sets.
 
+## BD-025: The selected karasu-cli build
+
+2026-11-17, owner. karasu-cli is found without an environment variable: `kbench karasu build`
+writes the commit it built (or found already built) into `work/karasu/selected`, and tool
+discovery uses that build after `KBENCH_KARASU_CLI` and before `PATH`. The choice stays explicit,
+never "the newest build": with several builds in `work/karasu/` (versions compared for
+regressions), the one measured is the one last built or re-selected, and every run records its
+commit.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

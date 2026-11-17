@@ -151,6 +151,16 @@ def test_missing_tools_stop_the_run(tmp_path: Path) -> None:
         )
 
 
+def _use_selected_karasu(environ: dict[str, str]) -> None:
+    """The tests run in a temporary work directory: point them at the selected build of the
+    suite's own work directory, unless KBENCH_KARASU_CLI is set."""
+    from kbench.karasu_build import selected_binary
+
+    selected = selected_binary(repository_path("work"))
+    if selected is not None:
+        environ.setdefault("KBENCH_KARASU_CLI", str(selected))
+
+
 @pytest.mark.integration
 def test_smoke_suite_with_the_real_tools(tmp_path: Path) -> None:
     """Needs KBENCH_INTEGRATION=1, a karasu-cli (KBENCH_KARASU_CLI) and the pinned UVTools."""
@@ -161,6 +171,7 @@ def test_smoke_suite_with_the_real_tools(tmp_path: Path) -> None:
         "KBENCH_UVTOOLSCMD",
         str(repository_path("work", "tools", "uvtools", "v7.1.2", "UVtoolsCmd")),
     )
+    _use_selected_karasu(environ)
     suite = load_suite(repository_path("suites", "smoke.toml"))
     run_dir = run_suite(
         suite,
@@ -215,6 +226,7 @@ def test_import_and_compare_with_the_real_tools(tmp_path: Path) -> None:
         "KBENCH_UVTOOLSCMD",
         str(repository_path("work", "tools", "uvtools", "v7.1.2", "UVtoolsCmd")),
     )
+    _use_selected_karasu(environ)
     targets = load_targets(repository_path("targets"))
     suite = load_suite(repository_path("suites", "smoke.toml"))
     run_dir = run_suite(

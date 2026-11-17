@@ -28,12 +28,43 @@ class BuildError(RuntimeError):
     """karasu-cli could not be built from the ref."""
 
 
+SELECTION_FILE = "selected"
+
+
 def build_directory(work: Path, commit: str) -> Path:
     return work / "karasu" / commit
 
 
+def select_build(work: Path, commit: str) -> None:
+    """Make the build of ``commit`` the karasu-cli that tool discovery finds (BD-025)."""
+    selection = work / "karasu" / SELECTION_FILE
+    partial = selection.with_name(SELECTION_FILE + ".partial")
+    partial.write_text(commit + "\n", encoding="utf-8")
+    partial.replace(selection)
+
+
+def selected_binary(work: Path) -> Path | None:
+    """The karasu-cli of the selected build under ``work``, or ``None`` when no build is
+    selected or the selected build's binary is gone."""
+    selection = work / "karasu" / SELECTION_FILE
+    try:
+        commit = selection.read_text(encoding="utf-8").strip()
+    except OSError:
+        return None
+    if len(commit) != 40 or any(char not in "0123456789abcdef" for char in commit):
+        return None
+    record_path = build_directory(work, commit) / "build.json"
+    try:
+        record = json.loads(record_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    binary = Path(record.get("binary", ""))
+    return binary if binary.is_file() else None
+
+
 def build_karasu(repo: Path, ref: str, work: Path, git: Path, cargo: Path) -> dict[str, Any]:
-    """Build karasu-cli at ``ref`` and return the build record (existing builds are reused)."""
+    """Build karasu-cli at ``ref``, select it and return the build record (existing builds are
+    reused and selected again)."""
     resolved = run_captured(
         [str(git), "-C", str(repo), "rev-parse", "--verify", f"{ref}^{{commit}}"], GIT_TIMEOUT_S
     )
@@ -48,6 +79,7 @@ def build_karasu(repo: Path, ref: str, work: Path, git: Path, cargo: Path) -> di
             Path(record["binary"]).is_file()
             and sha256_file(Path(record["binary"])) == record["binary_sha256"]
         ):
+            select_build(work, commit)
             return record
 
     source = directory / "src"
@@ -95,6 +127,7 @@ def build_karasu(repo: Path, ref: str, work: Path, git: Path, cargo: Path) -> di
         "binary_sha256": sha256_file(binary),
     }
     record_path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    select_build(work, commit)
     return record
 
 

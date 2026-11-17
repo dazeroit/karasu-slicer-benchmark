@@ -10,7 +10,9 @@ The slicer under test, found through `KBENCH_KARASU_CLI` or `PATH` (BD-006). `kb
 build --repo <checkout> --ref <ref>` builds it from a commit: the checkout is only read (`git
 archive` into `work/karasu/<commit>/src`), Cargo builds `karasu-cli` with the release profile and
 `--locked`, and `build.json` records the commit, the toolchain and the binary's SHA-256. A run
-whose karasu-cli comes from such a build records that commit.
+whose karasu-cli comes from such a build records that commit. The build is also selected: runs
+use it without any setting until another commit is built or re-selected, unless
+`KBENCH_KARASU_CLI` names another karasu-cli (BD-025).
 
 **Command** (`src/kbench/slicers.py`), built from the target's `[slicers.karasu]` table:
 

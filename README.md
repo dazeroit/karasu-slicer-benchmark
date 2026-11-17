@@ -41,14 +41,14 @@ uv run kbench install uvtools
 uv run kbench install prusaslicer   # optional: a compared slicer (docs/SLICERS.md)
 uv run kbench install dragonfruit   # optional: built from its pinned source (needs npm, cargo)
 uv run kbench karasu build --repo ../karasu-slicer --ref HEAD
-export KBENCH_KARASU_CLI=<the path the build prints>
 uv run kbench doctor
 ```
 
 `kbench install uvtools` downloads the pinned UVTools release and checks its SHA-256.
 `kbench karasu build` builds karasu-cli from a commit of a karasu-slicer checkout without
-writing to it, so every run can name the commit it measured; any karasu-cli can be used
-instead through `KBENCH_KARASU_CLI`. `kbench doctor` lists each tool with its path, SHA-256 and
+writing to it, so every run can name the commit it measured, and selects that build: runs find
+it without any setting. Building a commit already built only selects it again. Any other
+karasu-cli can be used through `KBENCH_KARASU_CLI`, which takes precedence. `kbench doctor` lists each tool with its path, SHA-256 and
 version, and exits with status 1 while a required tool is not ready.
 
 ## Usage

@@ -1,22 +1,24 @@
 """The external programs the suite depends on: where they are, what they are, which version.
 
 Each tool is found through its environment variable when that variable is set and not empty,
-then in its pinned installation under the work directory (``kbench install``), then on
-``PATH``. A variable that names something unusable is reported as invalid; the search never
-falls back behind the user's back, because measuring a different binary than the one configured
-would silently change the results (BD-006).
+then in the work directory (its pinned installation from ``kbench install``, or for karasu-cli
+the build ``kbench karasu build`` selected last), then on ``PATH``. A variable that names
+something unusable is reported as invalid; the search never falls back behind the user's back,
+because measuring a different binary than the one configured would silently change the results
+(BD-006, BD-025).
 """
 
 from __future__ import annotations
 
 import os
 import shutil
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
 from kbench.install import default_pins_path, load_pins
+from kbench.karasu_build import selected_binary
 from kbench.process import run_captured
 from kbench.provenance import sha256_file
 from kbench.source_build import default_sources_path, load_sources
@@ -41,6 +43,8 @@ class ToolSpec:
     # A program with no version option, built by the suite: its version is read from the
     # build.json two directories above the binary (BD-022).
     version_from_build: bool = False
+    # A work-directory location that depends on state (the selected karasu-cli build).
+    work_resolver: Callable[[Path], Path | None] | None = None
 
 
 KARASU_CLI = ToolSpec(
@@ -50,6 +54,7 @@ KARASU_CLI = ToolSpec(
     env_var="KBENCH_KARASU_CLI",
     executable="karasu-cli",
     version_args=("--version",),
+    work_resolver=selected_binary,
 )
 
 
@@ -171,6 +176,10 @@ def resolve(spec: ToolSpec, environ: Mapping[str, str], work: Path | None = None
         pinned = (work / spec.work_path).absolute()
         if pinned.is_file() and os.access(pinned, os.X_OK):
             return Resolution("found", "work", pinned, None)
+    if work is not None and spec.work_resolver is not None:
+        selected = spec.work_resolver(work)
+        if selected is not None and os.access(selected, os.X_OK):
+            return Resolution("found", "work (selected build)", selected.absolute(), None)
 
     found = shutil.which(spec.executable, path=environ.get("PATH", os.defpath))
     if found is None:

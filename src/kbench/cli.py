@@ -119,9 +119,11 @@ def _build_parser() -> argparse.ArgumentParser:
     karasu.set_defaults(handler=None, parser=karasu)
     karasu_build = karasu_commands.add_parser(
         "build",
-        help="build karasu-cli at a ref into work/karasu/<commit>",
+        help="build karasu-cli at a ref into work/karasu/<commit> and select it",
         description="Export the ref of a karasu-slicer checkout with git archive (the checkout is "
-        "only read) and build karasu-cli with Cargo's release profile and locked dependencies.",
+        "only read) and build karasu-cli with Cargo's release profile and locked dependencies. "
+        "The build becomes the selected karasu-cli; building an already built commit only "
+        "selects it again.",
     )
     karasu_build.add_argument("--repo", type=Path, required=True, help="karasu-slicer checkout")
     karasu_build.add_argument("--ref", default="HEAD", help="commit, branch or tag (default HEAD)")
@@ -276,7 +278,7 @@ def _run_karasu_build(args: argparse.Namespace) -> int:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
     print(f"karasu-cli at {record['commit']}: {record['binary']}")
-    print(f"Use it with: export KBENCH_KARASU_CLI={record['binary']}")
+    print("Selected: runs use this build unless KBENCH_KARASU_CLI names another karasu-cli.")
     return EXIT_OK
 
 

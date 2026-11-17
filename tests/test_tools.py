@@ -112,3 +112,38 @@ def test_inspect_missing_tool(tmp_path: Path) -> None:
     assert record["status"] == "missing"
     assert record["sha256"] is None
     assert record["version_probe"] is None
+
+
+@posix_only
+def test_selected_karasu_build_is_found(make_script: MakeScript, tmp_path: Path) -> None:
+    import json
+
+    from kbench.karasu_build import build_directory, select_build, selected_binary
+    from kbench.tools import KARASU_CLI
+
+    work = tmp_path / "work"
+    commit = "a" * 40
+    binary = make_script("karasu-cli", 'echo "karasu-slicer 1.0"')
+    directory = build_directory(work, commit)
+    directory.mkdir(parents=True)
+    (directory / "build.json").write_text(json.dumps({"commit": commit, "binary": str(binary)}))
+    empty_path = {"PATH": str(tmp_path / "nothing")}
+
+    assert selected_binary(work) is None  # Built but not selected: not found.
+    assert resolve(KARASU_CLI, empty_path, work).status == "missing"
+
+    select_build(work, commit)
+    resolution = resolve(KARASU_CLI, empty_path, work)
+    assert resolution.status == "found"
+    assert resolution.source == "work (selected build)"
+    assert resolution.path == binary
+
+    other = make_script("other-cli", 'echo "other"')
+    chosen = resolve(KARASU_CLI, {**empty_path, "KBENCH_KARASU_CLI": str(other)}, work)
+    assert chosen.path == other  # The environment variable wins.
+
+    (work / "karasu" / "selected").write_text("not a commit\n")
+    assert selected_binary(work) is None
+    binary.unlink()
+    select_build(work, commit)
+    assert selected_binary(work) is None  # The selected binary is gone.

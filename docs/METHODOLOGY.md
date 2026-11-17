@@ -68,7 +68,7 @@ what the launcher reports for the default toolchain.
 
 | Tool | Variable | Required | Version query |
 | --- | --- | --- | --- |
-| karasu-cli | `KBENCH_KARASU_CLI` | yes | `--version` |
+| karasu-cli | `KBENCH_KARASU_CLI`, else the build `kbench karasu build` selected (BD-025) | yes | `--version` |
 | UVtoolsCmd | `KBENCH_UVTOOLSCMD` | yes | `--core-version` (the UVTools release; `--version` gives the front end's own) |
 | PrusaSlicer | `KBENCH_PRUSASLICER` | no | `--help`, first line |
 | dragonfruit-cli | `KBENCH_DRAGONFRUIT_CLI` | no | `info` must succeed; the version is the tag and commit of the suite's build record |
