@@ -144,6 +144,38 @@ floor. GNU `time` has a lower floor (about 1.3 MiB) but reports times to the hun
 second, too coarse for runs of a few hundredths; the launcher keeps microsecond CPU times.
 Records made before this decision report wrong peaks and are not used.
 
+## BD-017: The SL1S target panel, given identically to both slicers
+
+2026-11-17. Prusa publishes the SL1S SPEED's LCD resolution (2560 × 1620 px) and print volume
+(127 × 80 × 150 mm) but no pixel pitch; third-party tables give 0.049 and 0.05 mm. The target
+uses 0.05 mm square pixels: a 128 × 81 mm panel that holds the published print area.
+
+A first version took the print volume as the panel (127 × 80 mm, pixels of 0.0496 × 0.0494 mm)
+and was rejected after two observations with a 20 mm cube:
+
+- PrusaSlicer 2.8.1 in portrait orientation, which the SL1S format stores, rasterises each plate
+  axis with the other axis's pitch: with non-square pixels the cube came out 405 × 403 px and
+  5.5 px off centre; with 0.05 mm square pixels it is 400 × 400 px and centred.
+- karasu-slicer's profile had been written with the panel resolution in plate order; its
+  documentation says that with `swap_xy` the resolution is in panel order (1620 × 2560). Written
+  that way, the cube is 400 × 400 px and centred too.
+
+karasu-slicer has no SL1S in its catalog, so the suite gives it printer and resin profiles of its
+own (`targets/profiles/karasu/`); PrusaSlicer gets the same panel through its documented display
+options, without any of its presets. Both slicers are told exactly the same panel; the comparison
+measures how each rasterises the same geometry on it.
+
+## BD-018: The suite reads SL1 and SL1S archives itself
+
+2026-11-17. UVTools v7.1.2 refuses karasu-slicer's `.sl1s` files ("Malformed file:
+prusaslicer.ini is missing"); it reads PrusaSlicer's, which hold that file. An SL1 archive is a
+ZIP of one PNG per layer and a `config.ini`, which the suite reads as data (`src/kbench/sl1.py`).
+To keep one decoder per format for every slicer, the suite decodes the layers of every SL1 and
+SL1S file itself, whichever slicer wrote it, and still asks UVTools for the properties and issues
+of each file, recording its refusals. For SL1 files the suite also hashes the layer images alone,
+because PrusaSlicer writes the creation time into `config.ini` and its files are never
+byte-identical.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

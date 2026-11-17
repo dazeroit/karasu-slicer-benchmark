@@ -28,6 +28,10 @@ karasu-cli slice --model <model.stl> --units mm --printer <printer id> --resin <
 - The first warm-up run adds `--log <file>`, which records karasu-slicer's own phase durations;
   timed runs never write a log.
 
+**SL1S profile.** For the SL1S target karasu-slicer gets suite-authored printer and resin
+profiles (`targets/profiles/karasu/`), in the format of `ProfileDocument::to_json` that its
+documentation describes; with `swap_xy` the resolution is in panel order (1620 × 2560).
+
 **Observed (0.2.0-dev, `45bc195`, 2026-11-17)**, on layer images as UVtoolsCmd v7.1.2 extracts
 them:
 
@@ -36,7 +40,9 @@ them:
 - the `.pwma` file for the Anycubic Photon Mono 4K declares `DisplayMirror: Horizontally`, and its
   images are also `mirror_y` of the top view. Whether the declaration names the panel's mirror
   or the image's is a convention of the format and the firmware; the suite reports both, and
-  does not judge which is right.
+  does not judge which is right;
+- UVtoolsCmd v7.1.2 refuses its `.sl1s` files: "Malformed file: prusaslicer.ini is missing"
+  (BD-018).
 
 ## UVTools (`UVtoolsCmd`)
 
@@ -58,6 +64,10 @@ command:
 Lines that do not parse are kept in the record (`unparsed`), never dropped. The raw outputs are
 saved beside each case in the run directory.
 
+**SL1 and SL1S** archives are decoded by the suite itself for every slicer (BD-018,
+`src/kbench/sl1.py`): the layer images `<jobDir><index, 5 digits>.png` and `config.ini`
+(`layerHeight`, `numFast + numSlow`). UVTools still reads their properties and issues.
+
 **Layer schedule.** Layer `i` spans from the previous layer's `PositionZ` (0 for the first) to
 its own. Two layers at the same height are refused: the reference has no slab for them.
 
@@ -65,7 +75,64 @@ its own. Two layers at the same height are refused: the reference has no slab fo
 traps, suction cups, touching bounds, print height and empty layers. They are reported side by
 side across slicers as observations, not as ground truth.
 
-## Other slicers
+## PrusaSlicer
 
-PrusaSlicer (command line, SL1/SL1S) and the manual protocol for slicers without a command line
-are added in phase P3 (DESIGN.md).
+Compared through its command line, pinned at 2.8.1 (BD-015) and installed with `kbench install
+prusaslicer`; the first line of `--help` names the build, which the suite records as its
+version. It is given no preset: only the options its `--help-sla` documents, built from the
+target's `[slicers.prusaslicer]` table (`src/kbench/slicers.py`):
+
+```console
+AppRun --export-sla --printer-technology SLA \
+  --display-width 127 --display-height 80 --display-pixels-x 2560 --display-pixels-y 1620 \
+  --display-orientation portrait --bed-shape 0x0,127x0,127x80,0x80 --max-print-height 150 \
+  --layer-height 0.05 --initial-layer-height 0.05 \
+  --no-supports-enable --no-pad-enable --no-hollowing-enable --gamma-correction 0 \
+  --exposure-time 2 --initial-exposure-time 25 --faded-layers 3 \
+  --center 63.5,40 --output <file>.sl1s <model.stl>
+```
+
+- The bed is the panel, and the model is centred on it.
+- `--gamma-correction 0` thresholds the masks (no anti-aliasing), matching karasu-cli's default of
+  one sample per pixel.
+- Exposure values only fill the file; they do not change the masks.
+- The SHA-256 the inventory records is the unpacked `AppRun` launcher's; the whole AppImage is
+  pinned by its own SHA-256.
+
+**Observed (2.8.1, 2026-11-17):**
+
+- The `.sl1s` file stores its layer images in portrait, 1620 px wide and 2560 px tall, and
+  `config.ini` holds the creation time, so two runs never give byte-identical files.
+- In portrait orientation, each plate axis is rasterised with the other axis's pitch: harmless
+  with square pixels, a distortion and an offset with non-square ones (BD-017).
+
+## Manual export protocol (slicers without a command line)
+
+CHITUBOX, Lychee, ELEGOO SatelLite, Anycubic Photon Workshop and other slicers that only have a
+graphical interface are compared through files an operator exports by hand. They get the same
+decoding and metrics; they get no timing, because a stopwatch on an interface is not an
+objective measurement.
+
+1. Build the model with the suite: `uv run kbench models build <model id>`. Slice exactly the
+   file it writes in `work/models/` (the import checks its SHA-256).
+2. In the slicer, choose the printer of the target (`targets/<id>.toml`); note the slicer's
+   name and version, and the operating system.
+3. Import the STL in millimetres without moving, rotating or scaling it, and centre it on the
+   plate if the slicer does not.
+4. Use the target's layer height. Turn off supports, raft, hollowing, drain holes, anti-aliasing,
+   blur, XY or elephant-foot compensation, and any automatic repair the slicer allows to turn
+   off. Leave exposure and motion settings as the slicer's default profile gives them.
+5. Export the printer's file and keep it outside the repository.
+6. Run, giving every setting that could not be set as step 4 asks in `--note`:
+
+   ```console
+   uv run kbench import <file> --slicer <name> --slicer-version <version> \
+     --target <target id> --model <model id> --stl work/models/<model id>.stl --note "<deviations>"
+   ```
+
+7. Compare with a suite run of the same target and model:
+   `uv run kbench report work/runs/<suite run> work/runs/<import run>` writes `comparison.md`.
+
+The import refuses a model file other than the suite's, records the file's SHA-256, the slicer
+and version given, the note and the date, and keeps the file in the run directory under
+`work/`.

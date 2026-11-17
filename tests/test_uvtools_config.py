@@ -196,3 +196,107 @@ def test_conformity_flags_differences() -> None:
     assert not checks["resolution"]["matches"]
     assert not checks["pixel_pitch_mm"]["matches"]
     assert not checks["layer_count"]["matches"]
+
+
+def test_prusaslicer_command() -> None:
+    from kbench.slicers import ADAPTERS
+
+    target = load_targets(repository_path("targets"))["prusa-sl1s"]
+    job = ADAPTERS["prusaslicer"].job(Path("/ps/AppRun"), Path("/m/cube.stl"), target, Path("/o/a"))
+    assert job.output == Path("/o/a.sl1s")
+    argv = job.argv
+    assert argv[:2] == ["/ps/AppRun", "--export-sla"]
+    assert argv[-1] == "/m/cube.stl"
+    options = dict(zip(argv[2:-1:2], argv[3:-1:2], strict=False))
+    assert argv[argv.index("--display-pixels-x") + 1] == "2560"
+    assert argv[argv.index("--display-orientation") + 1] == "portrait"
+    assert argv[argv.index("--bed-shape") + 1] == "0x0,128x0,128x81,0x81"
+    assert argv[argv.index("--center") + 1] == "64,40.5"
+    assert argv[argv.index("--layer-height") + 1] == "0.05"
+    assert argv[argv.index("--gamma-correction") + 1] == "0"
+    for flag in ("--no-supports-enable", "--no-pad-enable", "--no-hollowing-enable"):
+        assert flag in argv
+    assert options  # Every option has its value.
+
+
+def test_karasu_profile_files_resolve_to_the_repository() -> None:
+    target = load_targets(repository_path("targets"))["prusa-sl1s"]
+    job = karasu_job(Path("k"), Path("m.stl"), target, Path("o"))
+    printer = Path(job.argv[job.argv.index("--printer") + 1])
+    assert printer.is_absolute()
+    assert printer == repository_path("targets", "profiles", "karasu", "prusa-sl1s-printer.json")
+    assert printer.is_file()
+
+
+def test_conformity_accepts_a_portrait_declaration() -> None:
+    target = load_targets(repository_path("targets"))["prusa-sl1s"]
+    layers = schedule_from_layers([{"PositionZ": 0.05 * (i + 1)} for i in range(200)])
+    portrait = {
+        "ResolutionX": 1620.0,
+        "ResolutionY": 2560.0,
+        "PixelWidth": 0.05,
+        "PixelHeight": 0.05,
+        "LayerHeight": 0.05,
+    }
+    checks = conformity(portrait, target, layers, 10.0)
+    assert checks["resolution"]["transposed"]
+    assert checks["resolution"]["matches"]
+    assert checks["pixel_pitch_mm"]["matches"]
+
+
+def write_sl1(path: Path, count: int, job: str = "job", extra: dict | None = None) -> None:
+    import zipfile
+
+    import numpy as np
+    from PIL import Image
+
+    with zipfile.ZipFile(path, "w") as bundle:
+        config = (
+            f"jobDir = {job}\nlayerHeight = 0.05\nnumFast = {count}\nnumSlow = 0\nexpTime = 2\n"
+        )
+        bundle.writestr("config.ini", config)
+        for index in range(count):
+            image = np.zeros((4, 6), dtype=np.uint8)
+            image[1, index % 6] = 255
+            target = path.parent / f"tmp{index}.png"
+            Image.fromarray(image).save(target)
+            bundle.write(target, f"{job}{index:05d}.png")
+        for name, data in (extra or {}).items():
+            bundle.writestr(name, data)
+
+
+def test_sl1_reader(tmp_path: Path) -> None:
+    from kbench.sl1 import layers_digest, read_sl1
+
+    path = tmp_path / "file.sl1s"
+    write_sl1(path, 3, extra={"thumbnail/thumbnail.png": b"x"})
+    files, config, layers = read_sl1(path, tmp_path / "layers")
+    assert [file.name for file in files] == ["layer00000.png", "layer00001.png", "layer00002.png"]
+    assert config["jobDir"] == "job"
+    assert [(layer.z_bottom_mm, layer.height_mm) for layer in layers] == [
+        (0.0, 0.05),
+        (0.05, 0.05),
+        (0.1, 0.05),
+    ]
+    digest = layers_digest(path)
+    # Different metadata, same layers: same digest.
+    other = tmp_path / "other.sl1s"
+    write_sl1(other, 3, extra={"prusaslicer.ini": b"created = now"})
+    assert layers_digest(other) == digest
+    assert layers_digest(tmp_path / "x.goo") is None
+
+
+def test_sl1_reader_refuses_incomplete_archives(tmp_path: Path) -> None:
+    import zipfile
+
+    from kbench.sl1 import SL1Error, read_sl1
+
+    path = tmp_path / "bad.sl1"
+    with zipfile.ZipFile(path, "w") as bundle:
+        bundle.writestr("config.ini", "jobDir = j\nlayerHeight = 0.05\nnumFast = 2\nnumSlow = 0\n")
+        bundle.writestr("j00000.png", b"")
+    with pytest.raises(SL1Error, match="missing"):
+        read_sl1(path, tmp_path / "out")
+    (tmp_path / "plain.sl1").write_bytes(b"not a zip")
+    with pytest.raises(SL1Error, match="not a ZIP"):
+        read_sl1(tmp_path / "plain.sl1", tmp_path / "out")

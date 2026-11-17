@@ -1,0 +1,50 @@
+# karasu-slicer and PrusaSlicer on the same SL1S panel: accuracy and timing.
+id = "compare-sl1s"
+description = "karasu-slicer and PrusaSlicer on the Prusa SL1S target, same panel, no supports."
+
+[timing]
+warmup = 1
+repetitions = 5
+timeout_s = 1800
+
+[[cases]]
+model = "accuracy-plate"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "cube-20"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "cylinder-r5-n512"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "cone-r8-h16"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "sphere-r10"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "orientation-l"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+
+[[cases]]
+model = "sphere-r20-s7"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s8"
+target = "prusa-sl1s"
+slicers = ["karasu", "prusaslicer"]
+analyze = false

@@ -24,6 +24,7 @@ same pinned UVTools release, whichever slicer wrote it. The design is in
   | --- | --- | --- |
   | `karasu-cli` | `KBENCH_KARASU_CLI` | runs (the slicer under test) |
   | `UVtoolsCmd` (UVTools) | `KBENCH_UVTOOLSCMD` | runs (decoding and file analysis) |
+  | PrusaSlicer | `KBENCH_PRUSASLICER` | comparison suites |
   | `git` | `KBENCH_GIT` | building karasu-cli from a ref, recording the suite's commit |
   | `cargo` | `KBENCH_CARGO` | building karasu-cli from a ref |
 
@@ -35,6 +36,7 @@ same pinned UVTools release, whichever slicer wrote it. The design is in
 ```console
 uv sync
 uv run kbench install uvtools
+uv run kbench install prusaslicer   # optional: the compared slicer (docs/SLICERS.md)
 uv run kbench karasu build --repo ../karasu-slicer --ref HEAD
 export KBENCH_KARASU_CLI=<the path the build prints>
 uv run kbench doctor
@@ -57,7 +59,11 @@ uv run kbench models build   # STL files and manifest.json into work/models/
 uv run kbench run --suite smoke        # a few minutes: time, decode and measure one job
 uv run kbench run --suite accuracy     # every target and single-shape model
 uv run kbench run --suite performance  # timing only, more repetitions, scaling series
+uv run kbench run --suite compare-sl1s # karasu-slicer and PrusaSlicer on the same SL1S panel
 uv run kbench report work/runs/<run-id>
+uv run kbench report work/runs/<run-a> work/runs/<run-b>   # side by side
+uv run kbench import <file> --slicer <name> --slicer-version <v> --target <id> \
+  --model <id> --stl work/models/<id>.stl   # a file exported by hand (docs/SLICERS.md)
 ```
 
 Each run writes `work/runs/<run-id>/` with its records and `report.md`. Everything a run
@@ -69,6 +75,7 @@ produces goes under `work/` (or `KBENCH_WORK`), which Git ignores.
 uv run ruff format --check .
 uv run ruff check .
 uv run pytest
+KBENCH_INTEGRATION=1 uv run pytest -m integration   # with karasu-cli and UVTools installed
 ```
 
 ## Repository layout

@@ -131,8 +131,9 @@ uv run ruff check .
 uv run pytest
 ```
 
-Once the smoke suite exists, also run `uv run kbench run --suite smoke`; it needs karasu-cli and
-UVTools (`uv run kbench doctor`). Report commands that could not run, and distinguish failures of
+With karasu-cli and UVTools installed (`uv run kbench doctor`), also run
+`KBENCH_INTEGRATION=1 uv run pytest -m integration`, which runs the smoke suite and an import with
+the real tools. Report commands that could not run, and distinguish failures of
 this suite's code from environment failures and from failures of the slicer under test.
 
 ## Data and repository hygiene

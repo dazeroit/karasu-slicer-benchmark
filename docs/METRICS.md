@@ -68,7 +68,11 @@ minimum, maximum, and the worst layer: lowest `iou`, otherwise largest absolute 
 | `stray_area_mm2` | mm² | measured material outside the comparison window (the model's bounds plus 8 pixels) |
 
 **Limits.** Boundary distances are between pixel centres: their resolution is one pixel, and
-one-pixel growth gives one pitch. Extents count whole pixels.
+one-pixel growth gives one pitch. Extents count whole pixels. The maximum (Hausdorff) distance
+is set by the single worst pixel: one isolated pixel present in only one mask (the last pixel of
+a cone's apex, lit by one slicer and not by the other) gives the distance to the nearest boundary
+of the other mask, possibly millimetres away, while the IoU barely moves. The mean and the 95th
+percentile describe the bulk of the boundary.
 
 ## Model metrics
 

@@ -20,16 +20,16 @@ from kbench.env import capture_environment, parse_meminfo
 from kbench.execution import describe, launcher_floor, run_timed
 from kbench.karasu_build import build_record_for
 from kbench.metrics.stack import AnalysisError, PngStack, analyze_stack
-from kbench.models import build_catalog, build_model, load_catalog
+from kbench.models import BuiltModel, build_catalog, build_model, load_catalog
 from kbench.provenance import sha256_file, suite_root, utc_timestamp
 from kbench.reference import Layer, uniform_schedule
-from kbench.slicers import karasu_job
+from kbench.sl1 import SL1_SUFFIXES, SL1Error, layers_digest, read_sl1
+from kbench.slicers import ADAPTERS, Adapter
 from kbench.tools import inventory
-from kbench.uvtools import UVTools, UVToolsError
+from kbench.uvtools import GLOBAL_NUMBERS, GLOBAL_TEXTS, UVTools, UVToolsError
 
 RUN_SCHEMA_VERSION = 1
 CASE_SCHEMA_VERSION = 1
-SUPPORTED_SLICERS = ("karasu",)
 
 # Declared pixel pitch and layer height are printed by UVTools with a few decimals; agreement
 # within half a micrometre is agreement to the printed precision.
@@ -78,12 +78,14 @@ def run_suite(
 
     tools = inventory(environ, work)
     by_name = {tool["name"]: tool for tool in tools}
-    needed = {"karasu-cli"} | ({"UVtoolsCmd"} if any(case.analyze for case in selected) else set())
+    slicers = sorted({slicer for case in selected for slicer in case.slicers})
+    needed = {ADAPTERS[slicer].tool for slicer in slicers}
+    if any(case.analyze for case in selected):
+        needed.add("UVtoolsCmd")
     missing = sorted(name for name in needed if not by_name[name]["ok"])
     if missing:
         raise RunError(f"tools not ready: {missing}; run `kbench doctor`")
-    karasu = Path(by_name["karasu-cli"]["path"])
-    karasu_build = build_record_for(karasu)
+    executables = {slicer: Path(by_name[ADAPTERS[slicer].tool]["path"]) for slicer in slicers}
 
     started = utc_timestamp()
     run_id = f"{started.replace('-', '').replace(':', '')}-{suite.id}"
@@ -114,13 +116,16 @@ def run_suite(
                 suite,
                 case,
                 targets[case.target],
-                slicer,
-                karasu,
+                ADAPTERS[slicer],
+                executables[slicer],
                 run_dir / "models" / records[case.model]["stl"],
                 directory,
             )
             record["model"] = records[case.model]
-            record["slicer_build"] = karasu_build
+            record["slicer_tool"] = by_name[ADAPTERS[slicer].tool]
+            record["slicer_build"] = (
+                build_record_for(executables[slicer]) if slicer == "karasu" else None
+            )
             case_records.append(record)
 
     uvtools = Path(by_name["UVtoolsCmd"]["path"]) if by_name["UVtoolsCmd"]["ok"] else None
@@ -128,9 +133,8 @@ def run_suite(
         directory = Path(record["directory"])
         if case.analyze and uvtools is not None:
             progress(f"  analysing {case.id} with {record['slicer']}")
-            record["analysis"] = _analyze_case(
+            record["analysis"] = analyze_case(
                 record,
-                case,
                 targets[case.target],
                 build_model(specs[case.model]),
                 UVTools(uvtools, suite.timing.timeout_s),
@@ -196,7 +200,7 @@ def _check_cases(cases: Sequence[Case], targets: Mapping[str, Target], catalog_p
             raise RunError(f"case {case.id!r}: unknown model {case.model!r}")
         if case.target not in targets:
             raise RunError(f"case {case.id!r}: unknown target {case.target!r}")
-        unsupported = sorted(set(case.slicers) - set(SUPPORTED_SLICERS))
+        unsupported = sorted(set(case.slicers) - set(ADAPTERS))
         if unsupported:
             raise RunError(f"case {case.id!r}: slicers {unsupported} have no adapter yet")
 
@@ -205,8 +209,8 @@ def _time_case(
     suite: Suite,
     case: Case,
     target: Target,
-    slicer: str,
-    karasu: Path,
+    adapter: Adapter,
+    executable: Path,
     model: Path,
     directory: Path,
 ) -> dict[str, Any]:
@@ -218,7 +222,7 @@ def _time_case(
         warmup = attempt < timing.warmup
         stem = directory / f"attempt-{attempt:02d}"
         log = directory / "slicer-phases.log" if attempt == 0 and warmup else None
-        job = karasu_job(karasu, model, target, stem, log=log)
+        job = adapter.job(executable, model, target, stem, log=log)
         load = _host_load()
         run = run_timed(
             job.argv, timing.timeout_s, stem.with_suffix(".stdout"), stem.with_suffix(".stderr")
@@ -228,6 +232,7 @@ def _time_case(
         if job.output.is_file():
             entry["output_bytes"] = job.output.stat().st_size
             entry["output_sha256"] = sha256_file(job.output)
+            entry["layers_sha256"] = layers_digest(job.output)
             if print_file is None and entry["succeeded"] and not warmup:
                 print_file = directory / f"print{job.output.suffix}"
                 job.output.rename(print_file)
@@ -238,11 +243,12 @@ def _time_case(
     timed = [entry for entry in attempts if not entry["warmup"]]
     good = [entry for entry in timed if entry["succeeded"]]
     hashes = sorted({entry["output_sha256"] for entry in attempts if entry.get("output_sha256")})
+    layer_hashes = sorted({e["layers_sha256"] for e in attempts if e.get("layers_sha256")})
     return {
         "schema_version": CASE_SCHEMA_VERSION,
         "kind": "case",
         "case": case.id,
-        "slicer": slicer,
+        "slicer": adapter.name,
         "target": target.id,
         "directory": str(directory),
         "attempts": attempts,
@@ -258,6 +264,8 @@ def _time_case(
         "determinism": {
             "outputs": len([e for e in attempts if e.get("output_sha256")]),
             "distinct_sha256": hashes,
+            # SL1 family only: identical layers despite differing metadata.
+            "distinct_layers_sha256": layer_hashes or None,
         },
         "print_file": str(print_file) if print_file is not None else None,
     }
@@ -287,18 +295,27 @@ def conformity(
     resolution = (properties.get("ResolutionX"), properties.get("ResolutionY"))
     pitch = (properties.get("PixelWidth"), properties.get("PixelHeight"))
     expected_layers = len(uniform_schedule(model_height_mm, target.layer_height_mm))
+    expected_resolution = (panel.resolution_x, panel.resolution_y)
+    expected_pitch = (panel.pitch_x_mm, panel.pitch_y_mm)
+
+    def pitch_matches(order: tuple[float, float]) -> bool:
+        return None not in pitch and all(
+            abs(a - b) <= PITCH_TOLERANCE_MM for a, b in zip(pitch, order, strict=True)
+        )
+
+    # A portrait format declares the panel with its sides exchanged: the same panel.
+    transposed = resolution == expected_resolution[::-1] and resolution != expected_resolution
     checks = {
         "resolution": {
             "declared": list(resolution),
-            "expected": [panel.resolution_x, panel.resolution_y],
-            "matches": resolution == (panel.resolution_x, panel.resolution_y),
+            "expected": list(expected_resolution),
+            "transposed": transposed,
+            "matches": resolution == expected_resolution or transposed,
         },
         "pixel_pitch_mm": {
             "declared": list(pitch),
-            "expected": [panel.pitch_x_mm, panel.pitch_y_mm],
-            "matches": None not in pitch
-            and abs(pitch[0] - panel.pitch_x_mm) <= PITCH_TOLERANCE_MM
-            and abs(pitch[1] - panel.pitch_y_mm) <= PITCH_TOLERANCE_MM,
+            "expected": list(expected_pitch),
+            "matches": pitch_matches(expected_pitch[::-1] if transposed else expected_pitch),
         },
         "layer_height_mm": {
             "declared": properties.get("LayerHeight"),
@@ -323,29 +340,57 @@ def conformity(
     return checks
 
 
-def _analyze_case(
-    record: dict[str, Any], case: Case, target: Target, model, uvtools: UVTools, keep_layers: bool
+def analyze_case(
+    record: dict[str, Any], target: Target, model: BuiltModel, uvtools: UVTools, keep_layers: bool
 ) -> dict[str, Any]:
+    """Decode the case's print file, check it and measure it (``metrics.json``).
+
+    UVTools reads every file's properties and issues; its failures are recorded, not hidden.
+    Layers are decoded by UVTools, except SL1 and SL1S archives, which the suite reads itself
+    for every slicer (BD-018).
+    """
     directory = Path(record["directory"])
     if record["print_file"] is None:
         return {"status": "skipped", "reason": "no successful print file"}
     print_file = Path(record["print_file"])
     analysis: dict[str, Any] = {"status": "failed"}
+    layers_dir = directory / "layers"
     try:
         started = time.perf_counter()
-        properties_text, properties = uvtools.properties(print_file)
-        (directory / "uvtools-properties.txt").write_text(properties_text, encoding="utf-8")
-        layers_dir = directory / "layers"
-        files = uvtools.extract_layers(print_file, layers_dir)
-        layer_text, layer_properties = uvtools.layer_properties(print_file, len(files))
-        (directory / "uvtools-layers.txt").write_text(layer_text, encoding="utf-8")
-        issues_text, issues = uvtools.issues(print_file)
-        (directory / "uvtools-issues.txt").write_text(issues_text, encoding="utf-8")
-        analysis["uvtools_wall_s"] = time.perf_counter() - started
-        analysis["properties"] = properties
-        analysis["issues"] = issues
+        properties: dict[str, Any] | None
+        try:
+            properties_text, properties = uvtools.properties(print_file)
+            (directory / "uvtools-properties.txt").write_text(properties_text, encoding="utf-8")
+            analysis["properties_source"] = "uvtools"
+        except UVToolsError as error:
+            properties = None
+            analysis["uvtools_properties_error"] = str(error)[:2000]
 
-        layers = schedule_from_layers(layer_properties)
+        if print_file.suffix.lower() in SL1_SUFFIXES:
+            files, config, layers = read_sl1(print_file, layers_dir)
+            analysis["decoder"] = "kbench-sl1"
+            analysis["sl1_config"] = config
+            if properties is None:
+                properties = _sl1_properties(config, files[0], len(files))
+                analysis["properties_source"] = "config.ini and layer images"
+        else:
+            if properties is None:
+                raise UVToolsError(analysis["uvtools_properties_error"])
+            files = uvtools.extract_layers(print_file, layers_dir)
+            layer_text, layer_properties = uvtools.layer_properties(print_file, len(files))
+            (directory / "uvtools-layers.txt").write_text(layer_text, encoding="utf-8")
+            layers = schedule_from_layers(layer_properties)
+            analysis["decoder"] = "uvtools"
+
+        try:
+            issues_text, issues = uvtools.issues(print_file)
+            (directory / "uvtools-issues.txt").write_text(issues_text, encoding="utf-8")
+            analysis["issues"] = issues
+        except UVToolsError as error:
+            analysis["issues"] = None
+            analysis["uvtools_issues_error"] = str(error)[:2000]
+        analysis["decode_wall_s"] = time.perf_counter() - started
+        analysis["properties"] = properties
         analysis["conformity"] = conformity(
             properties, target, layers, float(model.mesh.vertices[:, 2].max())
         )
@@ -355,8 +400,163 @@ def _analyze_case(
         _write_json(directory / "metrics.json", metrics)
         analysis["metrics"] = "metrics.json"
         analysis["status"] = "analysed"
-        if not keep_layers:
-            shutil.rmtree(layers_dir)
-    except (UVToolsError, AnalysisError, OSError) as error:
-        analysis["error"] = f"{type(error).__name__}: {error}"
+    except (UVToolsError, AnalysisError, SL1Error, OSError) as error:
+        analysis["error"] = f"{type(error).__name__}: {error}"[:2000]
+    if not keep_layers and layers_dir.exists():
+        shutil.rmtree(layers_dir)
     return analysis
+
+
+def _sl1_properties(config: Mapping[str, str], first_layer: Path, count: int) -> dict[str, Any]:
+    """The properties an SL1 archive itself declares, where UVTools cannot read it."""
+    from PIL import Image
+
+    with Image.open(first_layer) as image:
+        width, height = image.width, image.height
+    properties: dict[str, Any] = dict.fromkeys(GLOBAL_NUMBERS)
+    properties.update(dict.fromkeys(GLOBAL_TEXTS))
+    properties.update(
+        {
+            "ResolutionX": float(width),
+            "ResolutionY": float(height),
+            "LayerHeight": float(config["layerHeight"]),
+            "LayerCount": float(count),
+            "ExposureTime": float(config["expTime"]) if "expTime" in config else None,
+            "BottomExposureTime": float(config["expTimeFirst"])
+            if "expTimeFirst" in config
+            else None,
+            "MachineName": config.get("printerModel"),
+        }
+    )
+    return properties
+
+
+def import_print_file(
+    print_file: Path,
+    *,
+    slicer: str,
+    slicer_version: str,
+    target: Target,
+    model_id: str,
+    stl: Path,
+    catalog_path: Path,
+    work: Path,
+    environ: Mapping[str, str],
+    note: str = "",
+    keep_layers: bool = False,
+    progress: Callable[[str], None] = print,
+) -> Path:
+    """Analyse a print file exported by hand from a slicer without a command line.
+
+    ``stl`` is the model file the operator sliced; it must be byte-identical to the model this
+    version of the suite generates, or the reference would not be the geometry that was sliced.
+    The run has no timing: a manual export carries no performance claim.
+    """
+    tools = inventory(environ, work)
+    uvtools = next(tool for tool in tools if tool["name"] == "UVtoolsCmd")
+    if not uvtools["ok"]:
+        raise RunError("UVtoolsCmd is not ready; run `kbench doctor`")
+    specs = {spec.id: spec for spec in load_catalog(catalog_path)}
+    if model_id not in specs:
+        raise RunError(f"unknown model {model_id!r}")
+    if not print_file.is_file():
+        raise RunError(f"no such print file: {print_file}")
+
+    started = utc_timestamp()
+    run_id = f"{started.replace('-', '').replace(':', '')}-import-{slicer}"
+    run_dir = work / "runs" / run_id
+    run_dir.mkdir(parents=True, exist_ok=False)
+    progress(f"Run {run_id}")
+    manifest = build_catalog(catalog_path, run_dir / "models", [model_id])
+    model_record = manifest["models"][0]
+    stl_sha256 = sha256_file(stl)
+    if stl_sha256 != model_record["sha256"]:
+        shutil.rmtree(run_dir)
+        raise RunError(
+            f"{stl.name} is not the model this suite generates for {model_id!r} "
+            f"(SHA-256 {stl_sha256[:16]}…, expected {model_record['sha256'][:16]}…); "
+            "slice the file `kbench models build` writes"
+        )
+
+    case_id = f"{model_id}@{target.id}"
+    directory = run_dir / "cases" / case_id / slicer
+    directory.mkdir(parents=True)
+    copy = directory / f"print{print_file.suffix}"
+    shutil.copyfile(print_file, copy)
+    record: dict[str, Any] = {
+        "schema_version": CASE_SCHEMA_VERSION,
+        "kind": "case",
+        "case": case_id,
+        "slicer": slicer,
+        "target": target.id,
+        "directory": str(directory),
+        "manual": {
+            "slicer": slicer,
+            "slicer_version": slicer_version,
+            "source_name": print_file.name,
+            "sha256": sha256_file(copy),
+            "bytes": copy.stat().st_size,
+            "imported_at_utc": started,
+            "stl_sha256": stl_sha256,
+            "note": note,
+        },
+        "attempts": [],
+        "performance": None,
+        "determinism": None,
+        "print_file": str(copy),
+        "model": model_record,
+        "slicer_tool": None,
+        "slicer_build": None,
+    }
+    progress(f"  analysing {case_id} from {slicer} {slicer_version}")
+    record["analysis"] = analyze_case(
+        record,
+        target,
+        build_model(specs[model_id]),
+        UVTools(Path(uvtools["path"])),
+        keep_layers,
+    )
+    _write_json(directory / "case.json", record)
+
+    git = next(tool for tool in tools if tool["name"] == "git")
+    _write_json(
+        run_dir / "run.json",
+        {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "kind": "run",
+            "run_id": run_id,
+            "started_at_utc": started,
+            "ended_at_utc": utc_timestamp(),
+            "suite": {
+                "id": "import",
+                "description": f"Manual export from {slicer} {slicer_version}.",
+                "sha256": None,
+                "timing": None,
+            },
+            "targets": {
+                target.id: {
+                    "description": target.description,
+                    "sha256": target.sha256,
+                    "source": dict(target.source),
+                }
+            },
+            "models": {
+                "generator_version": manifest["generator_version"],
+                "catalog_sha256": manifest["catalog_sha256"],
+            },
+            "tools": tools,
+            "launcher_floor_kib": None,
+            "environment_before": capture_environment(
+                suite_root(), Path(git["path"]) if git["ok"] else None, environ
+            ),
+            "environment_after": None,
+            "cases": [
+                {
+                    "case": case_id,
+                    "slicer": slicer,
+                    "record": str(directory.relative_to(run_dir) / "case.json"),
+                }
+            ],
+        },
+    )
+    return run_dir

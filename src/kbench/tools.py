@@ -85,7 +85,19 @@ CARGO = ToolSpec(
     version_args=("--version",),
 )
 
-TOOLS: tuple[ToolSpec, ...] = (KARASU_CLI, UVTOOLS_CMD, GIT, CARGO)
+PRUSASLICER = ToolSpec(
+    name="PrusaSlicer",
+    role="compared slicer (command line)",
+    required=False,
+    env_var="KBENCH_PRUSASLICER",
+    executable="prusa-slicer",
+    # PrusaSlicer has no version option; the first line of its help names the build (observed
+    # with 2.8.1).
+    version_args=("--help",),
+    work_path=_pinned_path("prusaslicer"),
+)
+
+TOOLS: tuple[ToolSpec, ...] = (KARASU_CLI, UVTOOLS_CMD, PRUSASLICER, GIT, CARGO)
 
 ResolutionStatus = Literal["found", "missing", "invalid"]
 

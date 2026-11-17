@@ -69,7 +69,8 @@ what the launcher reports for the default toolchain.
 | Tool | Variable | Required | Version query |
 | --- | --- | --- | --- |
 | karasu-cli | `KBENCH_KARASU_CLI` | yes | `--version` |
-| UVtoolsCmd | `KBENCH_UVTOOLSCMD` | yes | `--version`, to be confirmed on the pinned release |
+| UVtoolsCmd | `KBENCH_UVTOOLSCMD` | yes | `--core-version` (the UVTools release; `--version` gives the front end's own) |
+| PrusaSlicer | `KBENCH_PRUSASLICER` | no | `--help`, first line |
 | git | `KBENCH_GIT` | no | `--version` |
 | cargo | `KBENCH_CARGO` | no | `--version` |
 

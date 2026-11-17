@@ -13,7 +13,7 @@ from kbench.config import Case, Suite, Timing, load_suite, load_targets, reposit
 from kbench.install import InstallError, Pin, install
 from kbench.models import default_catalog_path
 from kbench.report import render
-from kbench.run import RunError, run_suite
+from kbench.run import RunError, import_print_file, run_suite
 
 
 def make_zip(path: Path, members: dict[str, bytes], executable: str | None = None) -> Pin:
@@ -104,7 +104,7 @@ def test_timing_only_run_with_a_fake_slicer(make_script: MakeScript, tmp_path: P
     assert "--log" not in case["attempts"][1]["argv"]
     assert "analysis" not in case
     report = render(run_dir)
-    assert "| cube | karasu |" in report
+    assert "| cube | karasu (karasu-slicer 9.9.9-fake) |" in report
     assert "## Failures\n\nNone." in report
 
 
@@ -131,7 +131,7 @@ def test_failures_are_recorded(make_script: MakeScript, tmp_path: Path) -> None:
     assert case["performance"]["failed_runs"] == 2
     assert [attempt["exit_status"] for attempt in case["attempts"]] == [4, 4]
     assert case["print_file"] is None
-    assert "| cube | karasu | 0 | 4 | no |" in render(run_dir)
+    assert "| cube | karasu (v) | 0 | 4 | no |" in render(run_dir)
 
 
 def test_missing_tools_stop_the_run(tmp_path: Path) -> None:
@@ -175,3 +175,69 @@ def test_smoke_suite_with_the_real_tools(tmp_path: Path) -> None:
         (run_dir / "cases" / "accuracy-plate@elegoo-mars-5" / "karasu" / "metrics.json").read_text()
     )
     assert metrics["summary"]["iou"]["min"] > 0.99
+
+
+@posix_only
+def test_import_refuses_a_different_model_file(make_script: MakeScript, tmp_path: Path) -> None:
+    uvtools = make_script("UVtoolsCmd", 'echo "7.1.2"')
+    other = tmp_path / "other.stl"
+    other.write_bytes(b"not the suite's model")
+    printed = tmp_path / "print.goo"
+    printed.write_bytes(b"file")
+    targets = load_targets(repository_path("targets"))
+    with pytest.raises(RunError, match="not the model this suite generates"):
+        import_print_file(
+            printed,
+            slicer="other",
+            slicer_version="1.0",
+            target=targets["elegoo-mars-5"],
+            model_id="cube-20",
+            stl=other,
+            catalog_path=default_catalog_path(),
+            work=tmp_path / "w",
+            environ={"KBENCH_UVTOOLSCMD": str(uvtools), "PATH": "/usr/bin:/bin"},
+            progress=lambda _: None,
+        )
+    assert not any((tmp_path / "w" / "runs").iterdir())  # Nothing half-written is left.
+
+
+@pytest.mark.integration
+def test_import_and_compare_with_the_real_tools(tmp_path: Path) -> None:
+    """A karasu-cli file imported as a manual export, reported beside a suite run."""
+    if os.environ.get("KBENCH_INTEGRATION") != "1":
+        pytest.skip("set KBENCH_INTEGRATION=1 to run with the real tools")
+    environ = dict(os.environ)
+    environ.setdefault(
+        "KBENCH_UVTOOLSCMD",
+        str(repository_path("work", "tools", "uvtools", "v7.1.2", "UVtoolsCmd")),
+    )
+    targets = load_targets(repository_path("targets"))
+    suite = load_suite(repository_path("suites", "smoke.toml"))
+    run_dir = run_suite(
+        suite, targets, default_catalog_path(), tmp_path / "w", environ, progress=lambda _: None
+    )
+    case = json.loads(
+        (run_dir / "cases" / "accuracy-plate@elegoo-mars-5" / "karasu" / "case.json").read_text()
+    )
+    imported = import_print_file(
+        Path(case["print_file"]),
+        slicer="karasu-by-hand",
+        slicer_version="0.2.0-dev",
+        target=targets["elegoo-mars-5"],
+        model_id="accuracy-plate",
+        stl=run_dir / "models" / "accuracy-plate.stl",
+        catalog_path=default_catalog_path(),
+        work=tmp_path / "w",
+        environ=environ,
+        note="test",
+        progress=lambda _: None,
+    )
+    record = json.loads(
+        (
+            imported / "cases" / "accuracy-plate@elegoo-mars-5" / "karasu-by-hand" / "case.json"
+        ).read_text()
+    )
+    assert record["analysis"]["status"] == "analysed"
+    report = render([run_dir, imported])
+    assert "karasu-by-hand 0.2.0-dev (manual)" in report
+    assert "Manual export: no timing." in report

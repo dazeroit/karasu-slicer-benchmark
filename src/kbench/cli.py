@@ -19,7 +19,7 @@ from kbench.karasu_build import BuildError, build_karasu
 from kbench.models import CatalogError, build_catalog, default_catalog_path, load_catalog
 from kbench.provenance import suite_root, utc_timestamp, work_root
 from kbench.report import write_report
-from kbench.run import RunError, run_suite
+from kbench.run import RunError, import_print_file, run_suite
 from kbench.tools import CARGO, GIT, TOOLS, inventory, resolve
 
 TOOL_INVENTORY_SCHEMA_VERSION = 1
@@ -130,9 +130,30 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--keep-layers", action="store_true", help="keep the decoded layer images")
     run.set_defaults(handler=_run_suite)
 
-    report = commands.add_parser("report", help="write the Markdown report of a run")
-    report.add_argument("run_dir", type=Path, help="the run directory (work/runs/<run-id>)")
+    report = commands.add_parser(
+        "report",
+        help="write the Markdown report of a run, or of several runs side by side",
+        description="Write report.md in the run directory; with more runs, write comparison.md "
+        "in the first one, with every run's cases side by side.",
+    )
+    report.add_argument("run_dirs", type=Path, nargs="+", metavar="RUN_DIR", help="run directories")
     report.set_defaults(handler=_run_report)
+
+    imported = commands.add_parser(
+        "import",
+        help="analyse a print file exported by hand from another slicer",
+        description="Analyse a print file exported by hand (docs/SLICERS.md, Manual export "
+        "protocol): decode it with UVTools and measure it against the model, without timing.",
+    )
+    imported.add_argument("file", type=Path, help="the exported print file")
+    imported.add_argument("--slicer", required=True, help="slicer name, e.g. chitubox")
+    imported.add_argument("--slicer-version", required=True, help="the slicer's version")
+    imported.add_argument("--target", required=True, help="target id (targets/<id>.toml)")
+    imported.add_argument("--model", required=True, help="model id (models/catalog.toml)")
+    imported.add_argument("--stl", type=Path, required=True, help="the STL file that was sliced")
+    imported.add_argument("--note", default="", help="settings changed from the protocol, if any")
+    imported.add_argument("--keep-layers", action="store_true", help="keep the decoded images")
+    imported.set_defaults(handler=_run_import)
     return parser
 
 
@@ -260,9 +281,36 @@ def _run_suite(args: argparse.Namespace) -> int:
     return EXIT_OK
 
 
+def _run_import(args: argparse.Namespace) -> int:
+    try:
+        targets = load_targets(repository_path("targets"))
+        if args.target not in targets:
+            print(f"kbench: unknown target {args.target!r}", file=sys.stderr)
+            return EXIT_USAGE
+        run_dir = import_print_file(
+            args.file,
+            slicer=args.slicer,
+            slicer_version=args.slicer_version,
+            target=targets[args.target],
+            model_id=args.model,
+            stl=args.stl,
+            catalog_path=default_catalog_path(),
+            work=_work_or_fail(),
+            environ=os.environ,
+            note=args.note,
+            keep_layers=args.keep_layers,
+        )
+        report = write_report(run_dir)
+    except (ConfigError, RunError, CatalogError, OSError) as error:
+        print(f"kbench: {error}", file=sys.stderr)
+        return EXIT_FAILURE
+    print(f"Report: {report}")
+    return EXIT_OK
+
+
 def _run_report(args: argparse.Namespace) -> int:
     try:
-        report = write_report(args.run_dir)
+        report = write_report(args.run_dirs[0], args.run_dirs[1:])
     except (OSError, KeyError, ValueError) as error:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE

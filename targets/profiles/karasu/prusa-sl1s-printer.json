@@ -1,0 +1,35 @@
+{
+  "kind": "printer",
+  "profile": {
+    "schema_version": 1,
+    "id": "kbench-prusa-sl1s",
+    "name": "kbench Prusa SL1S target",
+    "revision": 1,
+    "build_size_mm": [
+      128.0,
+      81.0,
+      150.0
+    ],
+    "resolution_px": [
+      1620,
+      2560
+    ],
+    "origin_xy_mm": [
+      0.0,
+      0.0
+    ],
+    "swap_xy": true,
+    "mirror_x": false,
+    "mirror_y": false,
+    "format_ids": [
+      "prusa-sl1s-firmware-motion"
+    ],
+    "limits": {
+      "min_layer_height_mm": 0.025,
+      "max_layer_height_mm": 0.1,
+      "max_exposure_s": 120.0,
+      "max_speed_mm_s": 100.0,
+      "max_lift_mm": 20.0
+    }
+  }
+}

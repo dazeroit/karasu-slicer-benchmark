@@ -1,0 +1,38 @@
+# Original Prusa SL1S SPEED: the common ground with PrusaSlicer, which has a command line.
+id = "prusa-sl1s"
+description = "Prusa SL1S SPEED: 5.96-inch mono LCD, 2560 x 1620 px of 0.05 mm"
+
+[panel]
+# Pixels along plate X (the long side) and Y, and the pitch: 0.05 mm square (BD-017).
+resolution_x = 2560
+resolution_y = 1620
+pitch_x_mm = 0.05
+pitch_y_mm = 0.05
+layer_height_mm = 0.05
+
+[source]
+# Prusa's product page, through a web search on 2026-11-17: "LCD resolution 5.96'', 2560×1620p",
+# "Print volume size 127×80×150 mm". Prusa publishes no pixel pitch; third-party tables give
+# 0.049 and 0.05 mm. The suite takes 0.05 mm square pixels (a 128 x 81 mm panel holding the
+# 127 x 80 mm print area), and gives both slicers exactly this panel (BD-017).
+manufacturer = "https://www.prusa3d.com/product/original-prusa-sl1s-speed-3d-printer/"
+corroboration = ["https://botland.store/1733-prusa-resin-3d-printers", "https://www.tomshardware.com/reviews/prusa-sl1s-speed-resin-3d-printer"]
+retrieved = "2026-11-17"
+
+[slicers.karasu]
+# A printer karasu-slicer's catalog does not have: suite-authored profiles (targets/profiles/).
+printer = "profiles/karasu/prusa-sl1s-printer.json"
+resin = "profiles/karasu/prusa-sl1s-resin.json"
+format = "prusa-sl1s-firmware-motion"
+extension = ".sl1s"
+
+[slicers.prusaslicer]
+# PrusaSlicer's display options for the same panel; the portrait orientation is how the SL1S
+# file stores its images.
+display_width_mm = "128"
+display_height_mm = "81"
+display_pixels_x = "2560"
+display_pixels_y = "1620"
+display_orientation = "portrait"
+max_print_height_mm = "150"
+extension = ".sl1s"

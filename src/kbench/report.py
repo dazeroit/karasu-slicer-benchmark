@@ -25,46 +25,66 @@ def _number(value: Any, digits: int = 3) -> str:
     return f"{value:.{digits}f}"
 
 
+def _distinct(determinism: dict[str, Any]) -> str:
+    text = str(len(determinism["distinct_sha256"]))
+    if determinism.get("distinct_layers_sha256"):
+        text += f" (layers: {len(determinism['distinct_layers_sha256'])})"
+    return text
+
+
 def _table(header: Sequence[str], rows: Sequence[Sequence[str]]) -> list[str]:
     lines = ["| " + " | ".join(header) + " |", "| " + " | ".join("---" for _ in header) + " |"]
     lines += ["| " + " | ".join(row) + " |" for row in rows]
     return lines
 
 
-def render(run_dir: Path) -> str:
-    """The report of the run in ``run_dir`` as Markdown."""
-    run = _load(run_dir / "run.json")
-    cases = [_load(run_dir / entry["record"]) for entry in run["cases"]]
+def slicer_label(case: dict[str, Any]) -> str:
+    """The slicer and its version as the report shows them."""
+    if case.get("manual"):
+        return f"{case['slicer']} {case['manual']['slicer_version']} (manual)"
+    tool = case.get("slicer_tool")
+    return (
+        f"{case['slicer']} ({tool['version']})" if tool and tool.get("version") else case["slicer"]
+    )
+
+
+def _conditions(run: dict[str, Any], cases: Sequence[dict[str, Any]]) -> list[str]:
     environment = run["environment_before"]
-    tools = {tool["name"]: tool for tool in run["tools"]}
-    lines = [f"# Run {run['run_id']}", ""]
-    lines += [
-        f"Suite `{run['suite']['id']}`: {run['suite']['description']} "
-        f"Started {run['started_at_utc']}, ended {run['ended_at_utc']}.",
-        "",
-        "## Conditions",
-        "",
-    ]
-    timing = run["suite"]["timing"]
     cpu, memory, os_info, suite = (
         environment["cpu"],
         environment["memory"] or {},
         environment["os"],
         environment["suite"],
     )
-    lines += [
+    timing = run["suite"]["timing"]
+    lines = [
+        f"### Run {run['run_id']}",
+        "",
+        f"Suite `{run['suite']['id']}`: {run['suite']['description']} "
+        f"Started {run['started_at_utc']}, ended {run['ended_at_utc']}.",
+        "",
         f"- Host: {cpu['model']}, {cpu['physical_cores']} cores / {cpu['logical_cpus']} threads, "
         f"{_number((memory.get('total_kib') or 0) / 1048576, 1)} GiB; {os_info['distribution']}, "
         f"kernel {os_info['release']}{WSL_NOTE if os_info['wsl'] else ''}.",
         f"- Suite: version {suite['version']}, commit {suite['git_commit'] or 'none'}"
         f"{' (uncommitted changes)' if suite['git_dirty'] else ''}.",
-        f"- Timing: {timing['warmup']} warm-up and {timing['repetitions']} timed "
-        f"runs per case, serial, warm page cache; analysis after all timing.",
-        f"- Peak memory floor: {_number(run['launcher_floor_kib']['median'] / 1024, 1)} MiB "
-        "(what the launcher reports for a program that uses almost none; a peak at the floor "
-        "means at most that much).",
     ]
-    for name in ("karasu-cli", "UVtoolsCmd"):
+    if timing is None:
+        lines.append("- Manual export: no timing.")
+    else:
+        lines.append(
+            f"- Timing: {timing['warmup']} warm-up and {timing['repetitions']} timed "
+            "runs per case, serial, warm page cache; analysis after all timing."
+        )
+    if run.get("launcher_floor_kib"):
+        lines.append(
+            f"- Peak memory floor: {_number(run['launcher_floor_kib']['median'] / 1024, 1)} MiB "
+            "(what the launcher reports for a program that uses almost none; a peak at the "
+            "floor means at most that much)."
+        )
+    tools = {tool["name"]: tool for tool in run["tools"]}
+    shown = {case["slicer_tool"]["name"] for case in cases if case.get("slicer_tool")}
+    for name in sorted(shown | {"UVtoolsCmd"}):
         tool = tools.get(name)
         if tool and tool["ok"]:
             lines.append(f"- {name}: {tool['version']}, SHA-256 `{tool['sha256'][:16]}…`.")
@@ -79,18 +99,44 @@ def render(run_dir: Path) -> str:
             f"- karasu-cli built from commit `{record['commit']}` "
             f"({record['cargo_version'].splitlines()[0]})."
         )
+    for case in cases:
+        manual = case.get("manual")
+        if manual:
+            lines.append(
+                f"- Manual export `{manual['source_name']}` from {manual['slicer']} "
+                f"{manual['slicer_version']}, SHA-256 `{manual['sha256'][:16]}…`, model SHA-256 "
+                f"`{manual['stl_sha256'][:16]}…`{'; ' + manual['note'] if manual['note'] else ''}."
+            )
     lines.append("")
+    return lines
+
+
+def render(run_dirs: Sequence[Path] | Path) -> str:
+    """The report of one run, or of several runs side by side, as Markdown."""
+    directories = [run_dirs] if isinstance(run_dirs, Path) else list(run_dirs)
+    runs = [_load(directory / "run.json") for directory in directories]
+    per_run = [
+        [_load(directory / entry["record"]) for entry in run["cases"]]
+        for directory, run in zip(directories, runs, strict=True)
+    ]
+    cases = [case for run_cases in per_run for case in run_cases]
+    title = runs[0]["run_id"] if len(runs) == 1 else f"{len(runs)} runs"
+    lines = [f"# Report: {title}", "", "## Conditions", ""]
+    for run, run_cases in zip(runs, per_run, strict=True):
+        lines += _conditions(run, run_cases)
 
     lines += ["## Performance", ""]
     rows = []
     for case in cases:
         perf = case["performance"]
+        if perf is None:
+            continue
         wall = perf["wall_s"]
         rss = perf["peak_rss_kib"]
         rows.append(
             [
                 case["case"],
-                case["slicer"],
+                slicer_label(case),
                 _number(wall["median"]),
                 _number(wall["min"]),
                 _number(wall["max"]),
@@ -104,7 +150,7 @@ def render(run_dir: Path) -> str:
                     else None
                 ),
                 f"{perf['timed_runs'] - perf['failed_runs']}/{perf['timed_runs']}",
-                str(len(case["determinism"]["distinct_sha256"])),
+                _distinct(case["determinism"]),
             ]
         )
     lines += _table(
@@ -127,7 +173,8 @@ def render(run_dir: Path) -> str:
     lines += [
         "",
         "Distinct outputs counts the different SHA-256 among all runs of a case, warm-ups "
-        "included: 1 means byte-identical files.",
+        "included: 1 means byte-identical files. For SL1 and SL1S files, the count in brackets "
+        "covers the layer images alone, without metadata such as a creation time.",
         "",
     ]
 
@@ -145,7 +192,7 @@ def render(run_dir: Path) -> str:
         rows.append(
             [
                 case["case"],
-                case["slicer"],
+                slicer_label(case),
                 str(metrics["layer_count"]),
                 orientation["stored"] + (" (ambiguous)" if orientation["ambiguous"] else ""),
                 f"{_number(offset[0])}, {_number(offset[1])}",
@@ -190,7 +237,7 @@ def render(run_dir: Path) -> str:
             rows.append(
                 [
                     case["case"],
-                    case["slicer"],
+                    slicer_label(case),
                     body["name"],
                     _number(body["volume_error_pct"]),
                     _number(phase["phase"])
@@ -204,6 +251,7 @@ def render(run_dir: Path) -> str:
         rows,
     )
 
+    lines += side_by_side(cases, dict((id(case), metrics) for case, metrics in analysed))
     lines += ["", "## File properties (UVTools)", ""]
     rows = []
     for case in cases:
@@ -214,7 +262,7 @@ def render(run_dir: Path) -> str:
         rows.append(
             [
                 case["case"],
-                case["slicer"],
+                slicer_label(case),
                 f"{_number(props['ResolutionX'], 0)} × {_number(props['ResolutionY'], 0)}",
                 f"{_number(props['PixelWidth'], 4)} × {_number(props['PixelHeight'], 4)}",
                 _number(props["LayerHeight"], 3),
@@ -251,13 +299,25 @@ def render(run_dir: Path) -> str:
         if analysis.get("status") != "analysed":
             continue
         issues = analysis["issues"]
+        if issues is None:
+            error = analysis.get("uvtools_issues_error", "").splitlines()[0][:160]
+            rows.append(
+                [
+                    case["case"],
+                    slicer_label(case),
+                    "–",
+                    f"UVTools could not read the file: {error}",
+                    "–",
+                ]
+            )
+            continue
         by_type = (
             ", ".join(f"{name}: {count}" for name, count in issues["by_type"].items()) or "none"
         )
         rows.append(
             [
                 case["case"],
-                case["slicer"],
+                slicer_label(case),
                 str(issues["count"]),
                 by_type,
                 str(len(issues["unparsed"])),
@@ -277,7 +337,7 @@ def render(run_dir: Path) -> str:
                 failures.append(
                     [
                         case["case"],
-                        case["slicer"],
+                        slicer_label(case),
                         str(attempt["attempt"]),
                         str(attempt["exit_status"]),
                         _number(attempt["timed_out"]),
@@ -286,7 +346,7 @@ def render(run_dir: Path) -> str:
         analysis = case.get("analysis", {})
         if analysis.get("status") == "failed":
             failures.append(
-                [case["case"], case["slicer"], "analysis", analysis.get("error", ""), "–"]
+                [case["case"], slicer_label(case), "analysis", analysis.get("error", ""), "–"]
             )
     lines += ["## Failures", ""]
     lines += (
@@ -298,7 +358,108 @@ def render(run_dir: Path) -> str:
     return "\n".join(lines)
 
 
-def write_report(run_dir: Path) -> Path:
-    path = run_dir / "report.md"
-    path.write_text(render(run_dir), encoding="utf-8")
+SIDE_BY_SIDE: tuple[tuple[str, Any], ...] = (
+    (
+        "Wall median (s)",
+        lambda c, m: _number(c["performance"]["wall_s"]["median"]) if c.get("performance") else "–",
+    ),
+    (
+        "User + system CPU (s)",
+        lambda c, m: (
+            _number(c["performance"]["user_s"]["median"] + c["performance"]["system_s"]["median"])
+            if c.get("performance") and c["performance"]["user_s"]["median"] is not None
+            else "–"
+        ),
+    ),
+    (
+        "Peak RSS (MiB)",
+        lambda c, m: (
+            _number(c["performance"]["peak_rss_kib"]["median"] / 1024, 1)
+            if c.get("performance") and c["performance"]["peak_rss_kib"]["median"] is not None
+            else "–"
+        ),
+    ),
+    (
+        "Output (bytes)",
+        lambda c, m: (
+            _number(int(c["performance"]["output_bytes"]["median"]))
+            if c.get("performance") and c["performance"]["output_bytes"]["median"] is not None
+            else "–"
+        ),
+    ),
+    ("Stored orientation", lambda c, m: m["orientation"]["stored"] if m else "–"),
+    (
+        "Placement dx, dy (mm)",
+        lambda c, m: ", ".join(_number(v) for v in m["placement"]["offset_mm"]) if m else "–",
+    ),
+    ("IoU min", lambda c, m: _number(m["summary"]["iou"]["min"], 4) if m else "–"),
+    ("IoU mean", lambda c, m: _number(m["summary"]["iou"]["mean"], 4) if m else "–"),
+    (
+        "Boundary mean (mm)",
+        lambda c, m: _number(m["summary"]["boundary_mean_mm"]["mean"], 4) if m else "–",
+    ),
+    (
+        "Boundary max (mm)",
+        lambda c, m: _number(m["summary"]["boundary_max_mm"]["max"], 4) if m else "–",
+    ),
+    (
+        "Volume vs reference (%)",
+        lambda c, m: _number(m["volume"]["error_vs_reference_pct"]) if m else "–",
+    ),
+    ("Height error (mm)", lambda c, m: _number(m["height"]["error_mm"]) if m else "–"),
+    (
+        "Edge coverage MAE",
+        lambda c, m: _number(m["summary"]["edge_coverage_mae"]["mean"]) if m else "–",
+    ),
+    (
+        "Z phase (bodies)",
+        lambda c, m: (
+            ", ".join(
+                f"{b['name']} {_number(b['z_phase']['phase'])}"
+                for b in m["bodies"]
+                if b["z_phase"]["phase"] is not None
+            )
+            or "–"
+            if m
+            else "–"
+        ),
+    ),
+    (
+        "UVTools issues",
+        lambda c, m: (
+            str(c["analysis"]["issues"]["count"])
+            if c.get("analysis", {}).get("issues")
+            else "unreadable"
+            if c.get("analysis", {}).get("status") == "analysed"
+            else "–"
+        ),
+    ),
+)
+
+
+def side_by_side(cases: Sequence[dict[str, Any]], metrics: dict[int, dict[str, Any]]) -> list[str]:
+    """For every case measured with more than one slicer, one column per slicer."""
+    by_case: dict[str, list[dict[str, Any]]] = {}
+    for case in cases:
+        by_case.setdefault(case["case"], []).append(case)
+    lines: list[str] = []
+    for name, group in by_case.items():
+        if len(group) < 2:
+            continue
+        if not lines:
+            lines += ["", "## Side by side", ""]
+        lines += [f"### {name}", ""]
+        rows = [
+            [label, *(cell(case, metrics.get(id(case))) for case in group)]
+            for label, cell in SIDE_BY_SIDE
+        ]
+        lines += _table(["Metric", *(slicer_label(case) for case in group)], rows)
+        lines.append("")
+    return lines
+
+
+def write_report(run_dir: Path, others: Sequence[Path] = ()) -> Path:
+    """Write ``report.md`` in ``run_dir`` (with ``others`` side by side when given)."""
+    path = run_dir / "report.md" if not others else run_dir / "comparison.md"
+    path.write_text(render([run_dir, *others]), encoding="utf-8")
     return path

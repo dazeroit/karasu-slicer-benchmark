@@ -1,0 +1,60 @@
+{
+  "kind": "resin",
+  "profile": {
+    "schema_version": 1,
+    "id": "kbench-generic",
+    "name": "kbench generic resin",
+    "revision": 1,
+    "density_g_per_ml": 1.1,
+    "cost_per_liter": 0.0,
+    "currency": "EUR",
+    "calibrations": [
+      {
+        "printer_id": "kbench-prusa-sl1s",
+        "settings": {
+          "layer_height_mm": 0.05,
+          "bottom_layer_count": 1,
+          "transition_layer_count": 3,
+          "bottom": {
+            "exposure_s": 25.0,
+            "wait_before_exposure_s": 0.0,
+            "wait_after_exposure_s": 0.0,
+            "wait_after_lift_s": 0.0,
+            "pwm": 255,
+            "lift": [
+              {
+                "distance_mm": 5.0,
+                "speed_mm_s": 2.0
+              }
+            ],
+            "retract": [
+              {
+                "distance_mm": 5.0,
+                "speed_mm_s": 2.0
+              }
+            ]
+          },
+          "normal": {
+            "exposure_s": 2.0,
+            "wait_before_exposure_s": 0.0,
+            "wait_after_exposure_s": 0.0,
+            "wait_after_lift_s": 0.0,
+            "pwm": 255,
+            "lift": [
+              {
+                "distance_mm": 5.0,
+                "speed_mm_s": 2.0
+              }
+            ],
+            "retract": [
+              {
+                "distance_mm": 5.0,
+                "speed_mm_s": 2.0
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
