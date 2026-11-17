@@ -1,0 +1,36 @@
+[project]
+name = "karasu-slicer-benchmark"
+version = "0.1.0.dev0"
+description = "Independent performance and geometric-accuracy benchmark suite for karasu-slicer and other resin slicers"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Ivan Maruca" }]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+kbench = "kbench.cli:main"
+
+[dependency-groups]
+# Development only; reviewed in docs/DECISIONS.md (BD-004).
+dev = ["pytest>=8.3", "ruff>=0.11"]
+
+[build-system]
+requires = ["uv_build>=0.10.11,<0.11.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "kbench"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "SIM", "PT", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
+addopts = ["-ra", "--strict-markers", "--import-mode=importlib"]

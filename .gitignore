@@ -1,0 +1,11 @@
+# Everything a run produces: tool installs, builds, models, slicer outputs, raw records.
+/work/
+
+# Python environment and caches.
+/.venv/
+__pycache__/
+*.py[cod]
+/.pytest_cache/
+/.ruff_cache/
+/dist/
+*.egg-info/
