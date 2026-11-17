@@ -19,6 +19,7 @@ from kbench.install import InstallError, default_pins_path, install, load_pins
 from kbench.karasu_build import BuildError, build_karasu
 from kbench.models import CatalogError, build_catalog, default_catalog_path, load_catalog
 from kbench.provenance import suite_root, utc_timestamp, work_root
+from kbench.publish import PublishError, publish
 from kbench.report import write_report
 from kbench.run import RunError, import_print_file, run_suite
 from kbench.source_build import (
@@ -148,6 +149,23 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     report.add_argument("run_dirs", type=Path, nargs="+", metavar="RUN_DIR", help="run directories")
     report.set_defaults(handler=_run_report)
+
+    published = commands.add_parser(
+        "publish",
+        help="write a curated, publishable summary of runs (results/)",
+        description="Write <name>.md (the report's tables) and <name>.json (the records) into "
+        "--out, without local paths, host or user names, per-layer arrays or third-party files. "
+        "Runs made from uncommitted suite code are refused.",
+    )
+    published.add_argument(
+        "run_dirs", type=Path, nargs="+", metavar="RUN_DIR", help="run directories"
+    )
+    published.add_argument(
+        "--out", type=Path, required=True, help="output directory, e.g. results/<date>"
+    )
+    published.add_argument("--name", required=True, help="file name without extension")
+    published.add_argument("--title", required=True, help="the summary's title")
+    published.set_defaults(handler=_run_publish)
 
     imported = commands.add_parser(
         "import",
@@ -307,6 +325,16 @@ def _run_suite(args: argparse.Namespace) -> int:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
     print(f"Report: {report} (and {report.with_suffix('.html').name})")
+    return EXIT_OK
+
+
+def _run_publish(args: argparse.Namespace) -> int:
+    try:
+        md_path, json_path = publish(args.run_dirs, args.out, args.name, args.title)
+    except (PublishError, OSError, KeyError, ValueError) as error:
+        print(f"kbench: {error}", file=sys.stderr)
+        return EXIT_FAILURE
+    print(f"Published {md_path} and {json_path}")
     return EXIT_OK
 
 

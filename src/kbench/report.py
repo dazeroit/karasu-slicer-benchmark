@@ -27,6 +27,16 @@ def _number(value: Any, digits: int = 3) -> str:
     return f"{value:.{digits}f}"
 
 
+def _conformity_text(checks: dict[str, Any]) -> str:
+    """The checks that failed, then those the file gave nothing to check against."""
+    failed = [name for name, check in checks.items() if check["matches"] is False]
+    unknown = [name for name, check in checks.items() if check["matches"] is None]
+    text = ", ".join(failed) if failed else "all declared values match"
+    if unknown:
+        text += f" (not declared: {', '.join(unknown)})"
+    return text
+
+
 def _distinct(case: dict[str, Any]) -> str:
     determinism = case["determinism"]
     text = str(len(determinism["distinct_sha256"]))
@@ -298,8 +308,7 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
                     f"{_number(props['ExposureTime'], 2)}",
                     _number(props["AntiAliasing"], 0),
                     str(props.get("DisplayMirror") or "–"),
-                    ", ".join(name for name, check in checks.items() if check["matches"] is False)
-                    or "all match",
+                    _conformity_text(checks),
                 ]
             )
         lines += _table(

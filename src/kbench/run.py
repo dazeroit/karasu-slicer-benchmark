@@ -323,7 +323,11 @@ def schedule_from_layers(layer_properties: Sequence[Mapping[str, Any]]) -> list[
 def conformity(
     properties: Mapping[str, Any], target: Target, layers: Sequence[Layer], model_height_mm: float
 ) -> dict[str, Any]:
-    """What the file declares against what the target and the model call for."""
+    """What the file declares against what the target and the model call for.
+
+    ``matches`` is ``None`` where the file declares nothing to check (a property no reader
+    found): unknown is never reported as a mismatch.
+    """
     panel = target.panel
     resolution = (properties.get("ResolutionX"), properties.get("ResolutionY"))
     pitch = (properties.get("PixelWidth"), properties.get("PixelHeight"))
@@ -331,10 +335,10 @@ def conformity(
     expected_resolution = (panel.resolution_x, panel.resolution_y)
     expected_pitch = (panel.pitch_x_mm, panel.pitch_y_mm)
 
-    def pitch_matches(order: tuple[float, float]) -> bool:
-        return None not in pitch and all(
-            abs(a - b) <= PITCH_TOLERANCE_MM for a, b in zip(pitch, order, strict=True)
-        )
+    def pitch_matches(order: tuple[float, float]) -> bool | None:
+        if None in pitch:
+            return None
+        return all(abs(a - b) <= PITCH_TOLERANCE_MM for a, b in zip(pitch, order, strict=True))
 
     # A portrait format declares the panel with its sides exchanged: the same panel.
     transposed = resolution == expected_resolution[::-1] and resolution != expected_resolution
@@ -343,7 +347,9 @@ def conformity(
             "declared": list(resolution),
             "expected": list(expected_resolution),
             "transposed": transposed,
-            "matches": resolution == expected_resolution or transposed,
+            "matches": None
+            if None in resolution
+            else resolution == expected_resolution or transposed,
         },
         "pixel_pitch_mm": {
             "declared": list(pitch),
@@ -353,8 +359,9 @@ def conformity(
         "layer_height_mm": {
             "declared": properties.get("LayerHeight"),
             "expected": target.layer_height_mm,
-            "matches": properties.get("LayerHeight") is not None
-            and abs(properties["LayerHeight"] - target.layer_height_mm)
+            "matches": None
+            if properties.get("LayerHeight") is None
+            else abs(properties["LayerHeight"] - target.layer_height_mm)
             <= LAYER_HEIGHT_TOLERANCE_MM,
         },
         "layer_count": {

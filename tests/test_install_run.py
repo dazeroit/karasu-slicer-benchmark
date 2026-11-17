@@ -290,3 +290,54 @@ def test_differing_outputs_are_kept_up_to_the_limit(
     assert len(case["determinism"]["distinct_sha256"]) == 5
     assert len(case["distinct_files"]) == 2
     assert all(Path(path).is_file() for path in case["distinct_files"])
+
+
+def test_scrub_removes_local_paths() -> None:
+    from kbench.publish import scrub
+
+    text = "failed: /home/user/work/runs/x/print.goo and C:\\Users\\me\\a.goo, see /tmp/k/log.txt"
+    assert scrub(text) == "failed: print.goo and a.goo, see log.txt"
+    assert scrub("ratio 1/2 and https://example.org/a/b") == "ratio 1/2 and https://example.org/a/b"
+
+
+@posix_only
+def test_publish_summarises_without_paths(make_script: MakeScript, tmp_path: Path) -> None:
+    from kbench.publish import PublishError, publish
+
+    karasu = make_script("karasu-cli", FAKE_KARASU)
+    suite = Suite(
+        "unit",
+        "Timing only.",
+        Timing(0, 2, 30),
+        (Case("cube", "cube-20", "elegoo-mars-5", ("karasu",), False),),
+        "0" * 64,
+    )
+    environ = {"KBENCH_KARASU_CLI": str(karasu), "PATH": "/usr/bin:/bin"}
+    run_dir = run_suite(
+        suite,
+        load_targets(repository_path("targets")),
+        default_catalog_path(),
+        tmp_path / "w",
+        environ,
+        progress=lambda _: None,
+    )
+    run_path = run_dir / "run.json"
+    record = json.loads(run_path.read_text())
+    record["environment_before"]["suite"]["git_dirty"] = True
+    run_path.write_text(json.dumps(record))
+    with pytest.raises(PublishError, match="uncommitted"):
+        publish([run_dir], tmp_path / "results", "unit", "Unit")
+    record["environment_before"]["suite"]["git_dirty"] = False
+    run_path.write_text(json.dumps(record))
+
+    md_path, json_path = publish([run_dir], tmp_path / "results", "unit", "Unit test summary")
+    text = md_path.read_text() + json_path.read_text()
+    assert str(tmp_path) not in text
+    assert "/home/" not in text
+    summary = json.loads(json_path.read_text())
+    assert summary["kind"] == "published_summary"
+    case = summary["runs"][0]["cases"][0]
+    assert case["performance"]["timed_runs"] == 2
+    assert case["model"]["id"] == "cube-20"
+    assert "hostname" not in json.dumps(summary)
+    assert md_path.read_text().startswith("# Unit test summary")

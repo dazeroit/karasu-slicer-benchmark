@@ -362,3 +362,19 @@ def test_decoded_determinism_tells_metadata_from_layers(tmp_path: Path) -> None:
     result = _decoded_determinism(record, files, unused, tmp_path)
     assert result["files"] == 3
     assert result["distinct"] == 2
+
+
+def test_conformity_reports_unknown_as_unknown() -> None:
+    target = load_targets(repository_path("targets"))["prusa-sl1s"]
+    layers = schedule_from_layers([{"PositionZ": 0.05 * (i + 1)} for i in range(200)])
+    # An SL1S archive read by the suite itself: size and layer height known, pixel pitch not.
+    declared = {
+        "ResolutionX": 1620.0,
+        "ResolutionY": 2560.0,
+        "LayerHeight": 0.05,
+        "LayerCount": 200.0,
+    }
+    checks = conformity(declared, target, layers, 10.0)
+    assert checks["pixel_pitch_mm"]["matches"] is None
+    assert checks["resolution"]["matches"] is True
+    assert conformity({}, target, layers, 10.0)["layer_height_mm"]["matches"] is None
