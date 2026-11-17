@@ -51,6 +51,43 @@ invalid and the search does not fall back to `PATH`: measuring a different binar
 configured would silently change the results. Pinned installs under `work/tools/` will be added
 to this order when their installers exist.
 
+## BD-007: NumPy and SciPy as run-time dependencies
+
+2026-11-17. The reference rasterizer and the metrics work on arrays of millions of pixels per
+layer; the standard library has no array type.
+
+| | NumPy | SciPy |
+| --- | --- | --- |
+| Purpose | arrays, vectorised geometry and rasterization | exact Euclidean distance transforms and morphology (`scipy.ndimage`) for boundary distances; `scipy.spatial` in tests |
+| Licence | BSD-3-Clause | BSD-3-Clause |
+| Native code | compiled C (wheels for Linux and Windows) | compiled C, C++ and Fortran (wheels for Linux and Windows) |
+| Maintenance | the reference array library of scientific Python, regular releases | likewise |
+| Why not the standard library | no arrays | an exact distance transform written in Python loops would take minutes per stack |
+
+Exact versions and hashes are pinned in `uv.lock`.
+
+## BD-008: Reference sampled at the mid-plane of each layer
+
+2026-11-17. A layer's reference is the exact section at the slab's mid-height, rasterised as exact
+pixel coverage (METHODOLOGY.md, Reference). A vertex on the plane counts as above it; a face in
+the plane is refused rather than resolved by a guess. Where a slicer samples elsewhere in the
+layer, the per-layer metrics show it as a shape error and the Z-phase metric measures it.
+
+## BD-009: Placement registered by least squares, not by centroid
+
+2026-11-17. The placement offset is the translation minimising the squared coverage differences
+on up to 16 layers, starting from the centroid difference (METRICS.md, Placement). The centroid
+alone was tried first and rejected: on the accuracy plate, a perfect binary slicer's half-pixel
+ties along the edges of two bodies moved the whole-plate centroid by 0.6 pixel, which the
+centroid registration reported as a displacement. The least-squares fit balances edge misfits
+and recovers the true offset within 0.05 pixel.
+
+## BD-010: Material attributed to the nearest body
+
+2026-11-17. Per-body metrics attribute each pixel of the comparison window to the body whose
+bounding box is nearest. A fixed margin around each body was tried first and rejected: a body
+that grew or moved beyond the margin lost area, so the body's metrics depended on the margin.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

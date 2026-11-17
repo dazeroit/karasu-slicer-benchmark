@@ -46,6 +46,8 @@ a required tool is not ready.
 uv run kbench env            # the environment record every run stores
 uv run kbench env --json
 uv run kbench doctor --json  # the tool inventory as JSON
+uv run kbench models list    # the test models
+uv run kbench models build   # STL files and manifest.json into work/models/
 ```
 
 Everything a run produces goes under `work/`, which Git ignores.
@@ -60,7 +62,9 @@ uv run pytest
 
 ## Repository layout
 
-- `src/kbench/`: the suite and its `kbench` command.
+- `src/kbench/`: the suite and its `kbench` command; `geometry/` (meshes, STL, exact sections and
+  pixel coverage), `metrics/` (layer, stack and body metrics).
+- `models/catalog.toml`: the test models.
 - `tests/`: the suite's tests.
 - `docs/`: design, methodology and decisions.
 - `.github/workflows/`: continuous integration.
@@ -70,7 +74,9 @@ uv run pytest
 
 - [AGENTS.md](AGENTS.md): permanent rules for contributors and agents.
 - [docs/DESIGN.md](docs/DESIGN.md): what the suite measures and how it is built.
-- [docs/METHODOLOGY.md](docs/METHODOLOGY.md): records, environment capture and tool inventory.
+- [docs/METHODOLOGY.md](docs/METHODOLOGY.md): records, environment, tools and the reference.
+- [docs/METRICS.md](docs/METRICS.md): every metric, its definition, unit and limits.
+- [docs/MODELS.md](docs/MODELS.md): the test models and their manifest.
 - [docs/DECISIONS.md](docs/DECISIONS.md): decisions and open questions.
 
 ## Licence

@@ -1,8 +1,9 @@
 # Methodology
 
-How the suite records the conditions of its measurements. The measurement protocols themselves
-(repetitions, statistics, decoding, reference geometry) are added here as they are implemented;
-until then [DESIGN.md](DESIGN.md) describes them.
+How the suite records the conditions of its measurements and computes its ground truth. Protocols
+not implemented yet (repetitions, statistics, decoding) are described in [DESIGN.md](DESIGN.md)
+until they are added here. The metrics are defined in [METRICS.md](METRICS.md), the test models
+in [MODELS.md](MODELS.md).
 
 ## Records
 
@@ -78,3 +79,41 @@ Every external program runs from an argument list, never through a shell, with s
 closed, both output streams captured and a hard timeout. On POSIX the program starts in its own
 session and, at the timeout, its whole process group is killed, so no child keeps running or
 holds the output open. A negative exit status means the program was ended by that signal.
+
+## Reference
+
+The reference is what an exact slicer would put on the panel. It is computed from the model's
+mesh as written to STL (`float32` coordinates), never from a slicer's output.
+
+**Layer schedule.** Layer `i` is the slab `[z_bottom, z_bottom + height]`; heights and positions
+come from the measured file when it declares them. For a uniform schedule the count is
+`ceil(model height / layer height)`, the ratio rounded to nine decimals first so that a height
+that is a whole number of layers in decimal does not gain a layer from binary rounding.
+
+**Section.** A layer's reference is the mesh's section by the plane at the slab's mid-height,
+the plane that best represents the slab. Each triangle crossing the plane gives one segment,
+oriented with the material on its left; segments need no chaining. A vertex exactly on the plane
+counts as above it, which makes the section the limit of sections just below the plane: exact
+wherever the area is continuous. A face lying in the plane (where the area jumps) is refused as
+ambiguous; model dimensions and schedules are chosen so that mid-planes never meet a horizontal
+face. Intersection points are interpolated from the lower-index vertex of each edge, so the two
+triangles sharing an edge produce the same point.
+
+**Pixel coverage.** The exact covered fraction of every pixel is accumulated from the segments:
+each piece of segment inside one pixel adds the signed area between itself and the pixel's right
+edge, and its signed height to every pixel further right (a running sum along the row). For
+closed loops of winding 0 or 1 this is the exact area up to rounding (well below 1e-9); coverage
+outside `[0, 1]` beyond that tolerance means overlapping or inverted solids and is refused. The
+rasterizer is checked in the tests against an independent polygon-clipping computation of every
+pixel, and its total against the section's shoelace area.
+
+**Panel frame.** The plate origin is the panel centre; the canonical image has `resolution_x`
+columns along +X and `resolution_y` rows along −Y (row 0 at the back), so it reads like a view
+from above. Pixel `(row, column)` covers `[column, column + 1)` in continuous column units.
+
+**Validation of the metrics.** The tests render synthetic slicer outputs from the reference and
+damage them in one known way each: binarised, mirrored, turned, transposed onto the exchanged
+panel, shifted, grown by one pixel, missing a layer, sampled at another height in the layer or
+one layer off, scaled in XY, with distorted grey levels, or with a stray speck. Each test checks
+that the defect is reported by the right metric, with the expected magnitude, and that the other
+metrics stay unaffected.

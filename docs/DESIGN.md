@@ -83,8 +83,10 @@ checked against analytic areas and high supersampling in the tests.
 pixel pitch, as UVTools reports them; a declaration that differs from the target is itself a
 finding. Each model carries a chiral marker, so the orientation of the stored image (one of the
 eight flips and quarter turns) is identified and reported; shape metrics are computed after
-applying it. One translation per model, estimated over all layers together, registers the
-stacks; it is reported as the placement error, so drift between layers is never absorbed.
+applying it. One translation per model registers the stacks: a least-squares fit of the coverage
+on layers spread over the model's height, started from the centroids (BD-009). It is reported
+as the placement error, and it applies to the whole stack, so drift between layers is never
+absorbed. [METRICS.md](METRICS.md) is the authoritative definition of every metric.
 
 **Metrics:**
 
@@ -227,16 +229,18 @@ karasu-slicer-benchmark/
 │   ├── tools.py              external tool discovery, hashing and version queries
 │   ├── process.py            external programs with captured output and hard timeouts
 │   ├── provenance.py         hashing, suite state, run manifests, record versions
-│   ├── geometry/             mesh generators, STL I/O, exact plane sections, reference rasterizer
+│   ├── models.py             the model catalog, builder and manifest
+│   ├── reference.py          layer schedules and reference layers
+│   ├── geometry/             meshes, primitives, polygons, STL I/O, exact sections, pixel coverage
 │   ├── slicers/              adapters: karasu, prusaslicer, manual (imported files)
 │   ├── execution/            process runner: timing, resource usage, timeouts, repetitions
 │   ├── uvtools/              UVtoolsCmd wrapper: decoding, properties, issues
-│   ├── metrics/              layers, volume, features, orientation, metadata, determinism, statistics
+│   ├── metrics/              orientation, layer metrics, stack and body metrics (more per phase)
 │   └── report/               Markdown and HTML reports, run comparisons
 ├── suites/                   smoke.toml, accuracy.toml, performance.toml, scaling.toml, ...
 ├── targets/                  one TOML per benchmark printer
 │   └── profiles/             suite-authored settings per slicer (karasu/, prusaslicer/)
-├── models/                   model specifications; external models by address and SHA-256
+├── models/                   catalog.toml; external models by address and SHA-256
 ├── thresholds/               optional, versioned gates, separate from measurements
 ├── schemas/                  JSON Schemas of run, case and metric records
 ├── tools/                    pinned installers for UVTools and PrusaSlicer

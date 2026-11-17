@@ -1,0 +1,84 @@
+# The suite's test models (docs/MODELS.md).
+#
+# Each model is one or more bodies. A body is a closed solid standing on z = 0; `at_mm` places
+# the centre of its bounding box on the plate (default [0, 0]). Bodies must be at least 1 mm apart.
+# The built model is centred on the origin in X and Y and stands on z = 0.
+#
+# Shapes and their parameters (lengths in mm, angles in degrees):
+#   box        size_mm = [x, y, z]
+#   prism      radius_mm, segments, height_mm, phase_deg = 0   (faceted cylinder)
+#   cone       radius_mm, segments, height_mm, phase_deg = 0   (regular pyramid)
+#   icosphere  radius_mm, subdivisions                          (20 * 4^subdivisions triangles)
+#   extrusion  polygon_mm = [[x, y], ...] counter-clockwise, height_mm
+
+[[models]]
+id = "cube-20"
+description = "A 20 mm cube: flat faces along the panel axes and sharp corners."
+bodies = [{ name = "cube", shape = "box", size_mm = [20.0, 20.0, 20.0] }]
+
+[[models]]
+id = "box-30x10x5"
+description = "An elongated box: different extents along X and Y."
+bodies = [{ name = "box", shape = "box", size_mm = [30.0, 10.0, 5.0] }]
+
+[[models]]
+id = "cylinder-r5-n64"
+description = "A 64-segment prism, radius 5 mm, 10 mm high: a coarse cylinder."
+bodies = [{ name = "cylinder", shape = "prism", radius_mm = 5.0, segments = 64, height_mm = 10.0 }]
+
+[[models]]
+id = "cylinder-r5-n512"
+description = "A 512-segment prism, radius 5 mm, 10 mm high: a fine cylinder."
+bodies = [{ name = "cylinder", shape = "prism", radius_mm = 5.0, segments = 512, height_mm = 10.0 }]
+
+[[models]]
+id = "cone-r8-h16"
+description = "A 128-segment pyramid, radius 8 mm, 16 mm high: the area changes with height."
+bodies = [{ name = "cone", shape = "cone", radius_mm = 8.0, segments = 128, height_mm = 16.0 }]
+
+[[models]]
+id = "sphere-r10"
+description = "An icosphere of radius 10 mm, 20,480 triangles: curvature in every direction."
+bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 10.0, subdivisions = 5 }]
+
+[[models]]
+id = "orientation-l"
+description = "A chiral L with arms of different lengths: each flip and quarter turn differs."
+bodies = [
+  { name = "l", shape = "extrusion", height_mm = 2.0, polygon_mm = [
+    [0.0, 0.0], [12.0, 0.0], [12.0, 4.0], [4.0, 4.0], [4.0, 20.0], [0.0, 20.0],
+  ] },
+]
+
+[[models]]
+id = "accuracy-plate"
+description = "One job for the accuracy metrics: cube, cylinder, cone, sphere and the chiral L."
+bodies = [
+  { name = "cube", shape = "box", size_mm = [10.0, 10.0, 10.0], at_mm = [-24.0, 7.0] },
+  { name = "cylinder", shape = "prism", radius_mm = 4.0, segments = 128, height_mm = 10.0, at_mm = [-10.0, 7.0] },
+  { name = "cone", shape = "cone", radius_mm = 5.0, segments = 128, height_mm = 10.0, at_mm = [4.0, 7.0] },
+  { name = "sphere", shape = "icosphere", radius_mm = 5.0, subdivisions = 4, at_mm = [18.0, 7.0] },
+  { name = "l", shape = "extrusion", height_mm = 2.0, at_mm = [-3.0, -11.0], polygon_mm = [
+    [0.0, 0.0], [12.0, 0.0], [12.0, 4.0], [4.0, 4.0], [4.0, 20.0], [0.0, 20.0],
+  ] },
+]
+
+[[models]]
+id = "sphere-r20-s3"
+description = "Scaling series: icosphere of radius 20 mm, 1,280 triangles."
+bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 3 }]
+
+[[models]]
+id = "sphere-r20-s5"
+description = "Scaling series: icosphere of radius 20 mm, 20,480 triangles."
+bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 5 }]
+
+[[models]]
+id = "sphere-r20-s7"
+description = "Scaling series: icosphere of radius 20 mm, 327,680 triangles."
+bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 7 }]
+
+[[models]]
+id = "sphere-r20-s8"
+description = "Scaling series: icosphere of radius 20 mm, 1,310,720 triangles."
+bodies = [{ name = "sphere", shape = "icosphere", radius_mm = 20.0, subdivisions = 8 }]
