@@ -1,0 +1,25 @@
+# External tools the suite installs, pinned by version and SHA-256 (BD-011).
+# `kbench install <name>` downloads `url`, checks `sha256`, and extracts the archive into
+# work/tools/<name>/<version>/. `executable` is the program's path inside that directory.
+
+[uvtools]
+version = "v7.1.2"
+url = "https://github.com/sn4k3/UVtools/releases/download/v7.1.2/UVtools_linux-x64_v7.1.2.zip"
+sha256 = "4d06ec7e86043c409d81126311c5c8e6f4629eb5bb9d3f092d8ec2401d157c1c"
+size_bytes = 91179562
+archive = "zip"
+executable = "UVtoolsCmd"
+platform = "linux-x64"
+# Release published 2026-10-26; digest as listed by the GitHub release API.
+
+[prusaslicer]
+# The last PrusaSlicer release with a Linux build on its GitHub releases page (BD-015).
+version = "2.8.1"
+url = "https://github.com/prusa3d/PrusaSlicer/releases/download/version_2.8.1/PrusaSlicer-2.8.1%2Blinux-x64-newer-distros-GTK3-202409181416.AppImage"
+# GitHub lists no digest for this 2024 asset: SHA-256 computed by the suite at its first
+# download, 2026-11-17, and pinned from then on. The size matches the release API.
+sha256 = "565f2f4bd4dbb05904a459d54db1916b6932124709c1d17b5aacfe9f5f2f1b03"
+size_bytes = 98731200
+archive = "appimage"
+executable = "squashfs-root/AppRun"
+platform = "linux-x64"

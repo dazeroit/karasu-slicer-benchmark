@@ -40,6 +40,7 @@ def _isolate_tools(monkeypatch: pytest.MonkeyPatch, path_dir: Path) -> None:
     for spec in TOOLS:
         monkeypatch.delenv(spec.env_var, raising=False)
     monkeypatch.setenv("PATH", str(path_dir))
+    monkeypatch.setenv("KBENCH_WORK", str(path_dir / "work"))  # No pinned installs.
 
 
 @posix_only

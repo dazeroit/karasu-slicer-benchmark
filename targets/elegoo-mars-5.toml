@@ -1,0 +1,25 @@
+# Elegoo Mars 5 (not the Mars 5 Ultra).
+id = "elegoo-mars-5"
+description = "Elegoo Mars 5: 4K mono LCD, 4098 x 2560 px at 35 µm"
+
+[panel]
+# Pixels along plate X (the long side) and Y, and the pixel pitch in mm.
+resolution_x = 4098
+resolution_y = 2560
+pitch_x_mm = 0.035
+pitch_y_mm = 0.035
+layer_height_mm = 0.05
+
+[source]
+# Published values. Retrieved 2026-11-17 through a web search that showed the manufacturer's
+# series page and independent specification tables agreeing on 4098 x 2560 px at 35 µm
+# (143.43 x 89.6 mm of panel); the manufacturer's page itself could not be fetched.
+manufacturer = "https://us.elegoo.com/pages/elegoo-mars-5-series"
+corroboration = ["https://printer-hub.ru/en/printers/elegoo-mars-5", "https://liqcreate.com/?p=20146"]
+retrieved = "2026-11-17"
+
+[slicers.karasu]
+printer = "elegoo-mars-5"
+resin = "elegoo-standard-resin"
+format = "goo-v3"
+extension = ".goo"

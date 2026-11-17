@@ -21,10 +21,12 @@ from __future__ import annotations
 import math
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Protocol
 
 import numpy as np
 from numpy.typing import NDArray
+from PIL import Image
 
 from kbench.geometry.mesh import Mesh
 from kbench.geometry.raster import Panel, Window
@@ -67,8 +69,8 @@ class LayerStack(Protocol):
     @property
     def shape(self) -> tuple[int, int]: ...
 
-    def coverage(self, index: int) -> NDArray[np.float64]:
-        """Layer ``index`` as coverage in ``[0, 1]``, full stored image."""
+    def image(self, index: int) -> NDArray[Any]:
+        """Layer ``index`` as stored: 8-bit grey levels, or coverage in ``[0, 1]``."""
         ...
 
 
@@ -83,8 +85,37 @@ class ArrayStack:
     def shape(self) -> tuple[int, int]:
         return self.images[0].shape if self.images else (0, 0)
 
-    def coverage(self, index: int) -> NDArray[np.float64]:
-        return to_coverage(self.images[index])
+    def image(self, index: int) -> NDArray[Any]:
+        return self.images[index]
+
+
+@dataclass(frozen=True)
+class PngStack:
+    """Decoded layers as 8-bit greyscale PNG files, one per layer, read when needed."""
+
+    files: Sequence[Path]
+    layers: Sequence[Layer]
+    shape: tuple[int, int]
+
+    @classmethod
+    def open(cls, files: Sequence[Path], layers: Sequence[Layer]) -> PngStack:
+        if len(files) != len(layers):
+            raise AnalysisError(f"{len(files)} layer images for {len(layers)} layers")
+        if not files:
+            raise AnalysisError("the stack has no layers")
+        with Image.open(files[0]) as first:
+            shape = (first.height, first.width)
+        return cls(tuple(files), tuple(layers), shape)
+
+    def image(self, index: int) -> NDArray[Any]:
+        with Image.open(self.files[index]) as picture:
+            if picture.mode != "L":
+                raise AnalysisError(
+                    f"{self.files[index].name}: mode {picture.mode}, expected 8-bit grey"
+                )
+            if (picture.height, picture.width) != self.shape:
+                raise AnalysisError(f"{self.files[index].name}: size differs from the first layer")
+            return np.asarray(picture, dtype=np.uint8)
 
 
 def to_coverage(image: NDArray[Any]) -> NDArray[np.float64]:
@@ -97,9 +128,9 @@ def to_coverage(image: NDArray[Any]) -> NDArray[np.float64]:
     return values
 
 
-def take_padded(image: NDArray[np.float64], window: Window) -> NDArray[np.float64]:
-    """``window`` of ``image``, with zeros where the window leaves the image."""
-    out = np.zeros((window.rows, window.cols))
+def take_padded(image: NDArray[Any], window: Window) -> NDArray[Any]:
+    """``window`` of ``image`` (same type), with zeros where the window leaves the image."""
+    out = np.zeros((window.rows, window.cols), dtype=image.dtype)
     r0, c0 = max(window.row0, 0), max(window.col0, 0)
     r1 = min(window.row0 + window.rows, image.shape[0])
     c1 = min(window.col0 + window.cols, image.shape[1])
@@ -110,10 +141,23 @@ def take_padded(image: NDArray[np.float64], window: Window) -> NDArray[np.float6
     return out
 
 
-def _weighted_sums(image: NDArray[np.float64]) -> tuple[float, float, float]:
+def _full_scale(image: NDArray[Any]) -> float:
+    return 255.0 if image.dtype == np.uint8 else 1.0
+
+
+def _material(image: NDArray[Any]) -> NDArray[np.bool_]:
+    """Material pixels: coverage ≥ 0.5, which for 8-bit grey is grey ≥ 128."""
+    return image >= 128 if image.dtype == np.uint8 else image >= MATERIAL_THRESHOLD
+
+
+def _weighted_sums(image: NDArray[Any]) -> tuple[float, float, float]:
+    """Total coverage and its first moments along rows and columns (pixel centres)."""
+    scale = _full_scale(image)
+    by_row = image.sum(axis=1, dtype=np.float64) / scale
+    by_col = image.sum(axis=0, dtype=np.float64) / scale
     rows = np.arange(image.shape[0]) + 0.5
     cols = np.arange(image.shape[1]) + 0.5
-    return float(image.sum()), float(image.sum(axis=1) @ rows), float(image.sum(axis=0) @ cols)
+    return float(by_row.sum()), float(by_row @ rows), float(by_col @ cols)
 
 
 def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[str, Any]:
@@ -139,8 +183,12 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
     stored_total = stored_rows = stored_cols = 0.0
     measured_full_area: list[float] = []
     for index in range(len(layers)):
-        image = stack.coverage(index)
-        stored_silhouette |= image >= MATERIAL_THRESHOLD
+        image = stack.image(index)
+        if image.shape != tuple(stack.shape):
+            raise AnalysisError(f"layer {index} has size {image.shape}, not {stack.shape}")
+        if image.dtype != np.uint8:
+            image = to_coverage(image)
+        stored_silhouette |= _material(image)
         total, rows, cols = _weighted_sums(image)
         stored_total, stored_rows, stored_cols = (
             stored_total + total,
@@ -192,7 +240,8 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
     window = nominal.shifted(round(start_row), round(start_col))
     sample = _registration_layers(nominal_area)
     measured_sample = [
-        take_padded(orient.apply(stack.coverage(index), to_canonical), window) for index in sample
+        to_coverage(take_padded(orient.apply(stack.image(index), to_canonical), window))
+        for index in sample
     ]
     registration = register_translation(
         mesh,
@@ -213,8 +262,8 @@ def analyze_stack(model: BuiltModel, panel: Panel, stack: LayerStack) -> dict[st
     per_layer: dict[str, list[Any]] = {field: [] for field in (*LAYER_FIELDS, "stray_area_mm2")}
     body_measured: dict[str, list[float]] = {name: [] for name in body_names}
     for index, layer in enumerate(layers):
-        canonical = orient.apply(stack.coverage(index), to_canonical)
-        measured = take_padded(canonical, window)
+        canonical = orient.apply(stack.image(index), to_canonical)
+        measured = to_coverage(take_padded(canonical, window))
         reference = reference_layer(mesh, panel, window, layer, offset_mm=offset_mm)
         for field, value in layer_metrics(measured, reference, panel).items():
             per_layer[field].append(value)

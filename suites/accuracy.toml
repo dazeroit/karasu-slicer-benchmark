@@ -1,0 +1,43 @@
+# Geometric accuracy on every target: the accuracy plate and the single-shape models.
+id = "accuracy"
+description = "Accuracy plate on both 4K targets, and the single-shape models on the Elegoo Mars 5."
+
+[timing]
+warmup = 1
+repetitions = 3
+timeout_s = 1200
+
+[[cases]]
+model = "accuracy-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+
+[[cases]]
+model = "accuracy-plate"
+target = "anycubic-photon-mono-4k"
+slicers = ["karasu"]
+
+[[cases]]
+model = "cube-20"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+
+[[cases]]
+model = "cylinder-r5-n512"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+
+[[cases]]
+model = "cone-r8-h16"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+
+[[cases]]
+model = "sphere-r10"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+
+[[cases]]
+model = "orientation-l"
+target = "anycubic-photon-mono-4k"
+slicers = ["karasu"]

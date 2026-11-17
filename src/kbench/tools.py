@@ -1,9 +1,10 @@
 """The external programs the suite depends on: where they are, what they are, which version.
 
 Each tool is found through its environment variable when that variable is set and not empty,
-otherwise on ``PATH``. A variable that names something unusable is reported as invalid; the
-search never falls back to ``PATH`` behind the user's back, because measuring a different binary
-than the one configured would silently change the results.
+then in its pinned installation under the work directory (``kbench install``), then on
+``PATH``. A variable that names something unusable is reported as invalid; the search never
+falls back behind the user's back, because measuring a different binary than the one configured
+would silently change the results (BD-006).
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Literal
 
+from kbench.install import default_pins_path, load_pins
 from kbench.process import run_captured
 from kbench.provenance import sha256_file
 
@@ -33,6 +35,8 @@ class ToolSpec:
     env_var: str
     executable: str
     version_args: tuple[str, ...]
+    # Path of a pinned installation, relative to the work directory.
+    work_path: str | None = None
 
 
 KARASU_CLI = ToolSpec(
@@ -43,13 +47,26 @@ KARASU_CLI = ToolSpec(
     executable="karasu-cli",
     version_args=("--version",),
 )
+
+
+def _pinned_path(name: str) -> str | None:
+    pins = load_pins(default_pins_path())
+    if name not in pins:
+        return None
+    pin = pins[name]
+    return f"tools/{pin.name}/{pin.version}/{pin.executable}"
+
+
 UVTOOLS_CMD = ToolSpec(
     name="UVtoolsCmd",
     role="decoder and file analysis",
     required=True,
     env_var="KBENCH_UVTOOLSCMD",
     executable="UVtoolsCmd",
-    version_args=("--version",),
+    # `--version` reports the command-line front end's own version; `--core-version` reports the
+    # UVTools release (observed with UVTools v7.1.2).
+    version_args=("--core-version",),
+    work_path=_pinned_path("uvtools"),
 )
 GIT = ToolSpec(
     name="git",
@@ -83,8 +100,9 @@ class Resolution:
     error: str | None
 
 
-def resolve(spec: ToolSpec, environ: Mapping[str, str]) -> Resolution:
-    """Find ``spec`` through its environment variable, otherwise on ``environ``'s ``PATH``."""
+def resolve(spec: ToolSpec, environ: Mapping[str, str], work: Path | None = None) -> Resolution:
+    """Find ``spec`` through its environment variable, its pinned installation under ``work``,
+    or ``environ``'s ``PATH``, in that order."""
     configured = environ.get(spec.env_var, "")
     if configured:
         path = Path(configured).expanduser().absolute()
@@ -97,6 +115,11 @@ def resolve(spec: ToolSpec, environ: Mapping[str, str]) -> Resolution:
             )
         return Resolution("found", source, path, None)
 
+    if work is not None and spec.work_path is not None:
+        pinned = (work / spec.work_path).absolute()
+        if pinned.is_file() and os.access(pinned, os.X_OK):
+            return Resolution("found", "work", pinned, None)
+
     found = shutil.which(spec.executable, path=environ.get("PATH", os.defpath))
     if found is None:
         return Resolution(
@@ -108,13 +131,13 @@ def resolve(spec: ToolSpec, environ: Mapping[str, str]) -> Resolution:
     return Resolution("found", "PATH", Path(found).absolute(), None)
 
 
-def inspect(spec: ToolSpec, environ: Mapping[str, str]) -> dict[str, Any]:
+def inspect(spec: ToolSpec, environ: Mapping[str, str], work: Path | None = None) -> dict[str, Any]:
     """A record of one tool: resolution, resolved file, SHA-256 and version.
 
     ``ok`` means the tool was found and answered its version query with exit status 0, so a
     run can record which version it used.
     """
-    resolution = resolve(spec, environ)
+    resolution = resolve(spec, environ, work)
     record: dict[str, Any] = {
         "name": spec.name,
         "role": spec.role,
@@ -153,6 +176,6 @@ def inspect(spec: ToolSpec, environ: Mapping[str, str]) -> dict[str, Any]:
     return record
 
 
-def inventory(environ: Mapping[str, str]) -> list[dict[str, Any]]:
+def inventory(environ: Mapping[str, str], work: Path | None = None) -> list[dict[str, Any]]:
     """Records of every tool in :data:`TOOLS`, in their fixed order."""
-    return [inspect(spec, environ) for spec in TOOLS]
+    return [inspect(spec, environ, work) for spec in TOOLS]

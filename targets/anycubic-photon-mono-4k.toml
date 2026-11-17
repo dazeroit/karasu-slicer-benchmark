@@ -1,0 +1,26 @@
+# Anycubic Photon Mono 4K.
+id = "anycubic-photon-mono-4k"
+description = "Anycubic Photon Mono 4K: 6.23-inch mono LCD, 3840 x 2400 px at 35 µm"
+
+[panel]
+# Pixels along plate X (the long side) and Y, and the pixel pitch in mm.
+resolution_x = 3840
+resolution_y = 2400
+pitch_x_mm = 0.035
+pitch_y_mm = 0.035
+layer_height_mm = 0.05
+
+[source]
+# Published values. Retrieved 2026-11-17 through a web search that showed the manufacturer's
+# store page and independent specification tables agreeing on 3840 x 2400 px at 0.035 mm (the
+# printable volume, 132 x 80 x 165 mm, is smaller than the panel); the manufacturer's page
+# itself could not be fetched.
+manufacturer = "https://store.anycubic.com/products/photon-mono-4k"
+corroboration = ["https://printer-hub.ru/en/printers/anycubic-photon-mono-4k", "https://all3dp.com/1/anycubic-photon-mono-4k-review-3d-printer-specs/"]
+retrieved = "2026-11-17"
+
+[slicers.karasu]
+printer = "anycubic-photon-mono-4k"
+resin = "anycubic-standard-resin"
+format = "anycubic-pwma-v516"
+extension = ".pwma"

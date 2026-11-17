@@ -117,3 +117,66 @@ panel, shifted, grown by one pixel, missing a layer, sampled at another height i
 one layer off, scaled in XY, with distorted grey levels, or with a stray speck. Each test checks
 that the defect is reported by the right metric, with the expected magnitude, and that the other
 metrics stay unaffected.
+
+## Runs
+
+`kbench run --suite <name>` runs `suites/<name>.toml` (or a suite file given by path). A suite
+names its timing parameters (warm-up runs, timed repetitions, timeout) and its cases: a model,
+a target and the slicers. Targets (`targets/<id>.toml`) give the panel (resolution and pixel
+pitch along plate X and Y), the layer height, the source of those values, and each slicer's
+settings for the printer.
+
+Everything goes into `work/runs/<UTC start>-<suite>/`:
+
+| Path | Content |
+| --- | --- |
+| `run.json` | `kind: run`: suite and target hashes, tools inventory, environment before and after, the list of case records |
+| `models/` | the models built for this run, with their manifest |
+| `cases/<case>/<slicer>/case.json` | `kind: case`: every attempt, the performance summary, determinism, the analysis summary |
+| `cases/<case>/<slicer>/attempt-NN.stdout`, `.stderr` | each run's output streams |
+| `cases/<case>/<slicer>/print.<ext>` | the first successful timed run's print file |
+| `cases/<case>/<slicer>/uvtools-*.txt` | UVtoolsCmd's raw outputs |
+| `cases/<case>/<slicer>/metrics.json` | `kind: stack_metrics` (METRICS.md) |
+| `report.md` | the Markdown report (`kbench report <run dir>` rewrites it) |
+
+**Order.** Models are built first. Then every timed run of every case runs, serially; decoding
+and analysis come only after all timing, because they load every core and would disturb the
+measurements.
+
+## Timing protocol
+
+- Each case runs `warmup` untimed-for-statistics runs, then `repetitions` timed runs, each into
+  a fresh output path. Warm-up runs are recorded like the others and flagged.
+- A run is measured from just before the process starts until the kernel reports its exit
+  (`os.wait4`): wall time on the monotonic clock (`time.perf_counter_ns`), user and system CPU
+  time and peak resident memory (`ru_maxrss`, KiB) of the process. Standard output and error go
+  to files, so nothing drains pipes while timing.
+- The process is started by a small separate launcher (`src/kbench/timer_helper.py`, a fresh
+  interpreter without site packages) that forks, execs and waits for it, not by the suite
+  itself: Linux carries the resident-memory high-water mark across `exec`, so a program started
+  by the suite's large process would report the suite's memory as its peak (BD-016). The
+  launcher's own size is a floor under every reported peak; each run measures it with
+  `/bin/true` (`launcher_floor_kib` in `run.json`, and in the report). A peak at the floor means
+  "at most the floor".
+- A watchdog kills the process's whole group at the suite's timeout; the run is recorded as
+  timed out.
+- The 1-minute load average and the available memory are recorded before each run. They are not
+  used to discard anything; note that the suite's own previous runs raise the load average.
+- Statistics are over successful timed runs: count, median, minimum, maximum and the inclusive
+  quartile range (`statistics.quantiles(method="inclusive")`), with every sample kept. The IQR
+  describes spread; it is not a confidence interval. Results from different hosts are never
+  pooled.
+- Page cache is warm (the model was just written and read by the warm-up). Cold-cache timing is
+  not measured.
+- **Determinism:** the SHA-256 of every run's print file, warm-ups included, is recorded; one
+  distinct hash means byte-identical files.
+- A failed run (non-zero exit, signal, timeout, no file) is recorded with its status and kept out
+  of the statistics, which say how many runs succeeded.
+
+## Decoding and analysis
+
+The first successful timed run's file is read by UVtools (SLICERS.md): properties, per-layer
+positions, issues, and every layer as an 8-bit PNG. The declared resolution, pixel pitch, layer
+height and layer count are checked against the target and the model (`conformity` in the case
+record). The PNG stack is then measured against the reference (METRICS.md) and deleted unless
+`--keep-layers` is given; its metrics stay.

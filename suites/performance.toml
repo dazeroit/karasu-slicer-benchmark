@@ -1,0 +1,44 @@
+# Timing only: more repetitions, no analysis, triangle counts from 1,280 to 1.3 million.
+id = "performance"
+description = "Slicing time, CPU and memory on both 4K targets and over the sphere scaling series."
+
+[timing]
+warmup = 2
+repetitions = 10
+timeout_s = 1800
+
+[[cases]]
+model = "accuracy-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+model = "accuracy-plate"
+target = "anycubic-photon-mono-4k"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s3"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s5"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s7"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s8"
+target = "elegoo-mars-5"
+slicers = ["karasu"]
+analyze = false

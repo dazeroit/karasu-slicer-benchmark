@@ -34,11 +34,17 @@ same pinned UVTools release, whichever slicer wrote it. The design is in
 
 ```console
 uv sync
+uv run kbench install uvtools
+uv run kbench karasu build --repo ../karasu-slicer --ref HEAD
+export KBENCH_KARASU_CLI=<the path the build prints>
 uv run kbench doctor
 ```
 
-`kbench doctor` lists each tool with its path, SHA-256 and version, and exits with status 1 while
-a required tool is not ready.
+`kbench install uvtools` downloads the pinned UVTools release and checks its SHA-256.
+`kbench karasu build` builds karasu-cli from a commit of a karasu-slicer checkout without
+writing to it, so every run can name the commit it measured; any karasu-cli can be used
+instead through `KBENCH_KARASU_CLI`. `kbench doctor` lists each tool with its path, SHA-256 and
+version, and exits with status 1 while a required tool is not ready.
 
 ## Usage
 
@@ -48,9 +54,14 @@ uv run kbench env --json
 uv run kbench doctor --json  # the tool inventory as JSON
 uv run kbench models list    # the test models
 uv run kbench models build   # STL files and manifest.json into work/models/
+uv run kbench run --suite smoke        # a few minutes: time, decode and measure one job
+uv run kbench run --suite accuracy     # every target and single-shape model
+uv run kbench run --suite performance  # timing only, more repetitions, scaling series
+uv run kbench report work/runs/<run-id>
 ```
 
-Everything a run produces goes under `work/`, which Git ignores.
+Each run writes `work/runs/<run-id>/` with its records and `report.md`. Everything a run
+produces goes under `work/` (or `KBENCH_WORK`), which Git ignores.
 
 ## Checks before a change
 
@@ -65,6 +76,9 @@ uv run pytest
 - `src/kbench/`: the suite and its `kbench` command; `geometry/` (meshes, STL, exact sections and
   pixel coverage), `metrics/` (layer, stack and body metrics).
 - `models/catalog.toml`: the test models.
+- `targets/`: benchmark printers (panel, layer height, each slicer's settings).
+- `suites/`: suites of cases with their timing parameters.
+- `tools/pins.toml`: pinned external tools.
 - `tests/`: the suite's tests.
 - `docs/`: design, methodology and decisions.
 - `.github/workflows/`: continuous integration.
@@ -77,6 +91,7 @@ uv run pytest
 - [docs/METHODOLOGY.md](docs/METHODOLOGY.md): records, environment, tools and the reference.
 - [docs/METRICS.md](docs/METRICS.md): every metric, its definition, unit and limits.
 - [docs/MODELS.md](docs/MODELS.md): the test models and their manifest.
+- [docs/SLICERS.md](docs/SLICERS.md): how each slicer is driven and how UVTools reads the files.
 - [docs/DECISIONS.md](docs/DECISIONS.md): decisions and open questions.
 
 ## Licence

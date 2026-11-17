@@ -9,6 +9,7 @@ authors = [{ name = "Ivan Maruca" }]
 requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.5.5",
+    "pillow>=13.0.0",
     "scipy>=1.18.1",
 ]
 
@@ -33,9 +34,10 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "W", "F", "I", "B", "UP", "SIM", "PT", "RUF"]
 # Mathematical signs used deliberately in prose.
-allowed-confusables = ["−", "×"]
+allowed-confusables = ["−", "×", "–"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["tests"]
 addopts = ["-ra", "--strict-markers", "--import-mode=importlib"]
+markers = ["integration: needs the real karasu-cli and UVTools (KBENCH_INTEGRATION=1)"]

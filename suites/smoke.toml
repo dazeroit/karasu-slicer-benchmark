@@ -1,0 +1,13 @@
+# A few minutes: one accuracy job and its timing on one target. Run before handing off a change.
+id = "smoke"
+description = "One accuracy plate on the Elegoo Mars 5, timed and analysed."
+
+[timing]
+warmup = 1
+repetitions = 3
+timeout_s = 600
+
+[[cases]]
+model = "accuracy-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu"]

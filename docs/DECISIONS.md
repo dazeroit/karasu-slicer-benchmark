@@ -88,6 +88,62 @@ and recovers the true offset within 0.05 pixel.
 bounding box is nearest. A fixed margin around each body was tried first and rejected: a body
 that grew or moved beyond the margin lost area, so the body's metrics depended on the margin.
 
+## BD-011: Pinned installs of external tools
+
+2026-11-17. External tools the suite installs are pinned in `tools/pins.toml` by version, URL,
+size and SHA-256, and installed by `kbench install <name>` into `work/tools/<name>/<version>/`:
+downloaded into a directory of their own, checked before extraction, extracted member by member
+with paths confined to the target and symbolic links refused. Tool discovery (BD-006) looks
+there after the environment variable and before `PATH`. UVTools is pinned at v7.1.2, Linux x64
+portable build, with the digest the GitHub release lists; the release is more than two weeks
+old.
+
+## BD-012: Pillow as a run-time dependency
+
+2026-11-17. Decoded layers are PNG files. Pillow reads them into NumPy arrays.
+
+| | Pillow |
+| --- | --- |
+| Licence | MIT-CMU (HPND) |
+| Native code | compiled C image codecs (wheels for Linux and Windows) |
+| Maintenance | the standard Python imaging library, regular releases |
+| Why not the standard library | it reads no PNG |
+
+## BD-013: Target panels from published specifications
+
+2026-11-17. A target's panel (resolution and pixel pitch) comes from the manufacturer's
+published specification, cited in the target file with the date and how it was retrieved, never
+from a slicer's catalog: the panel is the frame the files are measured in, so it must not come
+from the program under test. Each run checks what the file declares against it.
+
+## BD-014: Timing before analysis, statistics over every sample
+
+2026-11-17. A run times every case before decoding or analysing anything, and keeps every sample
+(METHODOLOGY.md, Timing protocol). Warm-up runs are recorded and flagged but not in the
+statistics; failed runs are recorded and counted but not in the statistics.
+
+## BD-015: PrusaSlicer 2.8.1 AppImage on Linux
+
+2026-11-17, owner. PrusaSlicer's GitHub releases carry a Linux build up to 2.8.1 (AppImage,
+September 2024); later releases are on Flathub for Linux. The suite pins the 2.8.1 "newer
+distros" AppImage, unpacked with its own `--appimage-extract` so runs need no FUSE mount and
+timing does not include mounting. GitHub lists no digest for this asset, so the SHA-256 was
+computed at the first download and pinned. The build needs the system libraries
+`libwebkit2gtk-4.1`, `libsoup-3.0` and `libjavascriptcoregtk-4.1`; the owner installs them
+(`sudo apt install libwebkit2gtk-4.1-0` on Ubuntu 24.04).
+
+## BD-016: Timed runs started by a small launcher
+
+2026-11-17. The first performance runs reported the same peak memory, 842.6 MiB, for every case,
+from a 5,914-triangle plate to a 1.3-million-triangle sphere. A check showed why: Linux carries a
+process's resident-memory high-water mark across `exec`, so `/bin/true` started by the suite's
+Python process after it held 600 MiB reported 632 MiB, and only 5.4 MiB when started by a fresh
+small interpreter. Timed runs are therefore started by a separate launcher
+(`timer_helper.py`) that forks and execs the program itself; each run records the launcher's
+floor. GNU `time` has a lower floor (about 1.3 MiB) but reports times to the hundredth of a
+second, too coarse for runs of a few hundredths; the launcher keeps microsecond CPU times.
+Records made before this decision report wrong peaks and are not used.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

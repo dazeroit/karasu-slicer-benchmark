@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import os
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -38,6 +40,17 @@ def suite_root() -> Path | None:
     """
     root = Path(__file__).resolve().parents[2]
     return root if (root / "pyproject.toml").is_file() else None
+
+
+def work_root(environ: Mapping[str, str] | None = None) -> Path | None:
+    """Where runs, builds and installed tools go: ``KBENCH_WORK`` when set and not empty,
+    otherwise ``work/`` in the checkout (``None`` outside a checkout)."""
+    environ = os.environ if environ is None else environ
+    configured = environ.get("KBENCH_WORK", "")
+    if configured:
+        return Path(configured).expanduser().absolute()
+    root = suite_root()
+    return root / "work" if root is not None else None
 
 
 def suite_state(root: Path | None, git: Path | None) -> dict[str, Any]:

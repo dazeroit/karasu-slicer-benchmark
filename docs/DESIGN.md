@@ -227,23 +227,27 @@ karasu-slicer-benchmark/
 │   ├── config.py             suite, target and case loading and validation (TOML)
 │   ├── env.py                host environment capture
 │   ├── tools.py              external tool discovery, hashing and version queries
+│   ├── install.py            pinned tool installation
+│   ├── karasu_build.py       karasu-cli builds from a git ref
+│   ├── execution.py          timed runs and their statistics
+│   ├── timer_helper.py       the small launcher that starts and measures each timed run
+│   ├── uvtools.py            UVtoolsCmd: decoding, properties, issues
+│   ├── slicers.py            slicer adapters
+│   ├── run.py                suite runs
+│   ├── report.py             Markdown reports (HTML and comparisons in P4)
 │   ├── process.py            external programs with captured output and hard timeouts
 │   ├── provenance.py         hashing, suite state, run manifests, record versions
 │   ├── models.py             the model catalog, builder and manifest
 │   ├── reference.py          layer schedules and reference layers
 │   ├── geometry/             meshes, primitives, polygons, STL I/O, exact sections, pixel coverage
-│   ├── slicers/              adapters: karasu, prusaslicer, manual (imported files)
-│   ├── execution/            process runner: timing, resource usage, timeouts, repetitions
-│   ├── uvtools/              UVtoolsCmd wrapper: decoding, properties, issues
-│   ├── metrics/              orientation, layer metrics, stack and body metrics (more per phase)
-│   └── report/               Markdown and HTML reports, run comparisons
-├── suites/                   smoke.toml, accuracy.toml, performance.toml, scaling.toml, ...
-├── targets/                  one TOML per benchmark printer
-│   └── profiles/             suite-authored settings per slicer (karasu/, prusaslicer/)
+│   └── metrics/              orientation, layer metrics, stack and body metrics (more per phase)
+├── suites/                   smoke.toml, accuracy.toml, performance.toml (more per phase)
+├── targets/                  one TOML per benchmark printer, with each slicer's settings
+│   └── profiles/             suite-authored settings files for slicers that need them (P3)
 ├── models/                   catalog.toml; external models by address and SHA-256
 ├── thresholds/               optional, versioned gates, separate from measurements
 ├── schemas/                  JSON Schemas of run, case and metric records
-├── tools/                    pinned installers for UVTools and PrusaSlicer
+├── tools/                    pins.toml: pinned external tools (UVTools, PrusaSlicer)
 ├── results/                  curated, published summaries (if decided)
 ├── docs/
 │   ├── DESIGN.md             this document
