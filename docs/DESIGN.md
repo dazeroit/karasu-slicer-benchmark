@@ -129,6 +129,7 @@ before use.
 | --- | --- | --- |
 | karasu-slicer | `karasu-cli`, automated; built from a git ref or given as a binary | everything |
 | PrusaSlicer | command line (SL1/SL1S export), automated | everything |
+| DragonFruit | command line built from its pinned source (BD-022), `.goo` export, automated | everything |
 | CHITUBOX, Lychee, ELEGOO SatelLite, Anycubic Photon Workshop | GUI only: manual export by a documented protocol, imported with a provenance record (slicer, version, OS, date, settings, SHA-256) | accuracy, metadata, UVTools; no timing |
 
 Each slicer has one adapter: its version, how its settings file is written from the case, the

@@ -7,6 +7,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 WSL_NOTE = " (WSL: not native Linux or Windows)"
 
 
@@ -25,9 +27,13 @@ def _number(value: Any, digits: int = 3) -> str:
     return f"{value:.{digits}f}"
 
 
-def _distinct(determinism: dict[str, Any]) -> str:
+def _distinct(case: dict[str, Any]) -> str:
+    determinism = case["determinism"]
     text = str(len(determinism["distinct_sha256"]))
-    if determinism.get("distinct_layers_sha256"):
+    decoded = case.get("analysis", {}).get("decoded_layers")
+    if decoded and len(determinism["distinct_sha256"]) > 1:
+        text += f" (layers: {decoded['distinct']} of {decoded['files']} decoded)"
+    elif determinism.get("distinct_layers_sha256"):
         text += f" (layers: {len(determinism['distinct_layers_sha256'])})"
     return text
 
@@ -155,7 +161,7 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
                     else None
                 ),
                 f"{perf['timed_runs'] - perf['failed_runs']}/{perf['timed_runs']}",
-                _distinct(case["determinism"]),
+                _distinct(case),
             ]
         )
     lines += _table(
@@ -179,8 +185,10 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
     lines += [
         "",
         "Distinct outputs counts the different SHA-256 among all runs of a case, warm-ups "
-        "included: 1 means byte-identical files. For SL1 and SL1S files, the count in brackets "
-        "covers the layer images alone, without metadata such as a creation time.",
+        "included: 1 means byte-identical files. When files differ, the brackets say whether "
+        "their layers differ: up to three of them are decoded and their pixels compared (SL1 "
+        "and SL1S layer images are hashed directly), so a creation time in the metadata does "
+        "not pass for a different print.",
         "",
     ]
 
@@ -250,11 +258,18 @@ def render(run_dirs: Sequence[Path] | Path) -> str:
                         _number(phase["phase"])
                         if phase["phase"] is not None
                         else f"– ({phase['reason']})",
-                        _number(phase["area_scale"], 4),
+                        _number(phase.get("outline_offset_mm"), 4),
                     ]
                 )
         lines += _table(
-            ["Case", "Slicer", "Body", "Volume vs reference (%)", "Z phase (layers)", "Area scale"],
+            [
+                "Case",
+                "Slicer",
+                "Body",
+                "Volume vs reference (%)",
+                "Z phase (layers)",
+                "Outline offset (mm)",
+            ],
             rows,
         )
 
@@ -403,6 +418,17 @@ def _phases(metrics: dict[str, Any] | None) -> str | None:
     return text or None
 
 
+def _outline(metrics: dict[str, Any] | None) -> float | None:
+    if metrics is None:
+        return None
+    offsets = [
+        body["z_phase"].get("outline_offset_mm")
+        for body in metrics["bodies"]
+        if body["z_phase"].get("outline_offset_mm") is not None
+    ]
+    return float(np.median(offsets)) if offsets else None
+
+
 def _smallest(metrics: dict[str, Any] | None, kind: str) -> float | None:
     if metrics is None:
         return None
@@ -437,6 +463,7 @@ SIDE_BY_SIDE: tuple[Metric, ...] = (
     ("Height error (mm)", 3, lambda c, m: m["height"]["error_mm"] if m else None),
     ("Edge coverage MAE", 3, lambda c, m: m["summary"]["edge_coverage_mae"]["mean"] if m else None),
     ("Z phase (bodies)", 0, lambda c, m: _phases(m)),
+    ("Outline offset, median of bodies (mm)", 4, lambda c, m: _outline(m)),
     ("Smallest pin (mm)", 2, lambda c, m: _smallest(m, "pin")),
     ("Smallest wall (mm)", 2, lambda c, m: _smallest(m, "wall")),
     ("Smallest hole (mm)", 2, lambda c, m: _smallest(m, "hole")),

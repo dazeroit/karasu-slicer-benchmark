@@ -87,10 +87,16 @@ def test_perfect_binary_slicer(perfect: dict, layers) -> None:
     assert 0.0 < perfect["volume"]["error_vs_reference_pct"] < 1.5
     assert perfect["summary"]["stray_area_mm2"]["max"] == 0.0
     assert perfect["height"]["error_mm"] == pytest.approx(0.0, abs=LAYER_HEIGHT_MM)
-    assert body(perfect, "cone")["z_phase"]["phase"] == pytest.approx(0.5, abs=0.05)
     assert body(perfect, "sphere")["z_phase"]["phase"] == pytest.approx(0.5, abs=0.1)
+    # On a cone a Z shift and an outline offset add the same area: no phase (BD-023).
+    cone = body(perfect, "cone")["z_phase"]
+    assert cone["phase"] is None
+    assert "outline offset" in cone["reason"]
     for name in ("cube", "cylinder", "l"):
         assert body(perfect, name)["z_phase"]["phase"] is None
+    # Binary rounding moves outlines by well under half a pixel on average.
+    for item in perfect["bodies"]:
+        assert abs(item["z_phase"]["outline_offset_mm"]) < PANEL.pitch_x_mm / 2
 
 
 @pytest.mark.parametrize("name", ["mirror_x", "mirror_y", "rotate_180"])
@@ -164,8 +170,10 @@ def test_missing_layer(plate, layers, perfect_images, perfect) -> None:
 def test_z_sampling_phase(plate, layers, fraction: float) -> None:
     images = render(plate, layers, sample_fraction=fraction, grey=lambda cover: cover)
     result = analyze_stack(plate, PANEL, ArrayStack(images, layers))
-    assert body(result, "cone")["z_phase"]["phase"] == pytest.approx(fraction, abs=0.01)
-    assert body(result, "sphere")["z_phase"]["phase"] == pytest.approx(fraction, abs=0.01)
+    sphere = body(result, "sphere")["z_phase"]
+    assert sphere["phase"] == pytest.approx(fraction, abs=0.01)
+    assert abs(sphere["outline_offset_mm"]) < 0.002
+    assert body(result, "cone")["z_phase"]["phase"] is None
 
 
 def test_z_sampling_phase_of_a_binary_slicer(plate, layers) -> None:
@@ -173,7 +181,6 @@ def test_z_sampling_phase_of_a_binary_slicer(plate, layers) -> None:
     result = analyze_stack(
         plate, PANEL, ArrayStack(render(plate, layers, sample_fraction=0.25), layers)
     )
-    assert body(result, "cone")["z_phase"]["phase"] == pytest.approx(0.25, abs=0.08)
     assert body(result, "sphere")["z_phase"]["phase"] == pytest.approx(0.25, abs=0.08)
 
 
@@ -183,9 +190,24 @@ def test_xy_scale_error(plate, layers) -> None:
     images = render(plate, layers, mesh=scaled, grey=lambda cover: cover)
     result = analyze_stack(plate, PANEL, ArrayStack(images, layers))
     assert result["volume"]["error_vs_reference_pct"] == pytest.approx(10.25, abs=0.1)
-    cone = body(result, "cone")["z_phase"]
-    assert cone["area_scale"] == pytest.approx(1.1025, abs=0.005)
-    assert cone["phase"] == pytest.approx(0.5, abs=0.05)  # The scale does not pass for a Z shift.
+
+
+def test_outline_growth_is_measured_and_not_taken_for_a_z_shift(
+    plate, layers, perfect_images, perfect
+) -> None:
+    exact = analyze_stack(plate, PANEL, ArrayStack(render(plate, layers, grey=lambda c: c), layers))
+    for item in exact["bodies"]:
+        assert abs(item["z_phase"]["outline_offset_mm"]) < 0.002  # Exact coverage: no offset.
+    dilated = [
+        (ndimage.binary_dilation(image >= 128) * 255).astype(np.uint8) for image in perfect_images
+    ]
+    result = analyze_stack(plate, PANEL, ArrayStack(dilated, layers))
+    assert body(result, "sphere")["z_phase"]["phase"] == pytest.approx(0.5, abs=0.1)
+    for name in ("cube", "cylinder", "sphere"):
+        # One pixel (0.2 mm) more than the binary slicer it was grown from.
+        grown = body(result, name)["z_phase"]["outline_offset_mm"]
+        before = body(perfect, name)["z_phase"]["outline_offset_mm"]
+        assert grown - before == pytest.approx(0.2, abs=0.02)
 
 
 def test_anti_aliasing_fidelity(plate, layers, perfect) -> None:

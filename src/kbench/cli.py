@@ -21,7 +21,13 @@ from kbench.models import CatalogError, build_catalog, default_catalog_path, loa
 from kbench.provenance import suite_root, utc_timestamp, work_root
 from kbench.report import write_report
 from kbench.run import RunError, import_print_file, run_suite
-from kbench.tools import CARGO, GIT, TOOLS, inventory, resolve
+from kbench.source_build import (
+    SourceBuildError,
+    build_from_source,
+    default_sources_path,
+    load_sources,
+)
+from kbench.tools import CARGO, GIT, NPM, TOOLS, inventory, resolve
 
 TOOL_INVENTORY_SCHEMA_VERSION = 1
 
@@ -99,9 +105,10 @@ def _build_parser() -> argparse.ArgumentParser:
 
     install_parser = commands.add_parser(
         "install",
-        help="install a pinned external tool into work/tools",
+        help="install a pinned external tool, or build one from its pinned source",
         description="Download the tool pinned in tools/pins.toml, check its size and SHA-256, and "
-        "extract it into work/tools/<name>/<version>/.",
+        "extract it into work/tools/<name>/<version>/; or, for a source pin (tools/sources.toml), "
+        "clone its commit and build it into work/<name>/<commit>/ with its documented commands.",
     )
     install_parser.add_argument("name", help="the pin's name (uvtools)")
     install_parser.add_argument("--archive", type=Path, help="use this downloaded archive instead")
@@ -229,11 +236,29 @@ def _work_or_fail() -> Path:
 def _run_install(args: argparse.Namespace) -> int:
     try:
         pins = load_pins(default_pins_path())
+        sources = load_sources(default_sources_path())
+        if args.name in sources:
+            tools = {spec.name: resolve(spec, os.environ) for spec in (GIT, CARGO, NPM)}
+            missing = sorted(name for name, found in tools.items() if found.path is None)
+            if missing:
+                print(f"kbench: building from source needs {missing}", file=sys.stderr)
+                return EXIT_FAILURE
+            record = build_from_source(
+                sources[args.name],
+                _work_or_fail(),
+                tools["git"].path,
+                tools["cargo"].path,
+                tools["npm"].path,
+            )
+            built = f"{record['version']} ({record['commit'][:7]})"
+            print(f"Built {args.name} {built}: {record['binary']}")
+            return EXIT_OK
         if args.name not in pins:
-            print(f"kbench: no pin named {args.name!r}; pins: {sorted(pins)}", file=sys.stderr)
+            known = sorted([*pins, *sources])
+            print(f"kbench: no pin named {args.name!r}; pins: {known}", file=sys.stderr)
             return EXIT_USAGE
         executable = install(pins[args.name], _work_or_fail(), archive=args.archive)
-    except (InstallError, RunError, OSError) as error:
+    except (InstallError, SourceBuildError, RunError, OSError) as error:
         print(f"kbench: {error}", file=sys.stderr)
         return EXIT_FAILURE
     print(f"Installed {args.name} {pins[args.name].version}: {executable}")

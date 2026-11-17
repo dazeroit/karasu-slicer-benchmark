@@ -21,3 +21,7 @@ printer = "elegoo-saturn-4-ultra-16k"
 resin = "elegoo-standard-resin"
 format = "goo-v3"
 extension = ".goo"
+
+[slicers.dragonfruit]
+# Format chosen by the output extension; the panel comes from [panel].
+extension = ".goo"

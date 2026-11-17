@@ -30,14 +30,15 @@ from PIL import Image
 
 from kbench.geometry.mesh import Mesh
 from kbench.geometry.raster import Panel, Window
-from kbench.geometry.section import plane_segments, segments_area
+from kbench.geometry.section import plane_segments, segments_area, segments_perimeter
 from kbench.metrics import MATERIAL_THRESHOLD, features
 from kbench.metrics import orientation as orient
 from kbench.metrics.layers import LAYER_FIELDS, layer_metrics
 from kbench.models import BuiltModel
 from kbench.reference import Layer, model_window, reference_layer
 
-STACK_SCHEMA_VERSION = 1
+# 2: z_phase fits an outline offset instead of an area scale (BD-023).
+STACK_SCHEMA_VERSION = 2
 
 # Z-phase search: candidate phases every 0.05 of a layer from one layer below the layer's bottom
 # to one layer above its top (so an off-by-one-layer schedule shows as about -0.5 or 1.5), refined
@@ -47,6 +48,10 @@ STACK_SCHEMA_VERSION = 1
 PHASE_STEP = 0.05
 PHASE_RANGE = (-1.0, 2.0)
 PHASE_MIN_RELATIVE_VARIATION = 0.05
+# The phase is reported only when at least this fraction of dA/dφ (relative norm over the fitted
+# layers) is not proportional to the perimeter; on a cone it is about 1e-3 (facets), on a sphere
+# about 1.
+PHASE_MIN_SEPARATION = 0.05
 
 # Registration: layers sampled for the least-squares fit (enough to average out per-layer
 # rounding, few enough to keep re-rasterising cheap), the iteration cap, and the step size, in
@@ -476,14 +481,18 @@ def z_phase(
     z_min: float,
     z_max: float,
 ) -> dict[str, Any]:
-    """Where inside each layer the slicer sampled the body: the phase ``φ`` (0 = layer bottom,
-    1 = layer top) that best explains the measured areas as ``s · A(z_bottom + φ · height)``.
+    """Where inside each layer the slicer sampled the body, and how far its outline moved.
 
-    ``A`` is the body's exact section area and ``s`` a free area scale, so a uniform XY growth
-    or shrinkage does not pass for a Z shift. The search spans :data:`PHASE_RANGE`; layers whose
-    candidate planes could reach the body's bottom or top (where faces lie in the plane and the
-    area jumps) are left out. Returns ``phase: None`` with a reason when the body's area does not
-    vary enough over the fitted layers.
+    The measured body areas ``a_i`` are fitted by ``A(z_i + φ·h_i) + g·P(z_i + φ·h_i)``: the exact
+    section area ``A`` at the phase ``φ`` (0 = layer bottom, 1 = layer top) plus an outline
+    offset ``g`` (mm, positive when the printed outline lies outside the exact one) times the
+    exact perimeter ``P``. ``φ`` is searched over :data:`PHASE_RANGE`; layers whose candidate
+    planes could reach the body's bottom or top are left out.
+
+    ``φ`` is reported only where it can be told apart from ``g``: where the change of the area
+    with height is not proportional to the perimeter. On a cone it is (moving the plane and
+    offsetting the outline add the same area), and on a prism the area does not change at all;
+    there ``phase`` is ``None`` with the reason, and ``g`` is fitted at mid-layer sampling.
     """
     below, above = -PHASE_RANGE[0], PHASE_RANGE[1] - 1.0
     fitted = [
@@ -492,41 +501,68 @@ def z_phase(
         if layer.z_bottom_mm - below * layer.height_mm > z_min
         and layer.z_bottom_mm + (1.0 + above) * layer.height_mm < z_max
     ]
+    empty = {
+        "phase": None,
+        "outline_offset_mm": None,
+        "outline_offset_basis": None,
+        "rms_mm2": None,
+        "reason": "fewer than three layers to fit",
+    }
     if len(fitted) < 3:
-        return {
-            "phase": None,
-            "area_scale": None,
-            "rms_mm2": None,
-            "reason": "fewer than three layers to fit",
-        }
+        return empty
     observed = np.array([measured_area[index] for index in fitted])
 
-    def predicted(phase: float) -> NDArray[np.float64]:
-        return np.array(
-            [
-                segments_area(plane_segments(mesh, layers[index].plane_mm(phase), triangles))
-                for index in fitted
-            ]
-        )
+    def sections(phase: float) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
+        areas, perimeters = [], []
+        for index in fitted:
+            segments = plane_segments(mesh, layers[index].plane_mm(phase), triangles)
+            areas.append(segments_area(segments))
+            perimeters.append(segments_perimeter(segments))
+        return np.array(areas), np.array(perimeters)
 
-    middle = predicted(0.5)
-    if (
-        middle.max() <= 0.0
-        or (middle.max() - middle.min()) / middle.max() < PHASE_MIN_RELATIVE_VARIATION
-    ):
+    def fit(area: NDArray[np.float64], perimeter: NDArray[np.float64]) -> tuple[float, float]:
+        weight = float(perimeter @ perimeter)
+        offset = float((observed - area) @ perimeter / weight) if weight > 0.0 else 0.0
+        return offset, float(((observed - area - offset * perimeter) ** 2).sum())
+
+    middle_area, middle_perimeter = sections(0.5)
+
+    def mid_plane(reason: str, basis: str) -> dict[str, Any]:
+        offset, rss = fit(middle_area, middle_perimeter)
         return {
             "phase": None,
-            "area_scale": None,
-            "rms_mm2": None,
-            "reason": "the area does not vary enough with height",
+            "outline_offset_mm": offset,
+            "outline_offset_basis": basis,
+            "rms_mm2": math.sqrt(rss / len(fitted)),
+            "reason": reason,
         }
+
+    if (
+        middle_area.max() <= 0.0
+        or (middle_area.max() - middle_area.min()) / middle_area.max()
+        < PHASE_MIN_RELATIVE_VARIATION
+    ):
+        return mid_plane("the area does not vary enough with height", "mid-layer sampling")
+
+    # Separability: the part of dA/dφ that an outline offset cannot imitate.
+    step = PHASE_STEP / 2.0
+    derivative = (sections(0.5 + step)[0] - sections(0.5 - step)[0]) / (2.0 * step)
+    projection = derivative @ middle_perimeter / (middle_perimeter @ middle_perimeter)
+    residual = derivative - projection * middle_perimeter
+    separation = float(np.linalg.norm(residual) / np.linalg.norm(derivative))
+    if separation < PHASE_MIN_SEPARATION:
+        return mid_plane(
+            "the layer height cannot be told apart from an outline offset on this body",
+            "mid-layer sampling assumed",
+        ) | {"separation": separation}
 
     phases = np.round(np.arange(PHASE_RANGE[0], PHASE_RANGE[1] + PHASE_STEP / 2, PHASE_STEP), 10)
     residuals = []
     for phase in phases:
-        p = middle if phase == 0.5 else predicted(float(phase))
-        scale = float(observed @ p / (p @ p))
-        residuals.append(float(((observed - scale * p) ** 2).sum()))
+        area, perimeter = (
+            (middle_area, middle_perimeter) if phase == 0.5 else sections(float(phase))
+        )
+        residuals.append(fit(area, perimeter)[1])
     best = int(np.argmin(residuals))
     phase = float(phases[best])
     if 0 < best < len(phases) - 1:
@@ -534,10 +570,15 @@ def z_phase(
         curvature = r0 - 2 * r1 + r2
         if curvature > 0:
             phase += PHASE_STEP * 0.5 * (r0 - r2) / curvature
-    p = predicted(phase)
-    scale = float(observed @ p / (p @ p))
-    rms = math.sqrt(float(((observed - scale * p) ** 2).mean()))
-    return {"phase": phase, "area_scale": scale, "rms_mm2": rms, "reason": None}
+    offset, rss = fit(*sections(phase))
+    return {
+        "phase": phase,
+        "outline_offset_mm": offset,
+        "outline_offset_basis": "fitted phase",
+        "rms_mm2": math.sqrt(rss / len(fitted)),
+        "reason": None,
+        "separation": separation,
+    }
 
 
 def summarize(field: str, values: Sequence[float | None]) -> dict[str, Any]:

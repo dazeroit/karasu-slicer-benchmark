@@ -1,0 +1,67 @@
+# karasu-slicer and DragonFruit writing the same format (.goo) for the same Elegoo panels:
+# a 4K panel and the 16K panel with non-square pixels.
+id = "compare-elegoo"
+description = "karasu-slicer and DragonFruit, both writing .goo, on the Elegoo Mars 5 and Saturn 4 Ultra 16K."
+
+[timing]
+warmup = 1
+repetitions = 5
+timeout_s = 1800
+
+[[cases]]
+model = "accuracy-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "feature-plate"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "cube-20"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "cylinder-r5-n512"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "cone-r8-h16"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "sphere-r10"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "orientation-l"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "accuracy-plate"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu", "dragonfruit"]
+
+[[cases]]
+model = "sphere-r20-s7"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s8"
+target = "elegoo-mars-5"
+slicers = ["karasu", "dragonfruit"]
+analyze = false
+
+[[cases]]
+model = "sphere-r20-s8"
+target = "elegoo-saturn-4-ultra-16k"
+slicers = ["karasu", "dragonfruit"]
+analyze = false

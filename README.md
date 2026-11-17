@@ -25,6 +25,8 @@ same pinned UVTools release, whichever slicer wrote it. The design is in
   | `karasu-cli` | `KBENCH_KARASU_CLI` | runs (the slicer under test) |
   | `UVtoolsCmd` (UVTools) | `KBENCH_UVTOOLSCMD` | runs (decoding and file analysis) |
   | PrusaSlicer | `KBENCH_PRUSASLICER` | comparison suites |
+  | `dragonfruit-cli` | `KBENCH_DRAGONFRUIT_CLI` | comparison suites |
+  | `npm` | `KBENCH_NPM` | building DragonFruit from source |
   | `git` | `KBENCH_GIT` | building karasu-cli from a ref, recording the suite's commit |
   | `cargo` | `KBENCH_CARGO` | building karasu-cli from a ref |
 
@@ -36,7 +38,8 @@ same pinned UVTools release, whichever slicer wrote it. The design is in
 ```console
 uv sync
 uv run kbench install uvtools
-uv run kbench install prusaslicer   # optional: the compared slicer (docs/SLICERS.md)
+uv run kbench install prusaslicer   # optional: a compared slicer (docs/SLICERS.md)
+uv run kbench install dragonfruit   # optional: built from its pinned source (needs npm, cargo)
 uv run kbench karasu build --repo ../karasu-slicer --ref HEAD
 export KBENCH_KARASU_CLI=<the path the build prints>
 uv run kbench doctor
@@ -60,6 +63,7 @@ uv run kbench run --suite smoke        # a few minutes: time, decode and measure
 uv run kbench run --suite accuracy     # every target and single-shape model
 uv run kbench run --suite performance  # timing only, more repetitions, scaling series
 uv run kbench run --suite compare-sl1s # karasu-slicer and PrusaSlicer on the same SL1S panel
+uv run kbench run --suite compare-elegoo # karasu-slicer and DragonFruit, both writing .goo
 uv run kbench run --suite scaling      # timing against resolution, layers, triangles, CPUs
 uv run kbench report work/runs/<run-id>
 uv run kbench report work/runs/<run-a> work/runs/<run-b>   # side by side

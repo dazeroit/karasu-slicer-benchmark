@@ -97,22 +97,33 @@ that grows or moves keeps all its material. Per body (`bodies[]`):
 | `measured_volume_mm3` | mm³ | Σ measured body area × layer height |
 | `reference_stack_volume_mm3` | mm³ | Σ exact body section area at mid-planes × layer height |
 | `volume_error_pct` | % | measured against reference |
-| `z_phase.phase` | layers | where inside each layer the slicer sampled the body: 0 at the layer's bottom, 1 at its top, 0.5 at mid-height |
-| `z_phase.area_scale` | ratio | the fitted area scale `s` |
+| `z_phase.phase` | layers | where inside each layer the slicer sampled the body: 0 at the layer's bottom, 1 at its top, 0.5 at mid-height; `null` where it cannot be measured |
+| `z_phase.outline_offset_mm` | mm | how far the printed outline lies outside the exact one, on average (negative: inside) |
+| `z_phase.outline_offset_basis` | | `fitted phase`, or `mid-layer sampling` / `mid-layer sampling assumed` when no phase was fitted |
+| `z_phase.separation` | ratio | the share of the area's change with height that an outline offset cannot imitate |
 | `z_phase.rms_mm2` | mm² | RMS residual of the fit |
 | `z_phase.reason` | | why no phase was fitted, if none was |
 
-**Z phase.** The measured body areas `a_i` are fitted by `s · A(z_i + φ · h_i)`, where `A` is the
-body's exact section area, `z_i` and `h_i` the layer's bottom and height, and `s` a free scale,
-so that a uniform XY growth does not pass for a Z shift. `φ` is searched from −1 to 2 in steps of
-0.05 and refined by a parabola through the best step and its neighbours: −0.5 or 1.5 means a
-schedule one layer off. Layers whose candidate planes could reach the body's bottom or top are
-left out. Bodies whose area varies by less than 5 % over the fitted layers (prisms, boxes)
-get no phase: pixel noise, not geometry, would decide it.
+**Z phase and outline offset** (schema version 2, BD-023). The measured body areas `a_i` are
+fitted by `A(z_i + φ · h_i) + g · P(z_i + φ · h_i)`, where `A` and `P` are the exact section area
+and perimeter of the body, `z_i` and `h_i` the layer's bottom and height, `φ` the phase and `g`
+the outline offset: a printed outline lying `g` outside the exact one adds about `g · P` of area.
+`φ` is searched from −1 to 2 in steps of 0.05 and refined by a parabola through the best step and
+its neighbours (−0.5 or 1.5 means a schedule one layer off); `g` is solved by least squares at
+each step. Layers whose candidate planes could reach the body's bottom or top are left out.
+
+The phase is not reported where it cannot be told apart from the outline offset:
+
+- where the area varies by less than 5 % over the fitted layers (prisms, boxes): `g` is fitted
+  at mid-layer sampling, which there is no assumption, since the section does not change;
+- where the change of the area with height is proportional to the perimeter (less than 5 % of
+  it is not, `separation < 0.05`): on a cone, sampling higher and shrinking the outline remove the
+  same area, so `g` is fitted assuming mid-layer sampling and says so.
 
 **Limits.** At coarse pixels binarisation noise moves the phase by a few hundredths of a layer
-(tests: within 0.08 at 5 pixels per mm). A growth that is not proportional to the area (a fixed
-offset of the outline) is only partly absorbed by `s`.
+(tests: within 0.08 at 5 pixels per mm). A uniform XY scale error is not an outline offset; it
+shows in the volume error and biases `g` (a wrong pixel pitch is caught by the file's
+conformity check instead).
 
 ## Feature metrics
 

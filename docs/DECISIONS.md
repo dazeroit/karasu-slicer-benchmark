@@ -204,6 +204,38 @@ counts; the hole measure is binary because an enclosed region is binary. Fit-bas
 (circle fits on contours) were not used: on features of a few pixels they have no stable
 solution.
 
+## BD-022: DragonFruit built from its pinned source
+
+2026-11-17, owner. DragonFruit's command line is documented but not released; the owner chose to
+build it from the pinned release tag (v0.2.2, `188df82`) rather than to use only its desktop
+application through the manual protocol. The source is cloned into `work/` (never committed)
+and only the build commands its documentation gives are run (`tools/sources.toml`,
+`src/kbench/source_build.py`); nobody opens or searches the source, and compiler warnings are
+off so the build log quotes none of it. The repository records only how the command line is used
+and what its files contain, as for every compared slicer. `kbench install dragonfruit` builds it;
+the inventory names it by tag and commit from the build record.
+
+## BD-023: Z phase fitted with an outline offset
+
+2026-11-17, owner. The Z phase was fitted with a free area scale, `s · A(z + φh)`. DragonFruit's
+files then gave a phase of 0.05 on the cone and 0.50 on the sphere: its outlines lie about half
+a pixel outside the exact ones, and on a cone an outline offset and a Z shift add the same area
+(both proportional to the perimeter), which a scale cannot absorb, so the fit took the offset for
+a Z shift. The phase is now fitted with an outline offset, `A(z + φh) + g · P(z + φh)`, and is
+reported only where its effect on the area is not proportional to the perimeter (spheres, not
+cones). The outline offset `g` becomes a metric of its own: the average distance between the
+printed and the exact outline. The stack-metrics schema goes to version 2; records of version 1
+carry `area_scale` and are not comparable on this metric.
+
+## BD-024: Determinism judged on decoded layers
+
+2026-11-17. Byte-identical files prove determinism, but differing bytes do not disprove it:
+PrusaSlicer writes a creation time into `config.ini` and DragonFruit into the GOO header
+(`FileCreateTime`, observed with v0.2.2). When the runs of a case write differing files, the
+suite keeps up to two of them besides the print file and, after analysing the print file, decodes
+them the same way and compares their pixels; the report gives the number of distinct decoded
+layer sets.
+
 ## Open questions
 
 Each is answered by a later `BD` record. Until then, the suite assumes the default given.

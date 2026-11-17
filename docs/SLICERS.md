@@ -106,6 +106,49 @@ AppRun --export-sla --printer-technology SLA \
 - In portrait orientation, each plate axis is rasterised with the other axis's pitch: harmless
   with square pixels, a distortion and an offset with non-square ones (BD-017).
 
+## DragonFruit
+
+An open-source resin slicer of the Open Resin Alliance (AGPL-3.0-or-later). Its released
+binaries are the desktop application; its documentation (`docs/reference/cli.md`) describes a
+command line, `dragonfruit-cli`, that is not in the releases and is built from the repository.
+The suite builds it from the pinned release tag (BD-022):
+
+```console
+uv run kbench install dragonfruit
+```
+
+clones `v0.2.2` (commit `188df82`) with its submodules into `work/dragonfruit/<commit>/src`,
+checks the commit, and runs only the commands the documentation gives: `npm ci`, `npm run
+generate:plugin-registry`, then `cargo build --release` in `rust/dragonfruit-cli`, with compiler
+warnings off so that the build log carries no source excerpts. Nothing in the source is opened.
+The repository pins its own Rust toolchain (1.97.0 at this tag), which rustup installs.
+`dragonfruit-cli` has no version option; the suite reports the tag and commit from the build
+record.
+
+**Command** (`src/kbench/slicers.py`), the documented `slice run` options, with the panel taken
+from the target:
+
+```console
+dragonfruit-cli slice run <model.stl> --output <file>.goo --layer-height 0.05 \
+  --build-width-mm 143.43 --build-depth-mm 89.6 --source-width-px 4098 --source-height-px 2560 \
+  --anti-aliasing Off
+```
+
+- The format follows the output extension (`slice info` lists `.aff`, `.azf`, `.nanodlp`,
+  `.ctb`, `.goo` and `.lumen` at this version). The suite uses `.goo`, the format karasu-slicer
+  writes for the same Elegoo targets, so both are read by the same UVTools decoder.
+- No printer preset is given, so the file declares no mirroring.
+
+**Observed (v0.2.2, `188df82`, 2026-11-17):**
+
+- Its `.goo` files declare the panel given (resolution, 0.035 mm pixels, 0.05 mm layers) and
+  `DisplayMirror: None`; the images are the unmirrored top view (`identity`).
+- The model, centred at the origin, is placed on the panel half a pixel off its centre in X and Y.
+- The GOO header carries the creation time (`FileCreateTime`), so two runs never give
+  byte-identical files; their decoded layers are identical (BD-024).
+- Without the application's job description its `.nanodlp` files declare a layer height and a
+  pixel size of 0 (as UVTools reads them), so the suite does not use that format.
+
 ## Manual export protocol (slicers without a command line)
 
 CHITUBOX, Lychee, ELEGOO SatelLite, Anycubic Photon Workshop and other slicers that only have a

@@ -1,0 +1,13 @@
+# Compared slicers the suite builds from a pinned source commit, because their command line is
+# not in their released binaries (BD-022). The suite only runs the build commands their
+# documentation gives; it never opens the sources (AGENTS.md, Clean room).
+
+[dragonfruit]
+version = "v0.2.2"
+repository = "https://github.com/Open-Resin-Alliance/DragonFruit.git"
+commit = "188df823d128e035bd0ea14c27b2f89396aac937"
+# Relative to the build directory work/dragonfruit/<commit>/.
+executable = "target/release/dragonfruit-cli"
+# From the repository's docs/reference/cli.md at v0.2.2: generate the plugin encoder registry,
+# then build the CLI crate.
+crate = "rust/dragonfruit-cli"

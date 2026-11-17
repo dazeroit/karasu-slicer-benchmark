@@ -19,6 +19,7 @@ from typing import Any, Literal
 from kbench.install import default_pins_path, load_pins
 from kbench.process import run_captured
 from kbench.provenance import sha256_file
+from kbench.source_build import default_sources_path, load_sources
 
 # A version query does no work, but the first start of a .NET program such as UVtoolsCmd can take
 # several seconds on a cold cache; 30 s leaves a wide margin and still bounds a hung program.
@@ -37,6 +38,9 @@ class ToolSpec:
     version_args: tuple[str, ...]
     # Path of a pinned installation, relative to the work directory.
     work_path: str | None = None
+    # A program with no version option, built by the suite: its version is read from the
+    # build.json two directories above the binary (BD-022).
+    version_from_build: bool = False
 
 
 KARASU_CLI = ToolSpec(
@@ -97,7 +101,43 @@ PRUSASLICER = ToolSpec(
     work_path=_pinned_path("prusaslicer"),
 )
 
-TOOLS: tuple[ToolSpec, ...] = (KARASU_CLI, UVTOOLS_CMD, PRUSASLICER, GIT, CARGO)
+
+def _source_path(name: str) -> str | None:
+    pins = load_sources(default_sources_path())
+    if name not in pins:
+        return None
+    pin = pins[name]
+    return f"{pin.name}/{pin.commit}/{pin.executable}"
+
+
+DRAGONFRUIT_CLI = ToolSpec(
+    name="dragonfruit-cli",
+    role="compared slicer (command line, built from source)",
+    required=False,
+    env_var="KBENCH_DRAGONFRUIT_CLI",
+    executable="dragonfruit-cli",
+    version_args=("info",),
+    work_path=_source_path("dragonfruit"),
+    version_from_build=True,
+)
+NPM = ToolSpec(
+    name="npm",
+    role="builds compared slicers from source",
+    required=False,
+    env_var="KBENCH_NPM",
+    executable="npm",
+    version_args=("--version",),
+)
+
+TOOLS: tuple[ToolSpec, ...] = (
+    KARASU_CLI,
+    UVTOOLS_CMD,
+    PRUSASLICER,
+    DRAGONFRUIT_CLI,
+    GIT,
+    CARGO,
+    NPM,
+)
 
 ResolutionStatus = Literal["found", "missing", "invalid"]
 
@@ -182,6 +222,8 @@ def inspect(spec: ToolSpec, environ: Mapping[str, str], work: Path | None = None
     }
     if probe.exit_status == 0:
         record["version"] = probe.first_line()
+        if spec.version_from_build:
+            record["version"] = _build_version(resolved) or record["version"]
         record["ok"] = record["version"] is not None
     else:
         record["error"] = "the version query failed"
@@ -191,3 +233,17 @@ def inspect(spec: ToolSpec, environ: Mapping[str, str], work: Path | None = None
 def inventory(environ: Mapping[str, str], work: Path | None = None) -> list[dict[str, Any]]:
     """Records of every tool in :data:`TOOLS`, in their fixed order."""
     return [inspect(spec, environ, work) for spec in TOOLS]
+
+
+def _build_version(binary: Path) -> str | None:
+    """``<name> <version> (<commit>)`` from the build record beside a suite-built binary."""
+    parents = binary.parents
+    if len(parents) < 3:
+        return None
+    path = parents[2] / "build.json"
+    if not path.is_file():
+        return None
+    import json
+
+    record = json.loads(path.read_text(encoding="utf-8"))
+    return f"{binary.name} {record.get('version')} ({str(record.get('commit', ''))[:7]})"

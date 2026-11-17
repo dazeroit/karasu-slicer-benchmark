@@ -300,3 +300,65 @@ def test_sl1_reader_refuses_incomplete_archives(tmp_path: Path) -> None:
     (tmp_path / "plain.sl1").write_bytes(b"not a zip")
     with pytest.raises(SL1Error, match="not a ZIP"):
         read_sl1(tmp_path / "plain.sl1", tmp_path / "out")
+
+
+def test_dragonfruit_command() -> None:
+    from kbench.slicers import ADAPTERS
+
+    target = load_targets(repository_path("targets"))["elegoo-saturn-4-ultra-16k"]
+    job = ADAPTERS["dragonfruit"].job(
+        Path("/df/dragonfruit-cli"), Path("/m/a.stl"), target, Path("/o/a")
+    )
+    assert job.output == Path("/o/a.goo")
+    argv = job.argv
+    assert argv[:4] == ["/df/dragonfruit-cli", "slice", "run", "/m/a.stl"]
+    assert argv[argv.index("--build-width-mm") + 1] == "211.68"
+    assert argv[argv.index("--build-depth-mm") + 1] == "118.37"
+    assert argv[argv.index("--source-width-px") + 1] == "15120"
+    assert argv[argv.index("--source-height-px") + 1] == "6230"
+    assert argv[argv.index("--anti-aliasing") + 1] == "Off"
+    assert argv[argv.index("--layer-height") + 1] == "0.05"
+
+
+def test_source_pins_and_build_versions(tmp_path: Path) -> None:
+    import json
+
+    from kbench.source_build import default_sources_path, load_sources
+    from kbench.tools import _build_version
+
+    pin = load_sources(default_sources_path())["dragonfruit"]
+    assert pin.version == "v0.2.2"
+    assert len(pin.commit) == 40
+    binary = tmp_path / "commit" / "target" / "release" / "tool"
+    binary.parent.mkdir(parents=True)
+    binary.write_text("")
+    assert _build_version(binary) is None
+    (tmp_path / "commit" / "build.json").write_text(
+        json.dumps({"version": "v1.2", "commit": "abcdef0123"})
+    )
+    assert _build_version(binary) == "tool v1.2 (abcdef0)"
+
+
+def test_decoded_determinism_tells_metadata_from_layers(tmp_path: Path) -> None:
+    from kbench.run import _decoded_determinism
+    from kbench.sl1 import read_sl1
+    from kbench.uvtools import UVTools
+
+    first, same, other = (
+        tmp_path / "a" / "p.sl1s",
+        tmp_path / "b" / "p.sl1s",
+        tmp_path / "c" / "p.sl1s",
+    )
+    for path in (first, same, other):
+        path.parent.mkdir()
+    write_sl1(first, 3)
+    write_sl1(same, 3, extra={"prusaslicer.ini": b"created = later"})  # Other bytes, same layers.
+    write_sl1(other, 4)  # Other layers.
+    files = read_sl1(first, tmp_path / "layers")[0]
+    unused = UVTools(Path("/nonexistent"))  # SL1 archives never reach UVTools.
+    record = {"distinct_files": [str(same)]}
+    assert _decoded_determinism(record, files, unused, tmp_path)["distinct"] == 1
+    record = {"distinct_files": [str(same), str(other)]}
+    result = _decoded_determinism(record, files, unused, tmp_path)
+    assert result["files"] == 3
+    assert result["distinct"] == 2

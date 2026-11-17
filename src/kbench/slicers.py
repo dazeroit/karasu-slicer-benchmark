@@ -136,6 +136,46 @@ def prusaslicer_job(
     return SliceJob(argv, output, None)
 
 
+DRAGONFRUIT_SETTINGS = {"extension"}
+
+
+def dragonfruit_job(
+    executable: Path, model: Path, target: Target, output_stem: Path, *, log: Path | None = None
+) -> SliceJob:
+    """The DragonFruit command-line slice for ``model`` on ``target`` (``log`` is not used).
+
+    Only documented options are given (``slice run --help``): the plate and the raster are the
+    target's panel, the layer height the target's, anti-aliasing off. The format follows the
+    output extension from the target's ``[slicers.dragonfruit]`` table. No printer preset is
+    used, so the file declares no mirroring.
+    """
+    del log
+    settings = _settings(target, "dragonfruit", DRAGONFRUIT_SETTINGS)
+    output = output_stem.with_suffix(settings["extension"])
+    panel = target.panel
+    argv = [
+        str(executable),
+        "slice",
+        "run",
+        str(model),
+        "--output",
+        str(output),
+        "--layer-height",
+        f"{target.layer_height_mm:g}",
+        "--build-width-mm",
+        f"{panel.resolution_x * panel.pitch_x_mm:.6g}",
+        "--build-depth-mm",
+        f"{panel.resolution_y * panel.pitch_y_mm:.6g}",
+        "--source-width-px",
+        str(panel.resolution_x),
+        "--source-height-px",
+        str(panel.resolution_y),
+        "--anti-aliasing",
+        "Off",
+    ]
+    return SliceJob(argv, output, None)
+
+
 def _settings(target: Target, slicer: str, keys: set[str]) -> Mapping[str, str]:
     if slicer not in target.slicers:
         raise ConfigError(f"target {target.id!r} has no [slicers.{slicer}] table")
@@ -160,4 +200,5 @@ class Adapter:
 ADAPTERS: dict[str, Adapter] = {
     "karasu": Adapter("karasu", "karasu-cli", karasu_job),
     "prusaslicer": Adapter("prusaslicer", "PrusaSlicer", prusaslicer_job),
+    "dragonfruit": Adapter("dragonfruit", "dragonfruit-cli", dragonfruit_job),
 }

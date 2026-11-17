@@ -79,6 +79,11 @@ def segments_area(segments: FloatArray) -> float:
     return float((xa * yb - xb * ya).sum() / 2.0)
 
 
+def segments_perimeter(segments: FloatArray) -> float:
+    """The total length in mm of the section's boundary (outer contours and holes)."""
+    return float(np.hypot(segments[:, 2] - segments[:, 0], segments[:, 3] - segments[:, 1]).sum())
+
+
 def area_profile(
     mesh: Mesh,
     heights_mm: Sequence[float] | FloatArray,

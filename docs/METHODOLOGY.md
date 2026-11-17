@@ -71,6 +71,8 @@ what the launcher reports for the default toolchain.
 | karasu-cli | `KBENCH_KARASU_CLI` | yes | `--version` |
 | UVtoolsCmd | `KBENCH_UVTOOLSCMD` | yes | `--core-version` (the UVTools release; `--version` gives the front end's own) |
 | PrusaSlicer | `KBENCH_PRUSASLICER` | no | `--help`, first line |
+| dragonfruit-cli | `KBENCH_DRAGONFRUIT_CLI` | no | `info` must succeed; the version is the tag and commit of the suite's build record |
+| npm | `KBENCH_NPM` | no | `--version` |
 | git | `KBENCH_GIT` | no | `--version` |
 | cargo | `KBENCH_CARGO` | no | `--version` |
 
@@ -175,8 +177,9 @@ measurements.
   without any option of the program itself (BD-020). Cases without `cpus` use every CPU.
 - **Determinism:** the SHA-256 of every run's print file, warm-ups included, is recorded; one
   distinct hash means byte-identical files. For SL1 and SL1S archives the layer images are also
-  hashed alone (BD-018). Reports compare cases of the same model, target and slicer build across
-  CPU counts and runs (*Determinism across cases*).
+  hashed alone (BD-018). When files differ, up to two more are kept and, after the analysis,
+  decoded and compared pixel by pixel with the print file (BD-024). Reports compare cases of the
+  same model, target and slicer build across CPU counts and runs (*Determinism across cases*).
 - A failed run (non-zero exit, signal, timeout, no file) is recorded with its status and kept out
   of the statistics, which say how many runs succeeded.
 

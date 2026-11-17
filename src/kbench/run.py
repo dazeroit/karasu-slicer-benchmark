@@ -31,6 +31,9 @@ from kbench.uvtools import GLOBAL_NUMBERS, GLOBAL_TEXTS, UVTools, UVToolsError
 RUN_SCHEMA_VERSION = 1
 CASE_SCHEMA_VERSION = 1
 
+# Files kept besides the print file when runs write different bytes.
+MAX_DISTINCT_FILES = 2
+
 # Declared pixel pitch and layer height are printed by UVTools with a few decimals; agreement
 # within half a micrometre is agreement to the printed precision.
 PITCH_TOLERANCE_MM = 0.0005
@@ -218,6 +221,9 @@ def _time_case(
     cpus = _case_cpus(case)
     attempts: list[dict[str, Any]] = []
     print_file: Path | None = None
+    # Up to MAX_DISTINCT_FILES more files whose bytes differ from the print file's, kept so the
+    # analysis can tell metadata differences from layer differences.
+    distinct: dict[str, Path] = {}
     total = timing.warmup + timing.repetitions
     for attempt in range(total):
         warmup = attempt < timing.warmup
@@ -238,9 +244,15 @@ def _time_case(
             entry["output_bytes"] = job.output.stat().st_size
             entry["output_sha256"] = sha256_file(job.output)
             entry["layers_sha256"] = layers_digest(job.output)
+            sha = entry["output_sha256"]
             if print_file is None and entry["succeeded"] and not warmup:
                 print_file = directory / f"print{job.output.suffix}"
                 job.output.rename(print_file)
+                distinct[sha] = print_file
+            elif entry["succeeded"] and sha not in distinct and len(distinct) <= MAX_DISTINCT_FILES:
+                kept = directory / f"distinct-{len(distinct)}{job.output.suffix}"
+                job.output.rename(kept)
+                distinct[sha] = kept
             else:
                 job.output.unlink()
         attempts.append(entry)
@@ -274,6 +286,7 @@ def _time_case(
             "distinct_layers_sha256": layer_hashes or None,
         },
         "print_file": str(print_file) if print_file is not None else None,
+        "distinct_files": [str(path) for path in distinct.values() if path != print_file],
     }
 
 
@@ -415,12 +428,50 @@ def analyze_case(
         analysis["metrics_wall_s"] = time.perf_counter() - started
         _write_json(directory / "metrics.json", metrics)
         analysis["metrics"] = "metrics.json"
+        analysis["decoded_layers"] = _decoded_determinism(record, files, uvtools, directory)
         analysis["status"] = "analysed"
     except (UVToolsError, AnalysisError, SL1Error, OSError) as error:
         analysis["error"] = f"{type(error).__name__}: {error}"[:2000]
     if not keep_layers and layers_dir.exists():
         shutil.rmtree(layers_dir)
     return analysis
+
+
+def _pixel_digest(files: Sequence[Path]) -> str:
+    """SHA-256 over the decoded pixels (and sizes) of layer images, in layer order."""
+    import hashlib
+
+    import numpy as np
+    from PIL import Image
+
+    digest = hashlib.sha256()
+    for file in files:
+        with Image.open(file) as image:
+            pixels = np.asarray(image)
+        digest.update(f"{pixels.shape}{pixels.dtype}".encode())
+        digest.update(pixels.tobytes())
+    return digest.hexdigest()
+
+
+def _decode(print_file: Path, uvtools: UVTools, out_dir: Path) -> list[Path]:
+    if print_file.suffix.lower() in SL1_SUFFIXES:
+        return read_sl1(print_file, out_dir)[0]
+    return uvtools.extract_layers(print_file, out_dir)
+
+
+def _decoded_determinism(
+    record: Mapping[str, Any], files: Sequence[Path], uvtools: UVTools, directory: Path
+) -> dict[str, Any]:
+    """Whether files with different bytes hold different layers: each kept file is decoded the
+    same way as the analysed one and its pixels compared."""
+    digests = [_pixel_digest(files)]
+    for index, other in enumerate(record.get("distinct_files", [])):
+        out_dir = directory / f"distinct-layers-{index}"
+        try:
+            digests.append(_pixel_digest(_decode(Path(other), uvtools, out_dir)))
+        finally:
+            shutil.rmtree(out_dir, ignore_errors=True)
+    return {"files": len(digests), "distinct": len(set(digests)), "digests": digests}
 
 
 def _sl1_properties(config: Mapping[str, str], first_layer: Path, count: int) -> dict[str, Any]:
